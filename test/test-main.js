@@ -48,6 +48,30 @@ describe("Anyhow Tests", function() {
         }
     })
 
+    it("Direct call to anyhow.log() passing debug level and a string", function(done) {
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.log("debug", "This is a debug log via anyhow.log()")
+        }).toString()
+
+        if (logged.indexOf("debug log") > 0) {
+            done()
+        } else {
+            done("Expected 'debug log' on console.")
+        }
+    })
+
+    it("Direct call to anyhow.console() passing custom level and a string", function(done) {
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.console("custom", "This is a custom log via anyhow.console()")
+        }).toString()
+
+        if (logged.indexOf("custom log") > 0) {
+            done()
+        } else {
+            done("Expected 'custom log' on console.")
+        }
+    })
+
     it("Log using Winston console", function(done) {
         anyhow.setup("winston")
 
