@@ -1,10 +1,12 @@
 {
     "name": "anyhow",
-    "version": "0.9.0",
-    "description": "Log anyhow.",
+    "version": "1.0.0",
+    "description": "Drop-in wrapper for Winston and console logs.",
     "keywords": [
         "anyhow",
-        "logger"
+        "console",
+        "logger",
+        "winston"
     ],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://anyhow.devv.com",
