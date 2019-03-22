@@ -134,23 +134,41 @@ class Anyhow {
     }
 
     /**
-     * Default Anyhow constructor. It will try to load compatible loggers,
-     * and fall back to the console if nothing was found.
+     * Setup will try to load compatible loggers, and fall back
+     * to the console if nothing was found.
      */
-    constructor() {
+    setup(): void {
+        let found = false
+
+        // First try Winston.
         try {
             const winston = require("winston")
-
             winston.add(new winston.transports.Console())
 
             this._log = function(level, message) {
                 winston.log({level: level, message: message})
             }
+
+            found = true
         } catch (ex) {}
 
-        try {
-            chalk = require("chalk")
-        } catch (ex) {}
+        // No logging libraries found? Fall back to console.
+        if (!found) {
+            try {
+                if (!chalk) {
+                    chalk = require("chalk")
+                }
+            } catch (ex) {}
+
+            this._log = (level, message) => this.console(level, message)
+        }
+    }
+
+    /**
+     * Default Anyhow constructor.
+     */
+    constructor() {
+        this.setup()
     }
 
     /**
