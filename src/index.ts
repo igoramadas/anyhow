@@ -31,9 +31,14 @@ class Anyhow {
     separator: string = " | "
 
     /**
-     * Console logging styles.
+     * Default console logging styles to be used in case the chalk module is installed.
      */
-    styles: []
+    styles: any = {
+        debug: ["gray"],
+        info: ["white"],
+        warn: ["yellow"],
+        error: ["red", "bold"]
+    }
 
     /**
      * Private logging function. This will be set by the constructor
@@ -90,18 +95,23 @@ class Anyhow {
     }
 
     /**
-     * Log directly to the console.
-     * @param level
-     * @param args
+     * Log directly to the console. This is the default logger handler
+     * in case no other compatible libraries are found.
+     * @param level String representing the level: error, warn, info, debug
+     * @param args Array of arguments to be logged.
+     * @returns The generated message that was just logged.
      */
-    console(level: string, args: any): void {
+    console(level: string, args: any): string {
         let message = _.isString(args) ? args : this.getMessage(args)
+        let styledMessage = message
         let logMethod = console.log
 
+        // Check if console supports the passed level. Defaults to "log".
         if (console[level] && level != "debug") {
             logMethod = console[level]
         }
 
+        // Is chalk installed? Use it to colorize the messages.
         if (chalk) {
             let styles = this.styles[level]
             let chalkStyle
@@ -115,10 +125,12 @@ class Anyhow {
                 chalkStyle = chalk.white
             }
 
-            message = chalkStyle(message)
+            styledMessage = chalkStyle(message)
         }
 
-        logMethod(message)
+        logMethod(styledMessage)
+
+        return message
     }
 
     /**
