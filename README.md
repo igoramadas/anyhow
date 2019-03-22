@@ -1,0 +1,3 @@
+# Anyhow
+
+Logging wrapper, docs coming soon...
