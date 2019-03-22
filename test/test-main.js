@@ -1,10 +1,8 @@
 // TEST: MAIN
 
-let fs = require("fs")
+let capcon = require("capture-console")
 let chai = require("chai")
 let mocha = require("mocha")
-let npm = require("npm")
-let after = mocha.after
 let before = mocha.before
 let describe = mocha.describe
 let it = mocha.it
@@ -18,38 +16,112 @@ describe("Anyhow Tests", function() {
         anyhow = require("../index")
     })
 
-    after(function() {
-        let callback = function(err) {
-            npm.commands.uninstall(["winston"], function() {})
-        }
+    it("Log info to console based on simple arguments", function(done) {
+        anyhow.setup("console")
 
-        npm.load(callback)
-    })
-
-    it("Logs info based on simple arguments", function(done) {
         let someString = "This is a string"
         let someNumber = 123
         let someBool = true
 
-        let message = anyhow.info(someString, someNumber, someBool)
-        done()
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info(someString, someNumber, someBool)
+        }).toString()
+
+        if (logged.indexOf("123") > 0) {
+            done()
+        } else {
+            done(`Expected '${expected}' but got '${logged}' on console.`)
+        }
     })
 
-    it("Logs using Winston", function(done) {
-        this.timeout(30000)
+    it("Log debug, warn, error", function(done) {
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.debug("Test log debug")
+            anyhow.warn("Test log warn")
+            anyhow.error("Test log error")
+        }).toString()
 
-        let callback = function(err) {
-            npm.commands.install(["winston"], function(ex, data) {
-                if (ex) {
-                    return done("Could not install Winston.")
-                }
+        if (logged.indexOf("debug") > 0 && logged.indexOf("warn") && logged.indexOf("error")) {
+            done()
+        } else {
+            done("Expected 'debug', 'warn' and 'error' on console.")
+        }
+    })
 
-                anyhow.setup()
-                let message = anyhow.info("Logged via Winston")
-                done()
-            })
+    it("Log using Winston console", function(done) {
+        anyhow.setup("winston")
+
+        let winston = require("winston")
+        winston.add(new winston.transports.Console())
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Log to Winston")
+        }).trim()
+
+        let expected = '{"level":"info","message":"Log to Winston"}'
+
+        if (expected == logged) {
+            done()
+        } else {
+            done(`Expected '${expected}' but got '${logged}' on console.`)
+        }
+    })
+
+    it("Log using Winston console", function(done) {
+        anyhow.setup("winston")
+
+        let winston = require("winston")
+        winston.add(new winston.transports.Console())
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Log to Winston")
+        }).trim()
+
+        let expected = '{"level":"info","message":"Log to Winston"}'
+
+        if (logged.indexOf("level") > 0 && logged.indexOf("Winston") > 0) {
+            done()
+        } else {
+            done(`Expected '${expected}' but got '${logged}' on console.`)
+        }
+    })
+
+    it("Transform mixed arguments into a message using getMessage()", function(done) {
+        let args = [
+            "Some message",
+            {
+                innerNumber: [1, 2, 3]
+            },
+            [4, 5, 6],
+            new Date()
+        ]
+
+        let message = anyhow.getMessage(args)
+
+        if (message.indexOf("1") > 0 && message.indexOf("4") > 0) {
+            done()
+        } else {
+            done("Message should have '1' and '4' inside.")
+        }
+    })
+
+    it("Transform error into a message using getMessage()", function(done) {
+        let expected = "This is an error"
+        let message = null
+
+        try {
+            throw new Error(expected)
+        } catch (ex) {
+            ex.friendlyMessage = "This is a friendly message"
+            ex.reason = "This is a reason"
+            ex.code = 500
+            message = anyhow.getMessage(ex)
         }
 
-        npm.load(callback);
+        if (message.indexOf(expected) >= 0) {
+            done()
+        } else {
+            done(`Expected '${expected}' inside the message.`)
+        }
     })
 })

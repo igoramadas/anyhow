@@ -3,6 +3,8 @@
  */
 
 const _ = require("lodash")
+
+let env = process.env.NODE_ENV || "development"
 let chalk = null
 
 class Anyhow {
@@ -135,22 +137,26 @@ class Anyhow {
 
     /**
      * Setup will try to load compatible loggers, and fall back
-     * to the console if nothing was found.
+     * to the console if nothing was found. You can also force
+     * a specific library to be loaded passing lib = "console|winston|
+     * @param lib Optional, force a specific library to be used. If not passed, will try winston first then console.
      */
-    setup(): void {
+    setup(lib?: string): void {
         let found = false
+        lib = lib || ""
 
         // First try Winston.
-        try {
-            const winston = require("winston")
-            winston.add(new winston.transports.Console())
+        if (!lib || lib == "winston") {
+            try {
+                const winston = require("winston")
 
-            this._log = function(level, message) {
-                winston.log({level: level, message: message})
-            }
+                this._log = function(level, message) {
+                    winston.log({level: level, message: message})
+                }
 
-            found = true
-        } catch (ex) {}
+                found = true
+            } catch (ex) {}
+        }
 
         // No logging libraries found? Fall back to console.
         if (!found) {
@@ -165,21 +171,19 @@ class Anyhow {
     }
 
     /**
-     * Default Anyhow constructor.
+     * Default Anyhow constructor. Calls setup() by default.
      */
     constructor() {
-        this.setup()
+        if (env != "test") {
+            this.setup()
+        }
     }
 
     /**
-     * Finds the correct path to the file looking first on the (optional) base path
-     * then the current or running directory, finally the root directory.
-     * Returns null if file is not found.
-     * @param filename The filename to be searched
-     * @param basepath Optional, basepath where to look for the file.
-     * @returns The full path to the file if one was found, or null if not found.
+     * Gets a nice, readable message out of the passed array of arguments.
+     * @param originalArgs Any single or collection of objects that will be transformed to a message string.
      */
-    getMessage(originalArgs) {
+    getMessage(originalArgs: any) {
         let value
         let separated = []
         let args = []
@@ -192,6 +196,8 @@ class Anyhow {
             for (value of Array.from(originalArgs)) {
                 args.push(_.cloneDeep(value))
             }
+        } else if (_.isError(originalArgs)) {
+            args.push(originalArgs)
         } else {
             args.push(_.cloneDeep(originalArgs))
         }
