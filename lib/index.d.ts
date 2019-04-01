@@ -5,6 +5,10 @@ declare class Anyhow {
     private static _instance;
     static readonly Instance: Anyhow;
     /**
+     * Helper to check if setup() was already called.
+     */
+    readonly isReady: boolean;
+    /**
      * Default is true. Messages will be compacted (spaces and breaks removed).
      * Set to false to log original values including spaces.
      */
@@ -75,7 +79,7 @@ declare class Anyhow {
      * Gets a nice, readable message out of the passed array of arguments.
      * @param originalArgs Any single or collection of objects that will be transformed to a message string.
      */
-    getMessage(originalArgs: any): string;
+    getMessage(originalArgs: any | any[]): string;
 }
 declare const _default: Anyhow;
 export = _default;

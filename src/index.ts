@@ -14,6 +14,17 @@ class Anyhow {
     }
 
     /**
+     * Helper to check if setup() was already called.
+     */
+    get isReady() {
+        if (this._log) {
+            return true
+        }
+
+        return false
+    }
+
+    /**
      * Default is true. Messages will be compacted (spaces and breaks removed).
      * Set to false to log original values including spaces.
      */
@@ -145,6 +156,15 @@ class Anyhow {
         let found = false
         lib = lib || ""
 
+        // Passed "none"? This will effectively disable logging.
+        if (lib == "none") {
+            this._log = function() {
+                return false
+            }
+
+            return
+        }
+
         // First try Winston.
         if (!lib || lib == "winston") {
             try {
@@ -183,7 +203,7 @@ class Anyhow {
      * Gets a nice, readable message out of the passed array of arguments.
      * @param originalArgs Any single or collection of objects that will be transformed to a message string.
      */
-    getMessage(originalArgs: any) {
+    getMessage(originalArgs: any | any[]) {
         let value
         let separated = []
         let args = []
