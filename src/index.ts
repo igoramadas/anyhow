@@ -74,7 +74,8 @@ class Anyhow {
     /**
      * Shortcut to log("debug", args).
      */
-    debug(): string {
+    debug(...args: any[]): string {
+        if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
         return this.log("debug", message)
@@ -83,7 +84,8 @@ class Anyhow {
     /**
      * Shortcut to log("info", args).
      */
-    info(): string {
+    info(...args: any[]): string {
+        if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
         return this.log("info", message)
@@ -92,7 +94,8 @@ class Anyhow {
     /**
      * Shortcut to log("warn", args).
      */
-    warn(): string {
+    warn(...args: any[]): string {
+        if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
         return this.log("warn", message)
@@ -101,7 +104,8 @@ class Anyhow {
     /**
      * Shortcut to log("error", args).
      */
-    error(): string {
+    error(...args: any[]): string {
+        if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
         return this.log("error", message)
@@ -149,7 +153,8 @@ class Anyhow {
     /**
      * Setup will try to load compatible loggers, and fall back
      * to the console if nothing was found. You can also force
-     * a specific library to be loaded passing lib = "console|winston|
+     * a specific library to be loaded passing lib = "console|winston",
+     * or "none" to disable
      * @param lib Optional, force a specific library to be used. If not passed, will try winston first then console.
      */
     setup(lib?: string): void {
@@ -229,43 +234,48 @@ class Anyhow {
         // Parse all arguments and stringify objects. Please note that fields defined
         // on the `removeFields` setting won't be added to the message.
         for (let arg of Array.from(args)) {
-            if (arg != null) {
-                let stringified = ""
+            try {
+                if (arg != null) {
+                    let stringified = ""
 
-                try {
-                    if (_.isArray(arg)) {
-                        for (value of Array.from(arg)) {
-                            stringified += JSON.stringify(value, null, 2)
+                    try {
+                        if (_.isArray(arg)) {
+                            for (value of Array.from(arg)) {
+                                stringified += JSON.stringify(value, null, 2)
+                            }
+                        } else if (_.isError(arg)) {
+                            const arrError = []
+                            if (arg.friendlyMessage != null) {
+                                arrError.push(arg.friendlyMessage)
+                            }
+                            if (arg.reason != null) {
+                                arrError.push(arg.reason)
+                            }
+                            if (arg.code != null) {
+                                arrError.push(arg.code)
+                            }
+                            arrError.push(arg.message)
+                            arrError.push(arg.stack)
+                            stringified = arrError.join(this.separator)
+                        } else if (_.isObject(arg)) {
+                            stringified = JSON.stringify(arg, null, 2)
+                        } else {
+                            stringified = arg.toString()
                         }
-                    } else if (_.isError(arg)) {
-                        const arrError = []
-                        if (arg.friendlyMessage != null) {
-                            arrError.push(arg.friendlyMessage)
-                        }
-                        if (arg.reason != null) {
-                            arrError.push(arg.reason)
-                        }
-                        if (arg.code != null) {
-                            arrError.push(arg.code)
-                        }
-                        arrError.push(arg.message)
-                        arrError.push(arg.stack)
-                        stringified = arrError.join(this.separator)
-                    } else if (_.isObject(arg)) {
-                        stringified = JSON.stringify(arg, null, 2)
-                    } else {
+                    } catch (ex) {
                         stringified = arg.toString()
                     }
-                } catch (ex) {
-                    stringified = arg.toString()
-                }
 
-                // Compact log lines?
-                if (this.compact) {
-                    stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
-                }
+                    // Compact log lines?
+                    if (this.compact) {
+                        stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
+                    }
 
-                separated.push(stringified)
+                    separated.push(stringified)
+                }
+            } catch (ex) {
+                // Critical error!
+                console.error("Anyhow.getMessage", ex)
             }
         }
 

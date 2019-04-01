@@ -43,19 +43,19 @@ declare class Anyhow {
     /**
      * Shortcut to log("debug", args).
      */
-    debug(): string;
+    debug(...args: any[]): string;
     /**
      * Shortcut to log("info", args).
      */
-    info(): string;
+    info(...args: any[]): string;
     /**
      * Shortcut to log("warn", args).
      */
-    warn(): string;
+    warn(...args: any[]): string;
     /**
      * Shortcut to log("error", args).
      */
-    error(): string;
+    error(...args: any[]): string;
     /**
      * Log directly to the console. This is the default logger handler
      * in case no other compatible libraries are found.
@@ -67,7 +67,8 @@ declare class Anyhow {
     /**
      * Setup will try to load compatible loggers, and fall back
      * to the console if nothing was found. You can also force
-     * a specific library to be loaded passing lib = "console|winston|
+     * a specific library to be loaded passing lib = "console|winston",
+     * or "none" to disable
      * @param lib Optional, force a specific library to be used. If not passed, will try winston first then console.
      */
     setup(lib?: string): void;
