@@ -16,7 +16,8 @@ declare class Anyhow {
     /**
      * A function that should be called to preprocess the arguments.
      * This is useful if you wish to remove or obfuscate data before
-     * generating the logging message.
+     * generating the logging message. Must return the processed arguments
+     * as a result.
      */
     preprocessor: Function;
     /**

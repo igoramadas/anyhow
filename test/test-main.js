@@ -184,6 +184,22 @@ describe("Anyhow Tests", function() {
             "password": "123"
         }
 
+        // Try first returning the arguments as a result.
+        anyhow.preprocessor = function(args) {
+            for (let a of args) {
+                if (a && a.password) {
+                    delete a.password
+                }
+            }
+
+            return args
+        }
+
+        if (anyhow.getMessage(obj).indexOf("123") >= 0) {
+            return done("Resulting message should not contain the password '123' (preprocessor returning a value).")
+        }
+
+        // Now without returning the arguments (it gets mutated).
         anyhow.preprocessor = function(args) {
             for (let a of args) {
                 if (a && a.password) {
@@ -192,12 +208,13 @@ describe("Anyhow Tests", function() {
             }
         }
 
-        message = anyhow.getMessage(obj)
+        if (anyhow.getMessage(obj).indexOf("123") >= 0) {
+            return done("Resulting message should not contain the password '123' (preprocessor NOT returning a value).")
 
-        if (message.indexOf("123") >= 0) {
-            done()
-        } else {
-            done(`Expected '${expected}' inside the message.`)
         }
+
+        anyhow.preprocessor = null
+
+        done()
     })
 })
