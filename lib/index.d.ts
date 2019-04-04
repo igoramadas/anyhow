@@ -68,11 +68,11 @@ declare class Anyhow {
     /**
      * Setup will try to load compatible loggers, and fall back
      * to the console if nothing was found. You can also force
-     * a specific library to be loaded passing lib = "console|winston",
+     * a specific library to be loaded passing lib = "winston|bunyan|console",
      * or "none" to disable
-     * @param lib Optional, force a specific library to be used. If not passed, will try winston first then console.
+     * @param lib Optional, force a specific library to be used. If not passed, will try winston then bunyan then console.
      */
-    setup(lib?: string): void;
+    setup(lib?: string | any, options?: any): void;
     /**
      * Default Anyhow constructor. Calls setup() by default.
      */

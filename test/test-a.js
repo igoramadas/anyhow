@@ -87,44 +87,6 @@ describe("Anyhow Tests", function() {
         }
     })
 
-    it("Log using Winston console", function(done) {
-        anyhow.setup("winston")
-
-        let winston = require("winston")
-        winston.add(new winston.transports.Console())
-
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Log to Winston")
-        }).trim()
-
-        let expected = '{"level":"info","message":"Log to Winston"}'
-
-        if (expected == logged) {
-            done()
-        } else {
-            done(`Expected '${expected}' but got '${logged}' on console.`)
-        }
-    })
-
-    it("Log using Winston console", function(done) {
-        anyhow.setup("winston")
-
-        let winston = require("winston")
-        winston.add(new winston.transports.Console())
-
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Log to Winston")
-        }).trim()
-
-        let expected = '{"level":"info","message":"Log to Winston"}'
-
-        if (logged.indexOf("level") > 0 && logged.indexOf("Winston") > 0) {
-            done()
-        } else {
-            done(`Expected '${expected}' but got '${logged}' on console.`)
-        }
-    })
-
     it("Disable logging using setup() passing 'none'", function(done) {
         anyhow.setup("none")
 
