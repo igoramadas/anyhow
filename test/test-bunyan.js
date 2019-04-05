@@ -16,13 +16,8 @@ describe("Anyhow Bunyan Tests", function() {
         anyhow = require("../index")
     })
 
-    it("Log using Bunyan console", function(done) {
+    it("Log using default auto-created Bunyan console", function(done) {
         anyhow.setup("bunyan")
-
-        let b = require("bunyan")
-        let c = b.createLogger({
-            name: "test"
-        })
 
         let logged = capcon.captureStdout(function scope() {
             anyhow.info("Log to Bunyan")
@@ -32,6 +27,24 @@ describe("Anyhow Bunyan Tests", function() {
             done()
         } else {
             done("Expected 'Log to Bunyan' on console output.")
+        }
+    })
+
+    it("Log passing Bunyan logger directly", function(done) {
+        let logger = require("bunyan").createLogger({
+            name: "test"
+        })
+
+        anyhow.setup(logger)
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Log to custom Bunyan")
+        }).trim()
+
+        if (logged.toString().indexOf("Log to custom Bunyan") > 0) {
+            done()
+        } else {
+            done("Expected 'Log to custom Bunyan' on console output.")
         }
     })
 })

@@ -16,7 +16,7 @@ describe("Anyhow Winston Tests", function() {
         anyhow = require("../index")
     })
 
-    it("Log using Winston console", function(done) {
+    it("Log using Winston default console logger", function(done) {
         anyhow.setup("winston")
 
         let winston = require("winston")
@@ -32,6 +32,27 @@ describe("Anyhow Winston Tests", function() {
             done()
         } else {
             done(`Expected '${expected}' but got '${logged}' on console.`)
+        }
+    })
+
+    it("Log passing Winston loggger directly", function(done) {
+        let winston = require("winston")
+        let logger = winston.createLogger({
+            level: "info",
+            format: winston.format.json(),
+            transports: [new winston.transports.Console()]
+        })
+
+        anyhow.setup(logger)
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Log to custom Winston")
+        }).trim()
+
+        if (logged.indexOf("Log to custom Winston") >= 0) {
+            done()
+        } else {
+            done("Expected to log 'Log to custom Winston' on console.")
         }
     })
 })
