@@ -17,7 +17,7 @@ describe("Anyhow Bunyan Tests", function() {
     })
 
     it("Log using default auto-created Bunyan console", function(done) {
-        anyhow.setup("bunyan")
+        anyhow.setup("bunyan", {})
 
         let logged = capcon.captureStdout(function scope() {
             anyhow.info("Log to Bunyan")
@@ -28,6 +28,12 @@ describe("Anyhow Bunyan Tests", function() {
         } else {
             done("Expected 'Log to Bunyan' on console output.")
         }
+    })
+
+    it("Pass custom options to Bunyan", function() {
+        anyhow.setup("bunyan", {
+            name: "MyApp"
+        })
     })
 
     it("Log passing Bunyan logger directly", function(done) {
