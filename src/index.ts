@@ -1,12 +1,13 @@
-/**
- * Anyhow
- */
+// Anyhow: index.ts
 
 /** @hidden lodash */
 const _ = require("lodash")
 /** @hidden chalk */
 let chalk = null
 
+/**
+ * This is the main (and only) class of the library.
+ */
 class Anyhow {
     private static _instance: Anyhow
     /** @hidden */
@@ -41,7 +42,7 @@ class Anyhow {
 
     /**
      * Set the separator between arguments when generating logging messages.
-     * Default separator is a vertical line " | ".
+     * Default separator is a pipe symbol " | ".
      */
     separator: string = " | "
 
@@ -49,10 +50,14 @@ class Anyhow {
      * Default console logging styles to be used in case the `chalk` module is installed.
      * Please check the `chalk` documentation for the available styles.
      */
-    styles: any = {
+    styles: object = {
+        /** Display debug logs in gray. */
         debug: ["gray"],
+        /** Display info logs in white. */
         info: ["white"],
+        /** Display warn logs in yellow. */
         warn: ["yellow"],
+        /** Display error messages in bold red. */
         error: ["red", "bold"]
     }
 
@@ -61,7 +66,6 @@ class Anyhow {
      * This is useful if you wish to remove or obfuscate data before
      * generating the logging message. Can either mutate the passed
      * arguments or return them processed as a result.
-     *
      */
     preprocessor: Function
 
@@ -162,6 +166,7 @@ class Anyhow {
      * a specific library to be loaded passing the object directly or
      * as string "winston|bunyan|console". Set "none" to disable logging.
      * @param lib Optional, force a specific library to be used. If not passed, will try winston then bunyan then console.
+     * @param options Additional options to be passed to the underlying logging library.
      */
     setup(lib?: string | any, options?: any): void {
         let found = false
@@ -246,8 +251,11 @@ class Anyhow {
     }
 
     /**
-     * Gets a nice, readable message out of the passed array of arguments.
+     * Gets a nice, readable message out of the passed  arguments.
+     * This is mainly used internally but exposed in case external
+     * modules want to make use of this feature as well.
      * @param originalArgs Any single or collection of objects that will be transformed to a message string.
+     * @returns Human readable string taken out of the parsed arguments.
      */
     getMessage(originalArgs: any | any[]): string {
         let value

@@ -67,6 +67,13 @@
 <div class="container container-main">
 	<div class="row">
 		<div class="col-8 col-content">
+			<section class="tsd-panel tsd-comment">
+				<div class="tsd-comment tsd-typography">
+					<div class="lead">
+						<p>This is the main (and only) class of the library.</p>
+					</div>
+				</div>
+			</section>
 			<section class="tsd-panel tsd-hierarchy">
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
@@ -123,7 +130,7 @@
 					<div class="tsd-signature tsd-kind-icon">compact<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol"> =&nbsp;true</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L40">index.ts:40</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L41">index.ts:41</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -139,7 +146,7 @@
 					<div class="tsd-signature tsd-kind-icon">preprocessor<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Function</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L66">index.ts:66</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L70">index.ts:70</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -157,13 +164,13 @@
 					<div class="tsd-signature tsd-kind-icon">separator<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol"> =&nbsp;&quot; | &quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L46">index.ts:46</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L47">index.ts:47</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Set the separator between arguments when generating logging messages.
-							Default separator is a vertical line &quot; | &quot;.</p>
+							Default separator is a pipe symbol &quot; | &quot;.</p>
 						</div>
 					</div>
 				</section>
@@ -180,7 +187,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L23">index.ts:23</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L24">index.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -205,7 +212,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L127">index.ts:127</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L131">index.ts:131</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -244,7 +251,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L83">index.ts:83</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L87">index.ts:87</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -272,7 +279,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L113">index.ts:113</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L117">index.ts:117</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -300,12 +307,14 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L252">index.ts:252</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L260">index.ts:260</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
 								<div class="lead">
-									<p>Gets a nice, readable message out of the passed array of arguments.</p>
+									<p>Gets a nice, readable message out of the passed  arguments.
+										This is mainly used internally but exposed in case external
+									modules want to make use of this feature as well.</p>
 								</div>
 							</div>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -318,6 +327,7 @@
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">string</span></h4>
+							<p>Human readable string taken out of the parsed arguments.</p>
 						</li>
 					</ul>
 				</section>
@@ -331,7 +341,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L93">index.ts:93</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L97">index.ts:97</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -359,7 +369,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L74">index.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L78">index.ts:78</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -397,7 +407,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L166">index.ts:166</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L171">index.ts:171</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -418,6 +428,9 @@
 								</li>
 								<li>
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> options: <span class="tsd-signature-type">any</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>Additional options to be passed to the underlying logging library.</p>
+									</div>
 								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
@@ -434,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L103">index.ts:103</a></li>
+									<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L107">index.ts:107</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -461,7 +474,7 @@
 					<div class="tsd-signature tsd-kind-icon">styles<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">object</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L52">index.ts:52</a></li>
+							<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L53">index.ts:53</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -476,9 +489,14 @@
 						<div class="tsd-signature tsd-kind-icon">debug<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;gray&quot;]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L53">index.ts:53</a></li>
+								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L55">index.ts:55</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Display debug logs in gray.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
 						<a name="styles.error-1" class="tsd-anchor"></a>
@@ -486,9 +504,14 @@
 						<div class="tsd-signature tsd-kind-icon">error<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;red&quot;, &quot;bold&quot;]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L56">index.ts:56</a></li>
+								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L61">index.ts:61</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Display error messages in bold red.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
 						<a name="styles.info-1" class="tsd-anchor"></a>
@@ -496,9 +519,14 @@
 						<div class="tsd-signature tsd-kind-icon">info<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;white&quot;]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L54">index.ts:54</a></li>
+								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L57">index.ts:57</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Display info logs in white.</p>
+							</div>
+						</div>
 					</section>
 					<section class="tsd-panel tsd-member tsd-kind-variable tsd-parent-kind-object-literal tsd-is-not-exported">
 						<a name="styles.warn-1" class="tsd-anchor"></a>
@@ -506,9 +534,14 @@
 						<div class="tsd-signature tsd-kind-icon">warn<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> =&nbsp;[&quot;yellow&quot;]</span></div>
 						<aside class="tsd-sources">
 							<ul>
-								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/eacc9cb/src/index.ts#L55">index.ts:55</a></li>
+								<li>Defined in <a href="https://github.com/igoramadas/anyhow/blob/7feee63/src/index.ts#L59">index.ts:59</a></li>
 							</ul>
 						</aside>
+						<div class="tsd-comment tsd-typography">
+							<div class="lead">
+								<p>Display warn logs in yellow.</p>
+							</div>
+						</div>
 					</section>
 				</section>
 			</section>
