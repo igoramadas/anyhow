@@ -93,7 +93,11 @@ Drop-in logging wrapper for Winston, Bunyan and console. Let the user decide whi
     // User was not mutated, logger will deep clone before logging
     console.dir(user)
 
-## Which modules use this?
+## API documentation
+
+You can browse the full API documentation at https://anyhow.devv.com.
+
+Or check these following modules that are using Anyhow for logging:
 
 * [Monitorado](https://travis-ci.org/igoramadas/monitorado)
 * [SetMeUp](https://travis-ci.org/igoramadas/setmeup)
