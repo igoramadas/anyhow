@@ -1,13 +1,11 @@
 // Anyhow: index.ts
 
-/** @hidden lodash */
+/** @hidden */
 const _ = require("lodash")
-/** @hidden chalk */
+/** @hidden */
 let chalk = null
 
-/**
- * This is the main (and only) class of the library.
- */
+/** This is the main (and only) class of the library. */
 class Anyhow {
     private static _instance: Anyhow
     /** @hidden */
