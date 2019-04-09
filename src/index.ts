@@ -261,14 +261,18 @@ class Anyhow {
         let args = []
 
         if (arguments.length > 1) {
-            for (value of Array.from(arguments)) {
-                args.push(_.cloneDeep(value))
+            originalArgs = Array.from(arguments)
+        }
+
+        if (_.isArray(originalArgs)) {
+            for (value of originalArgs) {
+                if (_.isFunction(value) || _.isError(value)) {
+                    args.push(value)
+                } else {
+                    args.push(_.cloneDeep(value))
+                }
             }
-        } else if (_.isArray(originalArgs)) {
-            for (value of Array.from(originalArgs)) {
-                args.push(_.cloneDeep(value))
-            }
-        } else if (_.isError(originalArgs)) {
+        } else if (_.isFunction(originalArgs) || _.isError(originalArgs)) {
             args.push(originalArgs)
         } else {
             args.push(_.cloneDeep(originalArgs))
@@ -315,12 +319,14 @@ class Anyhow {
                         stringified = arg.toString()
                     }
 
-                    // Compact log lines?
-                    if (this.compact) {
-                        stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
-                    }
+                    if (typeof stringified != "undefined" && stringified !== null) {
+                        // Compact log lines?
+                        if (this.compact) {
+                            stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
+                        }
 
-                    separated.push(stringified)
+                        separated.push(stringified)
+                    }
                 }
             } catch (ex) {
                 /* istanbul ignore next */
