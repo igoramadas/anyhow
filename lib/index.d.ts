@@ -77,10 +77,16 @@ declare class Anyhow {
      * Gets a nice, readable message out of the passed  arguments.
      * This is mainly used internally but exposed in case external
      * modules want to make use of this feature as well.
-     * @param originalArgs Any single or collection of objects that will be transformed to a message string.
+     * @param args Any single or collection of objects that will be transformed to a message string.
      * @returns Human readable string taken out of the parsed arguments.
      */
-    getMessage(originalArgs: any | any[]): string;
+    getMessage(args: any | any[]): string;
+    /**
+     * Used by [[getMessage]] to parse and return the individual log strings
+     * out of the passed arguments. Might run recursively.
+     * @param args Array of arguments to be parsed.
+     */
+    private parseArgsForMessage;
 }
 declare const _default: Anyhow;
 export = _default;

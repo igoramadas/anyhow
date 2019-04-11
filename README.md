@@ -72,6 +72,22 @@ logger.warn("Console output now shows yellow italic for this")
 logger.info("Info is still default gray")
 ```
 
+## Logging exceptions
+
+```javascript
+try {
+    // Some exception thrown
+    myApp.method(fails)
+} catch (ex) {
+    // User's password and token won't be loggged
+    logger.error("MyApp.MyMethod", ex)
+
+    // Do not log the stack trace by settting a _logNoStack flag.
+    ex._logNoStack = true
+    logger.error("MyApp.MyMethod", ex)
+}
+```
+
 ## Pre-processing logged messages
 
 ```javascript

@@ -252,30 +252,14 @@ class Anyhow {
      * Gets a nice, readable message out of the passed  arguments.
      * This is mainly used internally but exposed in case external
      * modules want to make use of this feature as well.
-     * @param originalArgs Any single or collection of objects that will be transformed to a message string.
+     * @param args Any single or collection of objects that will be transformed to a message string.
      * @returns Human readable string taken out of the parsed arguments.
      */
-    getMessage(originalArgs: any | any[]): string {
-        let value
-        let separated = []
-        let args = []
-
+    getMessage(args: any | any[]): string {
         if (arguments.length > 1) {
-            originalArgs = Array.from(arguments)
-        }
-
-        if (_.isArray(originalArgs)) {
-            for (value of originalArgs) {
-                if (_.isFunction(value) || _.isError(value)) {
-                    args.push(value)
-                } else {
-                    args.push(_.cloneDeep(value))
-                }
-            }
-        } else if (_.isFunction(originalArgs) || _.isError(originalArgs)) {
-            args.push(originalArgs)
-        } else {
-            args.push(_.cloneDeep(originalArgs))
+            args = Array.from(arguments)
+        } else if (!_.isArray(args)) {
+            args = [args]
         }
 
         if (this.preprocessor) {
@@ -283,31 +267,51 @@ class Anyhow {
             args = processedArgs ? processedArgs : args
         }
 
+        // Return single string log message.
+        return this.parseArgsForMessage(args).join(this.separator)
+    }
+
+    /**
+     * Used by [[getMessage]] to parse and return the individual log strings
+     * out of the passed arguments. Might run recursively.
+     * @param args Array of arguments to be parsed.
+     */
+    private parseArgsForMessage(args: any[]): string[] {
+        let result = []
+
         // Parse all arguments and stringify objects. Please note that fields defined
         // on the `removeFields` setting won't be added to the message.
-        for (let arg of Array.from(args)) {
+        for (let arg of args) {
             try {
                 if (arg != null) {
                     let stringified = ""
 
                     try {
                         if (_.isArray(arg)) {
-                            for (value of Array.from(arg)) {
-                                stringified += JSON.stringify(value, null, 2)
-                            }
+                            result = result.concat(this.parseArgsForMessage(arg))
                         } else if (_.isError(arg)) {
                             const arrError = []
-                            if (arg.friendlyMessage != null) {
+
+                            // Add error information separately.
+                            if (arg.friendlyMessage) {
                                 arrError.push(arg.friendlyMessage)
                             }
-                            if (arg.reason != null) {
+                            if (arg.reason) {
                                 arrError.push(arg.reason)
                             }
-                            if (arg.code != null) {
+                            if (arg.code) {
                                 arrError.push(arg.code)
                             }
-                            arrError.push(arg.message)
-                            arrError.push(arg.stack)
+                            if (arg.message) {
+                                arrError.push(arg.message)
+                            }
+
+                            // If you wish to avoid logging error stack traces you can
+                            // set a _logNoStack property on it.
+                            if (arg.stack && !arg._logNoStack) {
+                                arrError.push(arg.stack)
+                            }
+
                             stringified = arrError.join(this.separator)
                         } else if (_.isObject(arg)) {
                             stringified = JSON.stringify(arg, null, 2)
@@ -319,23 +323,22 @@ class Anyhow {
                         stringified = arg.toString()
                     }
 
+                    // Check if a valid message was taken, and if it needs to be compacted.
                     if (typeof stringified != "undefined" && stringified !== null) {
-                        // Compact log lines?
                         if (this.compact) {
                             stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
                         }
 
-                        separated.push(stringified)
+                        result.push(stringified)
                     }
                 }
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow.getMessage", ex)
+                console.error("Anyhow.parseArgsForMessage", ex)
             }
         }
 
-        // Return single string log message.
-        return separated.join(this.separator)
+        return result
     }
 }
 

@@ -67,82 +67,100 @@
 				<a href="https://coveralls.io/github/igoramadas/anyhow?branch=master"><img src="https://img.shields.io/coveralls/github/igoramadas/anyhow.svg?style=flat-square" alt="Coverage Status"></a></p>
 				<p>Drop-in logging wrapper for Winston, Bunyan and console. Let the user decide which one he prefers :-)</p>
 				<h2 id="basic-usage">Basic usage</h2>
-				<pre><code><span class="hljs-keyword">const</span> logger = require(<span class="hljs-string">"anyhow"</span>)
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"anyhow"</span>)
 
-// Use defaults: will <span class="hljs-keyword">try</span> loading Winston, <span class="hljs-keyword">then</span> Bunyan, <span class="hljs-literal">and</span> fall back <span class="hljs-keyword">to</span> console
+<span class="hljs-comment">// Use defaults: will try loading Winston, then Bunyan, and fall back to console</span>
 logger.setup()
 
-// <span class="hljs-built_in">Log</span> some information
+<span class="hljs-comment">// Log some information</span>
 logger.info(<span class="hljs-string">"My app has started"</span>)
 
-// Mix <span class="hljs-literal">and</span> match arguments
-logger.info({someJson: <span class="hljs-string">"text"</span>}, <span class="hljs-string">"Some string"</span>, <span class="hljs-number">123</span>)
+<span class="hljs-comment">// Mix and match arguments</span>
+logger.info({<span class="hljs-attr">someJson</span>: <span class="hljs-string">"text"</span>}, <span class="hljs-string">"Some string"</span>, <span class="hljs-number">123</span>)
 
-// <span class="hljs-built_in">Log</span> exceptions
+<span class="hljs-comment">// Log exceptions</span>
 <span class="hljs-keyword">try</span> {
     oops.itFailed()
 } <span class="hljs-keyword">catch</span> (ex) {
-    logger.<span class="hljs-built_in">error</span>(ex)
-}</code></pre><h2 id="enforcing-a-specific-library">Enforcing a specific library</h2>
-				<pre><code><span class="hljs-comment">// Use Winston default logger</span>
-logger.<span class="hljs-built_in">setup</span>(<span class="hljs-string">"winston"</span>)
+    logger.error(ex)
+}</code></pre>
+				<h2 id="enforcing-a-specific-library">Enforcing a specific library</h2>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Use Winston default logger</span>
+logger.setup(<span class="hljs-string">"winston"</span>)
 
 <span class="hljs-comment">// Or pass the Winston logger directly.</span>
 <span class="hljs-keyword">const</span> winstonLogger = winston.createLogger(options)
-logger.<span class="hljs-built_in">setup</span>(winstonLogger)
+logger.setup(winstonLogger)
 
 <span class="hljs-comment">// Same for Bunyan</span>
-logger.<span class="hljs-built_in">setup</span>(<span class="hljs-string">"bunyan"</span>)
+logger.setup(<span class="hljs-string">"bunyan"</span>)
 
 <span class="hljs-comment">// Or...</span>
 <span class="hljs-keyword">const</span> bunyanLogger = bunyan.createLogger(options)
-logger.<span class="hljs-built_in">setup</span>(bunyanLogger)
+logger.setup(bunyanLogger)
 
 <span class="hljs-comment">// Enforce using the console</span>
-logger.<span class="hljs-built_in">setup</span>(<span class="hljs-string">"console"</span>)
+logger.setup(<span class="hljs-string">"console"</span>)
 
 <span class="hljs-comment">// Disable logging</span>
-logger.<span class="hljs-built_in">setup</span>(<span class="hljs-string">"none"</span>)</code></pre><h2 id="changing-default-settings">Changing default settings</h2>
-				<pre><code>// Separate <span class="hljs-keyword">logged</span> arguments <span class="hljs-keyword">with</span> a comma <span class="hljs-keyword">instead</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">default</span> |
-logger.separator = ", "
+logger.setup(<span class="hljs-string">"none"</span>)</code></pre>
+				<h2 id="changing-default-settings">Changing default settings</h2>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Separate logged arguments with a comma instead of default |</span>
+logger.separator = <span class="hljs-string">", "</span>
 
-// Outputs "This is, now separated, by comma"
-logger.<span class="hljs-keyword">info</span>("This is", "now separated", "by comma")
+<span class="hljs-comment">// Outputs "This is, now separated, by comma"</span>
+logger.info(<span class="hljs-string">"This is"</span>, <span class="hljs-string">"now separated"</span>, <span class="hljs-string">"by comma"</span>)
 
-// <span class="hljs-keyword">Do</span> <span class="hljs-keyword">not</span> compact messages
-logger.compact = <span class="hljs-keyword">false</span>
+<span class="hljs-comment">// Do not compact messages</span>
+logger.compact = <span class="hljs-literal">false</span>
 
-// <span class="hljs-keyword">Logged</span> output will contain <span class="hljs-type">JSON</span> <span class="hljs-keyword">with</span> spaces <span class="hljs-keyword">and</span> <span class="hljs-type">line</span> breaks
-logger.<span class="hljs-keyword">info</span>(someDeepObject)
+<span class="hljs-comment">// Logged output will contain JSON with spaces and line breaks</span>
+logger.info(someDeepObject)
 
-// Make warn messages red <span class="hljs-keyword">and</span> italic <span class="hljs-keyword">instead</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">default</span> yellow
-logger.styles.warn = ["red", "italic"]
-logger.warn("Console output now shows yellow italic for this")
-logger.<span class="hljs-keyword">info</span>("Info is still default gray")</code></pre><h2 id="pre-processing-logged-messages">Pre-processing logged messages</h2>
-				<pre><code><span class="hljs-comment">// Sample user object</span>
-const user = {
-    name: <span class="hljs-string">"John Doe"</span>,
-    password: <span class="hljs-string">"mypass"</span>,
-    token: <span class="hljs-string">"sometoken"</span>
+<span class="hljs-comment">// Make warn messages red and italic instead of default yellow</span>
+logger.styles.warn = [<span class="hljs-string">"red"</span>, <span class="hljs-string">"italic"</span>]
+logger.warn(<span class="hljs-string">"Console output now shows yellow italic for this"</span>)
+logger.info(<span class="hljs-string">"Info is still default gray"</span>)</code></pre>
+				<h2 id="logging-exceptions">Logging exceptions</h2>
+				<pre><code class="language-javascript"><span class="hljs-keyword">try</span> {
+    <span class="hljs-comment">// Some exception thrown</span>
+    myApp.method(fails)
+} <span class="hljs-keyword">catch</span> (ex) {
+    <span class="hljs-comment">// User's password and token won't be loggged</span>
+    logger.error(<span class="hljs-string">"MyApp.MyMethod"</span>, ex)
+
+    <span class="hljs-comment">// Do not log the stack trace by settting a _logNoStack flag.</span>
+    ex._logNoStack = <span class="hljs-literal">true</span>
+    logger.error(<span class="hljs-string">"MyApp.MyMethod"</span>, ex)
+}</code></pre>
+				<h2 id="pre-processing-logged-messages">Pre-processing logged messages</h2>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Sample user object</span>
+<span class="hljs-keyword">const</span> user = {
+    <span class="hljs-attr">name</span>: <span class="hljs-string">"John Doe"</span>,
+    <span class="hljs-attr">password</span>: <span class="hljs-string">"mypass"</span>,
+    <span class="hljs-attr">token</span>: <span class="hljs-string">"sometoken"</span>
 }
 
 <span class="hljs-comment">// Remove passwords and tokens from logged objects</span>
-logger<span class="hljs-selector-class">.preprocessor</span> = function(args) {
-    <span class="hljs-keyword">for</span> (let <span class="hljs-selector-tag">a</span> of args) {
-        <span class="hljs-keyword">if</span> (<span class="hljs-selector-tag">a</span> &amp;&amp; <span class="hljs-selector-tag">a</span>.password) {
-            delete <span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.password</span>
-        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-selector-tag">a</span> &amp;&amp; <span class="hljs-selector-tag">a</span>.token) {
-            delete <span class="hljs-selector-tag">a</span><span class="hljs-selector-class">.token</span>
+logger.preprocessor = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">args</span>) </span>{
+    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> a <span class="hljs-keyword">of</span> args) {
+        <span class="hljs-keyword">if</span> (a &amp;&amp; a.password) {
+            <span class="hljs-keyword">delete</span> a.password
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a &amp;&amp; a.token) {
+            <span class="hljs-keyword">delete</span> a.token
         }
     }
-    return args
+    <span class="hljs-keyword">return</span> args
 }
 
 <span class="hljs-comment">// User's password and token won't be loggged</span>
 logger.info(user)
 
 <span class="hljs-comment">// User was not mutated, logger will deep clone before logging</span>
-console.dir(user)</code></pre><h2 id="which-modules-use-this-">Which modules use this?</h2>
+<span class="hljs-built_in">console</span>.dir(user)</code></pre>
+				<h2 id="api-documentation">API documentation</h2>
+				<p>You can browse the full API documentation at <a href="https://anyhow.devv.com">https://anyhow.devv.com</a>.</p>
+				<p>Or check these following modules that are using Anyhow for logging:</p>
 				<ul>
 					<li><a href="https://travis-ci.org/igoramadas/monitorado">Monitorado</a></li>
 					<li><a href="https://travis-ci.org/igoramadas/setmeup">SetMeUp</a></li>
