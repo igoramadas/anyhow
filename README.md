@@ -33,11 +33,11 @@ try {
 // Use Winston default logger
 logger.setup("winston")
 
-// Or pass the Winston logger directly.
+// Or pass the Winston logger directly
 const winstonLogger = winston.createLogger(options)
 logger.setup(winstonLogger)
 
-// Same for Bunyan
+// Same for Bunyan.
 logger.setup("bunyan")
 
 // Or...
@@ -79,12 +79,12 @@ try {
     // Some exception thrown
     myApp.method(fails)
 } catch (ex) {
-    // User's password and token won't be loggged
-    logger.error("MyApp.MyMethod", ex)
+    // By default the stack trace is not logged...
+    logger.error("error without stack trace", ex)
 
-    // Do not log the stack trace by settting a _logNoStack flag.
-    ex._logNoStack = true
-    logger.error("MyApp.MyMethod", ex)
+    // Include stack trace by settting errorStack = true
+    logger.errorStack = true
+    logger.error("error with stack trace", ex)
 }
 ```
 

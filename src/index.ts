@@ -33,10 +33,16 @@ class Anyhow {
     private _log: Function
 
     /**
-     * Default is true. Messages will be compacted (spaces and breaks removed).
+     * Messages will be compacted (spaces and breaks removed), default is true.
      * Set to false to log original values including spaces.
      */
     compact: boolean = true
+
+    /**
+     * Log error stack traces? Default is false. Use it with care!
+     * Set to true to add stack traces to the log output.
+     */
+    errorStack: boolean = false
 
     /**
      * Set the separator between arguments when generating logging messages.
@@ -249,9 +255,7 @@ class Anyhow {
     }
 
     /**
-     * Gets a nice, readable message out of the passed  arguments.
-     * This is mainly used internally but exposed in case external
-     * modules want to make use of this feature as well.
+     * Gets a nice, readable message out of the passed arguments, which can be of any type.
      * @param args Any single or collection of objects that will be transformed to a message string.
      * @returns Human readable string taken out of the parsed arguments.
      */
@@ -306,9 +310,8 @@ class Anyhow {
                                 arrError.push(arg.message)
                             }
 
-                            // If you wish to avoid logging error stack traces you can
-                            // set a _logNoStack property on it.
-                            if (arg.stack && !arg._logNoStack) {
+                            // Only add stack traces if `errorStack` is set.
+                            if (arg.stack && this.errorStack) {
                                 arrError.push(arg.stack)
                             }
 

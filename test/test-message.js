@@ -60,6 +60,18 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
+    it("Include stack trace with error messages", function(done) {
+        anyhow.errorStack = true
+
+        message = anyhow.getMessage(new Error("With stack"))
+
+        if (message.indexOf(".js") >= 0) {
+            done()
+        } else {
+            done("Expected stack trace inside the message.")
+        }
+    })
+
     it("Uses a custom separator and do not compact", function(done) {
         anyhow.separator = "/"
         anyhow.compact = false
