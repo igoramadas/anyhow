@@ -55,4 +55,22 @@ describe("Anyhow Winston Tests", function() {
             done("Expected to log 'Log to custom Winston' on console.")
         }
     })
+
+    it("Passing invalid Winston logger", function(done) {
+        let logger = {
+            invalid: true
+        }
+
+        anyhow.setup(logger)
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Invalid Winston logger should fallback")
+        }).trim()
+
+        if (logged.indexOf("Invalid Winston logger should fallback") >= 0) {
+            done()
+        } else {
+            done("Expected to fallback when passing invalid logger object.")
+        }
+    })
 })

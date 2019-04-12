@@ -5,7 +5,10 @@ const _ = require("lodash")
 /** @hidden */
 let chalk = null
 
-/** This is the main (and only) class of the library. */
+/**
+ * This is the main (and only) class of the Anyhow library.
+ * @example const logger = require("anyhow")
+ */
 class Anyhow {
     private static _instance: Anyhow
     /** @hidden */
@@ -45,6 +48,12 @@ class Anyhow {
     errorStack: boolean = false
 
     /**
+     * Array that controls which log calls are enabled. By default
+     * it's [[info]], [[warn]] and [[error]], so [[debug]] won't log anything.
+     */
+    levels: string[] = ["info", "warn", "error"]
+
+    /**
      * Set the separator between arguments when generating logging messages.
      * Default separator is a pipe symbol " | ".
      */
@@ -54,7 +63,7 @@ class Anyhow {
      * Default console logging styles to be used in case the `chalk` module is installed.
      * Please check the `chalk` documentation for the available styles.
      */
-    styles: object = {
+    styles: any = {
         /** Display debug logs in gray. */
         debug: ["gray"],
         /** Display info logs in white. */
@@ -66,12 +75,15 @@ class Anyhow {
     }
 
     /**
-     * A function that should be called to preprocess the arguments.
-     * This is useful if you wish to remove or obfuscate data before
-     * generating the logging message. Can either mutate the passed
-     * arguments or return them processed as a result.
+     * A function(arrayOfObjects) that should be called to preprocess the arguments.
+     * This is useful if you wish to remove or obfuscate data before generating the
+     * logging message. Can either mutate the passed arguments or return the
+     * processed array as a result.
      */
     preprocessor: Function
+
+    // LOGGING METHODS
+    // --------------------------------------------------------------------------
 
     /**
      * Default logging method.
@@ -80,6 +92,8 @@ class Anyhow {
      * @returns The generated message that was just logged.
      */
     log(level: string, args: any | any[]): string {
+        if (this.levels.indexOf(level.toLowerCase()) < 0) return null
+
         let message = _.isString(args) ? args : this.getMessage(args)
         this._log(level, message)
         return message
@@ -133,6 +147,8 @@ class Anyhow {
      * @returns The generated message that was just logged.
      */
     console(level: string, args: any): string {
+        if (this.levels.indexOf(level.toLowerCase()) < 0) return null
+
         let message = _.isString(args) ? args : this.getMessage(args)
         let styledMessage = message
         let logMethod = console.log
@@ -143,7 +159,7 @@ class Anyhow {
         }
 
         // Is chalk installed? Use it to colorize the messages.
-        if (chalk) {
+        if (chalk && this.styles) {
             let styles = this.styles[level]
             let chalkStyle
 
@@ -194,9 +210,11 @@ class Anyhow {
             if (lib.constructor.name == "DerivedLogger" && lib.format && lib.level) {
                 winston = lib
                 lib = "winston"
-            } else if (lib.constructor.name == "Logger" && lib.fields && lib._events) {
+            } else if (lib.constructor.name == "Logger" && lib.fields) {
                 bunyan = lib
                 lib = "bunyan"
+            } else {
+                console.warn("Anyhow.setup", "Passed object was not recognized as Winston or Bunyan.")
             }
         }
 
@@ -215,7 +233,7 @@ class Anyhow {
                 found = true
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow", "Could not load winston", ex)
+                console.error("Anyhow.setup", "Could not load winston", ex)
             }
         }
 
@@ -238,7 +256,7 @@ class Anyhow {
                 found = true
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow", "Could not load bunyan", ex)
+                console.error("Anyhow.setup", "Could not load bunyan", ex)
             }
         }
 
@@ -306,6 +324,8 @@ class Anyhow {
                             if (arg.code) {
                                 arrError.push(arg.code)
                             }
+
+                            /* istanbul ignore else */
                             if (arg.message) {
                                 arrError.push(arg.message)
                             }
@@ -327,6 +347,7 @@ class Anyhow {
                     }
 
                     // Check if a valid message was taken, and if it needs to be compacted.
+                    /* istanbul ignore else */
                     if (typeof stringified != "undefined" && stringified !== null) {
                         if (this.compact) {
                             stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")

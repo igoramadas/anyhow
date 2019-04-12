@@ -41,11 +41,10 @@ describe("Anyhow Message Tests", function() {
     })
 
     it("Transform error into a message using getMessage()", function(done) {
-        let expected = "This is an error"
         let message = null
 
         try {
-            throw new Error(expected)
+            throw new Error("This is an error")
         } catch (ex) {
             ex.friendlyMessage = "This is a friendly message"
             ex.reason = "This is a reason"
@@ -53,10 +52,10 @@ describe("Anyhow Message Tests", function() {
             message = anyhow.getMessage(ex)
         }
 
-        if (message.indexOf(expected) >= 0) {
+        if (message.indexOf("500") >= 0 && message.indexOf("error") >= 0) {
             done()
         } else {
-            done(`Expected '${expected}' inside the message.`)
+            done(`Expected at least '500' and 'error' inside the message, but got ${message}`)
         }
     })
 
