@@ -216,6 +216,6 @@ You can browse the full API documentation at https://anyhow.devv.com.
 
 Or check these following modules that are using Anyhow for logging:
 
-* [Expresser](https://travis-ci.org/igoramadas/expresser)
-* [Monitorado](https://travis-ci.org/igoramadas/monitorado)
-* [SetMeUp](https://travis-ci.org/igoramadas/setmeup)
+* [Expresser](https://github.com/igoramadas/expresser)
+* [Monitorado](https://github.com/igoramadas/monitorado)
+* [SetMeUp](https://github.com/igoramadas/setmeup)
