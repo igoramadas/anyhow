@@ -4,8 +4,10 @@
     "description": "Drop-in wrapper for Winston, Bunyan and console logs.",
     "keywords": [
         "anyhow",
+        "bunyan",
         "console",
         "logger",
+        "logging",
         "winston"
     ],
     "author": "Igor Ramadas <igor@devv.com>",

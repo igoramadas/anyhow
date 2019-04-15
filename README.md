@@ -1,6 +1,6 @@
 # Anyhow
 
-[![Build Status](https://img.shields.io/npm/v/anyhow.svg)](https://npmjs.com/package/anyhow)
+[![Version](https://img.shields.io/npm/v/anyhow.svg)](https://npmjs.com/package/anyhow)
 [![Build Status](https://img.shields.io/travis/igoramadas/anyhow.svg)](https://travis-ci.org/igoramadas/anyhow)
 [![Coverage Status](https://img.shields.io/coveralls/github/igoramadas/anyhow.svg)](https://coveralls.io/github/igoramadas/anyhow?branch=master)
 
@@ -182,29 +182,31 @@ if you also have the [chalk](https://www.npmjs.com/package/chalk) module install
 
 ## Methods
 
-#### console(level: string, args: object[])
+#### console(level, args) -> string
 
 Log to console directly, regardless of which library is currently active. First argument is
 the `level` string, and second is array of things to be logged.
+Returns the final, parsed message that was logged.
 
-#### log(level: string, args: object[])
+#### log(level, args) -> string
 
 Main logging method. First argument is the `level` string, and second is array of things to be logged.
 Please note that only "info", "warn" and "error" levels are enabled by default.
+Returns the final, parsed message that was logged.
 
-#### debug(...args)
+#### debug(...args) -> string
 
 Shortcut to log("debug", args). Please note that "debug" is not included on the default `levels`.
 
-#### info(...args)
+#### info(...args) -> string
 
 Shortcut to log("info", args).
 
-#### warn(...args)
+#### warn(...args) -> string
 
 Shortcut to log("warn", args).
 
-#### error(...args)
+#### error(...args) -> string
 
 Shortcut to log("error", args).
 
