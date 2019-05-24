@@ -36,6 +36,19 @@ class Anyhow {
     private _log: Function
 
     /**
+     * Name of the current library being used, populated on setup().
+     * Possible values are console, winston, bunyan and pino.
+     */
+    private _lib: string = null
+
+    /**
+     * Getter for _lib, to be used by external modules.
+     */
+    get lib() {
+        return this._lib
+    }
+
+    /**
      * Messages will be compacted (spaces and breaks removed), default is true.
      * Set to false to log original values including spaces.
      */
@@ -190,7 +203,7 @@ class Anyhow {
      */
     setup(lib?: string | any, options?: any): void {
         let found = false
-        let winston, bunyan
+        let winston, bunyan, pino
 
         // Set defaults.
         lib = lib || "console"
@@ -198,6 +211,7 @@ class Anyhow {
 
         // Passed "none"? This will effectively disable logging.
         if (lib == "none") {
+            this._lib = null
             this._log = function() {
                 return false
             }
@@ -213,8 +227,11 @@ class Anyhow {
             } else if (lib.constructor.name == "Logger" && lib.fields) {
                 bunyan = lib
                 lib = "bunyan"
+            } else if (lib.constructor.name == "Pino" && lib.levels) {
+                bunyan = lib
+                lib = "pino"
             } else {
-                console.warn("Anyhow.setup", "Passed object was not recognized as Winston or Bunyan.")
+                console.warn("Anyhow.setup", "Passed object was not recognized as Winston / Bunyan / Pino.")
             }
         }
 
@@ -226,6 +243,7 @@ class Anyhow {
                     winston = require("winston")
                 }
 
+                this._lib = "winston"
                 this._log = function(level, message) {
                     winston.log({level: level, message: message})
                 }
@@ -249,6 +267,7 @@ class Anyhow {
                     bunyan = require("bunyan").createLogger(options)
                 }
 
+                this._lib = "bunyan"
                 this._log = function(level, message) {
                     bunyan[level](message)
                 }
@@ -260,6 +279,30 @@ class Anyhow {
             }
         }
 
+        // Then Pino. It will check if a Pino logger was passed directly
+        // as `lib`, or create a default logger if passed as string.
+        if (lib == "pino") {
+            try {
+                if (!options.name) {
+                    options.name = "Anyhow"
+                }
+
+                if (!pino) {
+                    pino = require("pino")()
+                }
+
+                this._lib = "pino"
+                this._log = function(level, message) {
+                    pino[level](message)
+                }
+
+                found = true
+            } catch (ex) {
+                /* istanbul ignore next */
+                console.error("Anyhow.setup", "Could not load pino", ex)
+            }
+        }
+
         // No logging libraries found? Fall back to console.
         if (!found) {
             try {
@@ -268,6 +311,7 @@ class Anyhow {
                 }
             } catch (ex) {}
 
+            this._lib = "console"
             this._log = (level, message) => this.console(level, message)
         }
     }

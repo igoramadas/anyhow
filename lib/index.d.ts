@@ -15,6 +15,15 @@ declare class Anyhow {
      */
     private _log;
     /**
+     * Name of the current library being used, populated on setup().
+     * Possible values are console, winston, bunyan and pino.
+     */
+    private _lib;
+    /**
+     * Getter for _lib, to be used by external modules.
+     */
+    readonly lib: string;
+    /**
      * Messages will be compacted (spaces and breaks removed), default is true.
      * Set to false to log original values including spaces.
      */

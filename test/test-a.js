@@ -162,6 +162,8 @@ describe("Anyhow Tests", function() {
 
         if (logged.indexOf("should") > 0) {
             done(`Nothing should be logged, but got: ${logged}`)
+        } else if (anyhow.lib != null) {
+            done(`The .lib property should be null, but got: ${anyhow.lib}`)
         } else {
             done()
         }
