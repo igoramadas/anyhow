@@ -21,6 +21,18 @@ describe("Anyhow Tests", function() {
         anyhow.preprocessor = null
     })
 
+    it("Calling log() before setup() warns and defaults to console", function(done) {
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Log before setup")
+        }).toString()
+
+        if (logged.indexOf("please call") && logged.indexOf("setup")) {
+            done()
+        } else {
+            done("Expected warning to call setup() first.")
+        }
+    })
+
     it("Checking isReady should return false before calling setup()", function(done) {
         if (anyhow.isReady) {
             done("Calling isReady should have returned false.")
