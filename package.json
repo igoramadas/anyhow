@@ -6,6 +6,7 @@
         "anyhow",
         "bunyan",
         "console",
+        "log",
         "logger",
         "logging",
         "pino",

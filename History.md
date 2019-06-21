@@ -2,7 +2,7 @@
 
 1.1.2
 =====
-* Calling log before setup() will warn and default to console.
+* Calling log() before setup() will warn and default to console.
 
 1.1.1
 =====
