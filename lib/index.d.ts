@@ -61,6 +61,13 @@ declare class Anyhow {
      */
     preprocessor: Function;
     /**
+     * Function to catch and log uncaught exceptions, set by [[logUncaughtExceptions]].
+     */
+    private _uncaughtExceptionHandler;
+    /** Returns true if the uncaught exception handler is set, false otherwise. */
+    /** Enable or disable the uncaught exception handler to log unhandled exceptions. */
+    logUncaughtExceptions: boolean;
+    /**
      * Default logging method.
      * @param level String representing the level: error, warn, info, verbose, debug, silly
      * @param args Array of arguments to be logged.

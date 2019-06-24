@@ -1,7 +1,8 @@
 # Changelog for Anyhow
 
-1.1.4
+1.2.0
 =====
+* NEW! Option uncaughtExceptions to auto log uncaught exceptions, defaults to false.
 * NEW! Option levelOnConsole to output log level to console, defaults to false.
 
 1.1.3

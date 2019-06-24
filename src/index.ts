@@ -101,6 +101,31 @@ class Anyhow {
      */
     preprocessor: Function
 
+    /**
+     * Function to catch and log uncaught exceptions, set by [[logUncaughtExceptions]].
+     */
+    private _uncaughtExceptionHandler: Function = null
+
+    /** Returns true if the uncaught exception handler is set, false otherwise. */
+    get uncaughtExceptions() {
+        return this._uncaughtExceptionHandler != null
+    }
+
+    /** Enable or disable the uncaught exception handler to log unhandled exceptions. */
+    set uncaughtExceptions(value) {
+        if (value) {
+            this._uncaughtExceptionHandler = err => {
+                this.error("Uncaught exception", err)
+            }
+            process.on("uncaughtException" as any, this._uncaughtExceptionHandler as any)
+        } else {
+            if (this._uncaughtExceptionHandler) {
+                process.off("uncaughtException", this._uncaughtExceptionHandler as any)
+            }
+            this._uncaughtExceptionHandler = null
+        }
+    }
+
     // LOGGING METHODS
     // --------------------------------------------------------------------------
 
