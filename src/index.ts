@@ -116,6 +116,7 @@ class Anyhow {
         if (value) {
             this._uncaughtExceptionHandler = err => {
                 this.error("Uncaught exception", err)
+                return
             }
             process.on("uncaughtException" as any, this._uncaughtExceptionHandler as any)
         } else {

@@ -53,7 +53,7 @@ describe("Anyhow Tests", function() {
 
     it("Log info to console based on simple arguments", function(done) {
         anyhow.setup("console")
-        anyhow.logUncaughtExceptions = true
+        anyhow.uncaughtExceptions = true
 
         if (!anyhow.isReady) {
             done("Calling isReady should return true.")
@@ -185,7 +185,7 @@ describe("Anyhow Tests", function() {
 
     it("Disable logging using setup() passing 'none'", function(done) {
         anyhow.setup("none")
-        anyhow.logUncaughtExceptions = false
+        anyhow.uncaughtExceptions = false
 
         let logged = capcon.captureStdout(function scope() {
             anyhow.info("Nothing should be logged")
