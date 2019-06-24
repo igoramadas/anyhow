@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.1.3
+=====
+* Removed .git from package.
+
 1.1.2
 =====
 * Calling log() before setup() will warn and default to console.
