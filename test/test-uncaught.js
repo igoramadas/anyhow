@@ -47,7 +47,7 @@ let messageHandler = message => {
 process.on("message", messageHandler)
 
 if (describe) {
-    describe("Anyhow Tests", function() {
+    describe("Anyhow Uncaught Exception Test", function() {
         let anyhow = null
 
         before(function() {

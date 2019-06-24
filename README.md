@@ -151,6 +151,19 @@ logger.info(user)
 console.dir(user)
 ```
 
+### Logging uncaught exceptions
+
+```javascript
+logger.uncaughtExceptions = true
+
+// Throw some exception.
+let notFunction = true
+notFunction()
+
+// Will log the "Not a function" exception to the current transport.
+// Code will not execute from here, but exception was logged to the console.
+```
+
 ## Options
 
 #### compact (true)
@@ -169,6 +182,10 @@ Array of string, defines which logging levels are enabled. Possible logging leve
 #### levelOnConsole (false)
 
 Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.
+
+#### uncaughtExceptions (false)
+
+Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).
 
 #### preprocessor
 

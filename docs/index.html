@@ -193,6 +193,15 @@ logger.info(user)
 
 <span class="hljs-comment">// User was not mutated, as it will deep clone before logging.</span>
 <span class="hljs-built_in">console</span>.dir(user)</code></pre>
+				<h3 id="logging-uncaught-exceptions">Logging uncaught exceptions</h3>
+				<pre><code class="language-javascript">logger.uncaughtExceptions = <span class="hljs-literal">true</span>
+
+<span class="hljs-comment">// Throw some exception.</span>
+<span class="hljs-keyword">let</span> notFunction = <span class="hljs-literal">true</span>
+notFunction()
+
+<span class="hljs-comment">// Will log the "Not a function" exception to the current transport.</span>
+<span class="hljs-comment">// Code will not execute from here, but exception was logged to the console.</span></code></pre>
 				<h2 id="options">Options</h2>
 				<h4 id="compact-true-">compact (true)</h4>
 				<p>Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.</p>
@@ -203,6 +212,8 @@ logger.info(user)
 				[&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;].</p>
 				<h4 id="levelonconsole-false-">levelOnConsole (false)</h4>
 				<p>Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.</p>
+				<h4 id="uncaughtexceptions-false-">uncaughtExceptions (false)</h4>
+				<p>Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).</p>
 				<h4 id="preprocessor">preprocessor</h4>
 				<p>You can define a function(arrayOfObjects) that will be used to process arguments before generating
 					the final log messages. This is useful if you want to change or remove information from objects, for
