@@ -102,6 +102,10 @@ logger.info("Info is still default gray")
 logger.styles = null
 logger.warn("No console styles anymore, even if chalk is installed")
 
+// Prepend log level on the console.
+logger.levelOnConsole = true
+logger.info("This will now have 'INFO:' on the beginning of the message")
+
 try {
     // Some exception thrown.
     myApp.method(fails)
@@ -161,6 +165,10 @@ Boolean, defines if stack traces should be logged with errors and exceptions.
 
 Array of string, defines which logging levels are enabled. Possible logging levels are
 ["info", "warn", "error"].
+
+#### levelOnConsole (false)
+
+Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.
 
 #### preprocessor
 

@@ -150,6 +150,10 @@ logger.info(<span class="hljs-string">"Info is still default gray"</span>)
 logger.styles = <span class="hljs-literal">null</span>
 logger.warn(<span class="hljs-string">"No console styles anymore, even if chalk is installed"</span>)
 
+<span class="hljs-comment">// Prepend log level on the console.</span>
+logger.levelOnConsole = <span class="hljs-literal">true</span>
+logger.info(<span class="hljs-string">"This will now have 'INFO:' on the beginning of the message"</span>)
+
 <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// Some exception thrown.</span>
     myApp.method(fails)
@@ -197,6 +201,8 @@ logger.info(user)
 				<h4 id="levels-info-warn-error-">levels ([&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;])</h4>
 				<p>Array of string, defines which logging levels are enabled. Possible logging levels are
 				[&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;].</p>
+				<h4 id="levelonconsole-false-">levelOnConsole (false)</h4>
+				<p>Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.</p>
 				<h4 id="preprocessor">preprocessor</h4>
 				<p>You can define a function(arrayOfObjects) that will be used to process arguments before generating
 					the final log messages. This is useful if you want to change or remove information from objects, for

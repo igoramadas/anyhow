@@ -61,6 +61,12 @@ class Anyhow {
     errorStack: boolean = false
 
     /**
+     * Include level (INFO, WARN, ERROR etc...) on the output message when
+     * logging to the console? Default is true.
+     */
+    levelOnConsole: boolean = false
+
+    /**
      * Array that controls which log calls are enabled. By default
      * it's [[info]], [[warn]] and [[error]], so [[debug]] won't log anything.
      */
@@ -173,6 +179,11 @@ class Anyhow {
         let message = _.isString(args) ? args : this.getMessage(args)
         let styledMessage = message
         let logMethod = console.log
+
+        // Add level to the output?
+        if (this.levelOnConsole) {
+            message = `${level.toUpperCase()}: ${message}`
+        }
 
         // Check if console supports the passed level. Defaults to "log".
         if (console[level] && level != "debug") {

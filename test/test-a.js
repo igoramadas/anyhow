@@ -97,6 +97,23 @@ describe("Anyhow Tests", function() {
         }
     })
 
+    it("Output level to console with levelOnConsole = true", function(done) {
+        anyhow.levelOnConsole = true
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.info("Test i-n-f-o")
+            anyhow.error("Test e-r-r-o-r")
+        }).toString()
+
+        if (logged.indexOf("INFO") && logged.indexOf("ERROR")) {
+            done()
+        } else {
+            done("Expected 'INFO' and 'ERROR' console.")
+        }
+
+        anyhow.levelOnConsole = false
+    })
+
     it("Log calls passing empty or null arguments", function() {
         anyhow.debug()
         anyhow.info()

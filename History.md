@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.1.4
+=====
+* NEW! Option levelOnConsole to output log level to console, defaults to false.
+
 1.1.3
 =====
 * Removed .git from package.

@@ -34,6 +34,11 @@ declare class Anyhow {
      */
     errorStack: boolean;
     /**
+     * Include level (INFO, WARN, ERROR etc...) on the output message when
+     * logging to the console? Default is true.
+     */
+    levelOnConsole: boolean;
+    /**
      * Array that controls which log calls are enabled. By default
      * it's [[info]], [[warn]] and [[error]], so [[debug]] won't log anything.
      */
