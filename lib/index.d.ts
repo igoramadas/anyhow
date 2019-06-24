@@ -66,7 +66,7 @@ declare class Anyhow {
     private _uncaughtExceptionHandler;
     /** Returns true if the uncaught exception handler is set, false otherwise. */
     /** Enable or disable the uncaught exception handler to log unhandled exceptions. */
-    logUncaughtExceptions: boolean;
+    uncaughtExceptions: boolean;
     /**
      * Default logging method.
      * @param level String representing the level: error, warn, info, verbose, debug, silly
