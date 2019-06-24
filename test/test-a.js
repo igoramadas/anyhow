@@ -105,13 +105,13 @@ describe("Anyhow Tests", function() {
             anyhow.error("Test e-r-r-o-r")
         }).toString()
 
+        anyhow.levelOnConsole = false
+
         if (logged.indexOf("INFO") && logged.indexOf("ERROR")) {
             done()
         } else {
             done("Expected 'INFO' and 'ERROR' console.")
         }
-
-        anyhow.levelOnConsole = false
     })
 
     it("Log calls passing empty or null arguments", function() {
