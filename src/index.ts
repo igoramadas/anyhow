@@ -203,13 +203,14 @@ class Anyhow {
         if (this.levels.indexOf(level.toLowerCase()) < 0) return null
 
         let message = _.isString(args) ? args : this.getMessage(args)
-        let styledMessage = message
-        let logMethod = console.log
 
         // Add level to the output?
         if (this.levelOnConsole) {
             message = `${level.toUpperCase()}: ${message}`
         }
+
+        let styledMessage = message
+        let logMethod = console.log
 
         // Check if console supports the passed level. Defaults to "log".
         if (console[level] && level != "debug") {

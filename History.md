@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.2.1
+=====
+* Option levelOnConsole also works when messages are stylized (using chalk).
+
 1.2.0
 =====
 * NEW! Option uncaughtExceptions to auto log uncaught exceptions, defaults to false.
