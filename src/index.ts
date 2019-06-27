@@ -156,6 +156,7 @@ class Anyhow {
      * Shortcut to [[log]]("debug", args).
      */
     debug(...args: any[]): string {
+        if (this.levels.indexOf("debug") < 0) return null
         if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
@@ -166,6 +167,7 @@ class Anyhow {
      * Shortcut to [[log]]("info", args).
      */
     info(...args: any[]): string {
+        if (this.levels.indexOf("info") < 0) return null
         if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
@@ -176,6 +178,7 @@ class Anyhow {
      * Shortcut to [[log]]("warn", args).
      */
     warn(...args: any[]): string {
+        if (this.levels.indexOf("warn") < 0) return null
         if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)
@@ -186,6 +189,7 @@ class Anyhow {
      * Shortcut to [[log]]("error", args).
      */
     error(...args: any[]): string {
+        if (this.levels.indexOf("error") < 0) return null
         if (args.length < 1) return
         let params = Array.from(arguments)
         let message = this.getMessage(params)

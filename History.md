@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.2.2
+=====
+* Check for level on log shortcuts (debug, info, warn, error).
+
 1.2.1
 =====
 * Option levelOnConsole also works when messages are stylized (using chalk).
