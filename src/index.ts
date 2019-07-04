@@ -378,6 +378,7 @@ class Anyhow {
             args = [args]
         }
 
+        // If the preprocessor returns a value, use it as the new args.
         if (this.preprocessor) {
             let processedArgs = this.preprocessor(args)
             args = processedArgs ? processedArgs : args
