@@ -123,6 +123,23 @@ describe("Anyhow Tests", function() {
         anyhow.info([null], null, {}.invalid)
     })
 
+    it("Direct call to anyhow.debug()", function(done) {
+        let originalLevels = anyhow.levels
+        anyhow.levels = ["debug"]
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.debug("This is a debug log via anyhow.debug()")
+        }).toString()
+
+        anyhow.levels = originalLevels
+
+        if (logged.indexOf("debug log") > 0) {
+            done()
+        } else {
+            done("Expected 'debug log' on console.")
+        }
+    })
+
     it("Direct call to anyhow.log() passing info level and a string", function(done) {
         let logged = capcon.captureStdout(function scope() {
             anyhow.log("info", "This is a info log via anyhow.log()")
@@ -135,7 +152,7 @@ describe("Anyhow Tests", function() {
         }
     })
 
-    it("Direct call to anyhow.log() passing disabled levels", function(done) {
+    it("Do not output using disabled levels", function(done) {
         let originalLevels = anyhow.levels
         anyhow.levels = []
 
