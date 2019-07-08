@@ -135,6 +135,27 @@ describe("Anyhow Tests", function() {
         }
     })
 
+    it("Direct call to anyhow.log() passing disabled levels", function(done) {
+        let originalLevels = anyhow.levels
+        anyhow.levels = []
+
+        let logged = capcon.captureStdout(function scope() {
+            anyhow.log("invalidLevel", "This should not come up on the console.")
+            anyhow.debug("This should not come up on the console.")
+            anyhow.info("This should not come up on the console.")
+            anyhow.warn("This should not come up on the console.")
+            anyhow.error("This should not come up on the console.")
+        }).toString()
+
+        anyhow.levels = originalLevels
+
+        if (logged.indexOf("should not come up") < 0) {
+            done()
+        } else {
+            done("Log call for invalidLevel should have output null.")
+        }
+    })
+
     it("Direct call to anyhow.console() passing custom level and a string", function(done) {
         anyhow.levels.push("custom")
 

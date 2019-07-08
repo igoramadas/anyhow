@@ -64,5 +64,18 @@ if (describe) {
                 command: "throwex"
             })
         })
+
+        it("Disable catching uncaught exceptions", function(done) {
+            anyhow.uncaughtExceptions = false
+            anyhow.uncaughtExceptions = true
+
+            if (anyhow.uncaughtExceptions) {
+                anyhow.uncaughtExceptions = false
+                done()
+            } else {
+                done("The uncaughtExceptions should have returned true.")
+            }
+
+        })
     })
 }
