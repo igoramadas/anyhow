@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.2.3
+=====
+* Updated dependencies.
+
 1.2.2
 =====
 * Check for level on log shortcuts (debug, info, warn, error).
