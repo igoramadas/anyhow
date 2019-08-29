@@ -29,6 +29,11 @@ declare class Anyhow {
      */
     compact: boolean;
     /**
+     * Prepend logged messages with a timestamp on the format YY-MM-DD hh:mm:ss.
+     * default is false.
+     */
+    timestamp: boolean;
+    /**
      * Log error stack traces? Default is false. Use it with care!
      * Set to true to add stack traces to the log output.
      */

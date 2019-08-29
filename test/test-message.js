@@ -84,10 +84,25 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
+    it("Append a timestamp on messages", function(done) {
+        anyhow.timestamp = true
+        let message = anyhow.getMessage("Should have a timestamp")
+        anyhow.timestamp = false
+
+        let now = new Date()
+        let year = now.getUTCFullYear().toString()
+
+        if (message.substring(0, 2) == year.substring(2)) {
+            done()
+        } else {
+            done(`Expected year ${year.substring(2)} on the beginning of '${message}'.`)
+        }
+    })
+
     it("Enables message preprocessor to remove properties named 'password'", function(done) {
         let obj = {
-            "username": "user",
-            "password": "123"
+            username: "user",
+            password: "123"
         }
 
         // Try first returning the arguments as a result.
@@ -116,7 +131,6 @@ describe("Anyhow Message Tests", function() {
 
         if (anyhow.getMessage(obj).indexOf("123") >= 0) {
             return done("Resulting message should not contain the password '123' (preprocessor NOT returning a value).")
-
         }
 
         anyhow.preprocessor = null

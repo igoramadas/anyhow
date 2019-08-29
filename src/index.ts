@@ -55,6 +55,12 @@ class Anyhow {
     compact: boolean = true
 
     /**
+     * Prepend logged messages with a timestamp on the format YY-MM-DD hh:mm:ss.
+     * default is false.
+     */
+    timestamp: boolean = false
+
+    /**
      * Log error stack traces? Default is false. Use it with care!
      * Set to true to add stack traces to the log output.
      */
@@ -376,6 +382,26 @@ class Anyhow {
             args = Array.from(arguments)
         } else if (!_.isArray(args)) {
             args = [args]
+        }
+
+        // Add timestamp to the output?
+        if (this.timestamp) {
+            const padLeft = v => {
+                return v < 10 ? "0" + v.toString() : v.toString()
+            }
+
+            // Get date elements.
+            const now = new Date()
+            let year: any = now.getUTCFullYear().toString()
+            let month: any = now.getUTCMonth() + 1
+            let day: any = now.getUTCDate()
+            let hour: any = now.getUTCHours()
+            let minute: any = now.getUTCMinutes()
+            let second: any = now.getUTCSeconds()
+
+            // Append timestamp to the message.
+            let timestamp = `${padLeft(year.substring(2))}-${padLeft(month)}-${padLeft(day)} ${padLeft(hour)}:${padLeft(minute)}:${padLeft(second)}`
+            args.unshift(timestamp)
         }
 
         // If the preprocessor returns a value, use it as the new args.

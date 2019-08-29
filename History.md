@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+1.3.0
+=====
+* NEW! Option timestamp to prepend timestamp on logged messages.
+* Updated dependencies.
+
 1.2.3
 =====
 * Updated dependencies.
