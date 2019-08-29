@@ -62,25 +62,31 @@
 	<div class="row">
 		<div class="col-8 col-content">
 			<div class="tsd-panel tsd-typography">
-				<h1 id="anyhow">Anyhow</h1>
+				<a href="#anyhow" id="anyhow" style="color: inherit; text-decoration: none;">
+					<h1>Anyhow</h1>
+				</a>
 				<p><a href="https://npmjs.com/package/anyhow"><img src="https://img.shields.io/npm/v/anyhow.svg" alt="Version"></a>
 					<a href="https://travis-ci.org/igoramadas/anyhow"><img src="https://img.shields.io/travis/igoramadas/anyhow.svg" alt="Build Status"></a>
 				<a href="https://coveralls.io/github/igoramadas/anyhow?branch=master"><img src="https://img.shields.io/coveralls/github/igoramadas/anyhow.svg" alt="Coverage Status"></a></p>
-				<p>Drop-in logging wrapper for <a href="https://www.npmjs.com/package/winston">Winston</a>,
-					<a href="https://www.npmjs.com/package/bunyan">Bunyan</a> and <a href="https://nodejs.org/api/console.html">console</a>.
-				Let the user decide which one he prefers :-)</p>
-				<h2 id="why-">Why?</h2>
+				<p>Drop-in logging wrapper for <a href="https://www.npmjs.com/package/winston">winston</a>,
+					<a href="https://www.npmjs.com/package/bunyan">bunyan</a>, <a href="https://www.npmjs.com/package/pino">pino</a>
+				and <a href="https://nodejs.org/api/console.html">console</a>. Let the user decide which one he prefers :-)</p>
+				<a href="#why" id="why" style="color: inherit; text-decoration: none;">
+					<h2>Why?</h2>
+				</a>
 				<p>The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my
-					personal and work projects. Some were using Winston. A few other went for Bunyan. Some were simply
+					personal and work projects. Some were using winston. A few other went for bunyan. Some were simply
 				streaming to the console.</p>
 				<p>By using Anyhow we can achieve a consistent logging mechanism regardless of what library is
 					actually doing the logging. Install anyhow, replace the log calls and let it delegate the
 					actual logging to the correct library. It also has some handy features like compacting the
 				messages, pre-processing arguments and stylizing the console output.</p>
-				<h2 id="basic-usage">Basic usage</h2>
+				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
+					<h2>Basic usage</h2>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"anyhow"</span>)
 
-<span class="hljs-comment">// Use defaults: will try loading Winston, then Bunyan, and fall back to console.</span>
+<span class="hljs-comment">// Use defaults: will try loading winston, then bunyan, then pino, and fall back to console.</span>
 logger.setup()
 
 <span class="hljs-comment">// Log some text.</span>
@@ -108,27 +114,34 @@ logger.debug(<span class="hljs-string">"This will now be logged"</span>)
 
 <span class="hljs-comment">// You can also call the .log method directly, passing level as the first argument.</span>
 logger.log(<span class="hljs-string">"info"</span>, <span class="hljs-string">"This will be called as info"</span>, someExtraObject, <span class="hljs-number">123</span>)</code></pre>
-				<h3 id="enforcing-a-specific-library">Enforcing a specific library</h3>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Use Winston default logger.</span>
+				<a href="#enforcing-a-specific-library" id="enforcing-a-specific-library" style="color: inherit; text-decoration: none;">
+					<h3>Enforcing a specific library</h3>
+				</a>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Use winston default logger.</span>
 logger.setup(<span class="hljs-string">"winston"</span>)
 
-<span class="hljs-comment">// Or pass the Winston logger directly.</span>
+<span class="hljs-comment">// Or pass the winston logger directly.</span>
 <span class="hljs-keyword">const</span> winstonLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"winston"</span>).createLogger(options)
 logger.setup(winstonLogger)
 
-<span class="hljs-comment">// Same for Bunyan.</span>
+<span class="hljs-comment">// Same for bunyan.</span>
 logger.setup(<span class="hljs-string">"bunyan"</span>)
 
 <span class="hljs-comment">// Or...</span>
 <span class="hljs-keyword">const</span> bunyanLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"bunyan"</span>).createLogger(options)
 logger.setup(bunyanLogger)
 
+<span class="hljs-comment">// Also pino.</span>
+logger.setup(<span class="hljs-string">"pino"</span>)
+
 <span class="hljs-comment">// Enforce using the console.</span>
 logger.setup(<span class="hljs-string">"console"</span>)
 
 <span class="hljs-comment">// Disable logging.</span>
 logger.setup(<span class="hljs-string">"none"</span>)</code></pre>
-				<h3 id="changing-default-settings">Changing default settings</h3>
+				<a href="#changing-default-settings" id="changing-default-settings" style="color: inherit; text-decoration: none;">
+					<h3>Changing default settings</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Separate logged arguments with a ", " comma instead of default " | " pipe.</span>
 logger.separator = <span class="hljs-string">", "</span>
 
@@ -165,7 +178,9 @@ logger.info(<span class="hljs-string">"This will now have 'INFO:' on the beginni
     logger.errorStack = <span class="hljs-literal">true</span>
     logger.error(<span class="hljs-string">"error with stack trace"</span>, ex)
 }</code></pre>
-				<h3 id="pre-processing-logged-messages">Pre-processing logged messages</h3>
+				<a href="#pre-processing-logged-messages" id="pre-processing-logged-messages" style="color: inherit; text-decoration: none;">
+					<h3>Pre-processing logged messages</h3>
+				</a>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Sample user object.</span>
 <span class="hljs-keyword">const</span> user = {
     <span class="hljs-attr">name</span>: <span class="hljs-string">"John Doe"</span>,
@@ -193,7 +208,9 @@ logger.info(user)
 
 <span class="hljs-comment">// User was not mutated, as it will deep clone before logging.</span>
 <span class="hljs-built_in">console</span>.dir(user)</code></pre>
-				<h3 id="logging-uncaught-exceptions">Logging uncaught exceptions</h3>
+				<a href="#logging-uncaught-exceptions" id="logging-uncaught-exceptions" style="color: inherit; text-decoration: none;">
+					<h3>Logging uncaught exceptions</h3>
+				</a>
 				<pre><code class="language-javascript">logger.uncaughtExceptions = <span class="hljs-literal">true</span>
 
 <span class="hljs-comment">// Throw some exception.</span>
@@ -202,48 +219,82 @@ notFunction()
 
 <span class="hljs-comment">// Will log the "Not a function" exception to the current transport.</span>
 <span class="hljs-comment">// Code will not execute from here, but exception was logged to the console.</span></code></pre>
-				<h2 id="options">Options</h2>
-				<h4 id="compact-true-">compact (true)</h4>
+				<a href="#options" id="options" style="color: inherit; text-decoration: none;">
+					<h2>Options</h2>
+				</a>
+				<a href="#compact-true" id="compact-true" style="color: inherit; text-decoration: none;">
+					<h4>compact (true)</h4>
+				</a>
 				<p>Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.</p>
-				<h4 id="errorstack-false-">errorStack (false)</h4>
+				<a href="#errorstack-false" id="errorstack-false" style="color: inherit; text-decoration: none;">
+					<h4>errorStack (false)</h4>
+				</a>
 				<p>Boolean, defines if stack traces should be logged with errors and exceptions.</p>
-				<h4 id="levels-info-warn-error-">levels ([&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;])</h4>
+				<a href="#levels-quotinfoquot-quotwarnquot-quoterrorquot" id="levels-quotinfoquot-quotwarnquot-quoterrorquot" style="color: inherit; text-decoration: none;">
+					<h4>levels ([&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;])</h4>
+				</a>
 				<p>Array of string, defines which logging levels are enabled. Possible logging levels are
 				[&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;].</p>
-				<h4 id="levelonconsole-false-">levelOnConsole (false)</h4>
+				<a href="#levelonconsole-false" id="levelonconsole-false" style="color: inherit; text-decoration: none;">
+					<h4>levelOnConsole (false)</h4>
+				</a>
 				<p>Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.</p>
-				<h4 id="uncaughtexceptions-false-">uncaughtExceptions (false)</h4>
+				<a href="#uncaughtexceptions-false" id="uncaughtexceptions-false" style="color: inherit; text-decoration: none;">
+					<h4>uncaughtExceptions (false)</h4>
+				</a>
 				<p>Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).</p>
-				<h4 id="preprocessor">preprocessor</h4>
+				<a href="#preprocessor" id="preprocessor" style="color: inherit; text-decoration: none;">
+					<h4>preprocessor</h4>
+				</a>
 				<p>You can define a function(arrayOfObjects) that will be used to process arguments before generating
 					the final log messages. This is useful if you want to change or remove information from objects, for
 					instance you might want to obfuscate all <code>password</code> fields and mask <code>telephone</code> fields. The function
 				can either mutate the arrayOfObjects or return the new arguments as a result.</p>
-				<h4 id="separator-">separator (&quot; | &quot;)</h4>
+				<a href="#separator-quot--quot" id="separator-quot--quot" style="color: inherit; text-decoration: none;">
+					<h4>separator (&quot; | &quot;)</h4>
+				</a>
 				<p>String, defines the default separator between logged objects. For instance if you do a
 				<code>info(123, &quot;ABC&quot;)</code>, output will be &quot;123 | ABC&quot;.</p>
-				<h4 id="styles-object-">styles (object)</h4>
+				<a href="#styles-object" id="styles-object" style="color: inherit; text-decoration: none;">
+					<h4>styles (object)</h4>
+				</a>
 				<p>Object with keys defining the styles for each level on console output. This will only be effective
 					if you also have the <a href="https://www.npmjs.com/package/chalk">chalk</a> module installed. By default
 				<code>debug</code> is gray, <code>info</code> is white, <code>warn</code> is yellow and <code>error</code> is bold red.</p>
-				<h2 id="methods">Methods</h2>
-				<h4 id="console-level-args-string">console(level, args) -&gt; string</h4>
+				<a href="#methods" id="methods" style="color: inherit; text-decoration: none;">
+					<h2>Methods</h2>
+				</a>
+				<a href="#consolelevel-args--gt-string" id="consolelevel-args--gt-string" style="color: inherit; text-decoration: none;">
+					<h4>console(level, args) -&gt; string</h4>
+				</a>
 				<p>Log to console directly, regardless of which library is currently active. First argument is
 					the <code>level</code> string, and second is array of things to be logged.
 				Returns the final, parsed message that was logged.</p>
-				<h4 id="log-level-args-string">log(level, args) -&gt; string</h4>
+				<a href="#loglevel-args--gt-string" id="loglevel-args--gt-string" style="color: inherit; text-decoration: none;">
+					<h4>log(level, args) -&gt; string</h4>
+				</a>
 				<p>Main logging method. First argument is the <code>level</code> string, and second is array of things to be logged.
 					Please note that only &quot;info&quot;, &quot;warn&quot; and &quot;error&quot; levels are enabled by default.
 				Returns the final, parsed message that was logged.</p>
-				<h4 id="debug-args-string">debug(...args) -&gt; string</h4>
+				<a href="#debugargs--gt-string" id="debugargs--gt-string" style="color: inherit; text-decoration: none;">
+					<h4>debug(...args) -&gt; string</h4>
+				</a>
 				<p>Shortcut to log(&quot;debug&quot;, args). Please note that &quot;debug&quot; is not included on the default <code>levels</code>.</p>
-				<h4 id="info-args-string">info(...args) -&gt; string</h4>
+				<a href="#infoargs--gt-string" id="infoargs--gt-string" style="color: inherit; text-decoration: none;">
+					<h4>info(...args) -&gt; string</h4>
+				</a>
 				<p>Shortcut to log(&quot;info&quot;, args).</p>
-				<h4 id="warn-args-string">warn(...args) -&gt; string</h4>
+				<a href="#warnargs--gt-string" id="warnargs--gt-string" style="color: inherit; text-decoration: none;">
+					<h4>warn(...args) -&gt; string</h4>
+				</a>
 				<p>Shortcut to log(&quot;warn&quot;, args).</p>
-				<h4 id="error-args-string">error(...args) -&gt; string</h4>
+				<a href="#errorargs--gt-string" id="errorargs--gt-string" style="color: inherit; text-decoration: none;">
+					<h4>error(...args) -&gt; string</h4>
+				</a>
 				<p>Shortcut to log(&quot;error&quot;, args).</p>
-				<h2 id="api-documentation">API documentation</h2>
+				<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
+					<h2>API documentation</h2>
+				</a>
 				<p>You can browse the full API documentation at <a href="https://anyhow.devv.com">https://anyhow.devv.com</a>.</p>
 				<p>Or check these following modules that are using Anyhow for logging:</p>
 				<ul>
@@ -283,6 +334,7 @@ notFunction()
 				<li class="tsd-kind-function tsd-has-type-parameter"><span class="tsd-kind-icon">Function with type parameter</span></li>
 				<li class="tsd-kind-index-signature"><span class="tsd-kind-icon">Index signature</span></li>
 				<li class="tsd-kind-type-alias"><span class="tsd-kind-icon">Type alias</span></li>
+				<li class="tsd-kind-type-alias tsd-has-type-parameter"><span class="tsd-kind-icon">Type alias with type parameter</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-enum"><span class="tsd-kind-icon">Enumeration</span></li>
@@ -331,7 +383,7 @@ notFunction()
 	</div>
 </footer>
 <div class="container tsd-generator">
-	<p>Generated using <a href="http://typedoc.org/" target="_blank">TypeDoc</a></p>
+	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
 </div>
 <div class="overlay"></div>
 <script src="assets/js/main.js"></script>

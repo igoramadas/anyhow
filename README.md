@@ -4,14 +4,14 @@
 [![Build Status](https://img.shields.io/travis/igoramadas/anyhow.svg)](https://travis-ci.org/igoramadas/anyhow)
 [![Coverage Status](https://img.shields.io/coveralls/github/igoramadas/anyhow.svg)](https://coveralls.io/github/igoramadas/anyhow?branch=master)
 
-Drop-in logging wrapper for [Winston](https://www.npmjs.com/package/winston),
-[Bunyan](https://www.npmjs.com/package/bunyan) and [console](https://nodejs.org/api/console.html).
-Let the user decide which one he prefers :-)
+Drop-in logging wrapper for [winston](https://www.npmjs.com/package/winston),
+[bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino)
+and [console](https://nodejs.org/api/console.html). Let the user decide which one he prefers :-)
 
 ## Why?
 
 The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my
-personal and work projects. Some were using Winston. A few other went for Bunyan. Some were simply
+personal and work projects. Some were using winston. A few other went for bunyan. Some were simply
 streaming to the console.
 
 By using Anyhow we can achieve a consistent logging mechanism regardless of what library is
@@ -24,7 +24,7 @@ messages, pre-processing arguments and stylizing the console output.
 ```javascript
 const logger = require("anyhow")
 
-// Use defaults: will try loading Winston, then Bunyan, and fall back to console.
+// Use defaults: will try loading winston, then bunyan, then pino, and fall back to console.
 logger.setup()
 
 // Log some text.
@@ -57,19 +57,22 @@ logger.log("info", "This will be called as info", someExtraObject, 123)
 ### Enforcing a specific library
 
 ```javascript
-// Use Winston default logger.
+// Use winston default logger.
 logger.setup("winston")
 
-// Or pass the Winston logger directly.
+// Or pass the winston logger directly.
 const winstonLogger = require("winston").createLogger(options)
 logger.setup(winstonLogger)
 
-// Same for Bunyan.
+// Same for bunyan.
 logger.setup("bunyan")
 
 // Or...
 const bunyanLogger = require("bunyan").createLogger(options)
 logger.setup(bunyanLogger)
+
+// Also pino.
+logger.setup("pino")
 
 // Enforce using the console.
 logger.setup("console")
