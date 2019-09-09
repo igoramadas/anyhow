@@ -132,11 +132,7 @@ class Anyhow {
     set uncaughtExceptions(value) {
         if (value) {
             this._uncaughtExceptionHandler = err => {
-                if (this.appName) {
-                    this.error(this.appName, "Uncaught exception", err)
-                } else {
-                    this.error("Uncaught exception", err)
-                }
+                this.error(this.appName || "Anyhow", "Uncaught exception", err)
 
                 return
             }
@@ -158,11 +154,7 @@ class Anyhow {
     set unhandledRejections(value) {
         if (value) {
             this._unhandledRejectionHandler = err => {
-                if (this.appName) {
-                    this.error(this.appName, "Unhandled rejection", err)
-                } else {
-                    this.error("Unhandled rejection", err)
-                }
+                this.error(this.appName || "Anyhow", "Unhandled rejection", err)
 
                 return
             }

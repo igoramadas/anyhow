@@ -39,6 +39,7 @@ let messageHandler = message => {
         let innerAnyhow = require("../lib/index")
         innerAnyhow.setup("console")
         innerAnyhow.unhandledRejections = true
+        innerAnyhow.appName = "My App"
 
         capcon.startCapture(process.stderr, function(stdout) {
             logged += stdout
@@ -118,6 +119,7 @@ if (describe) {
         })
 
         it("Disable catching unhandled rejections", function(done) {
+            anyhow.appName = null
             anyhow.unhandledRejections = false
             anyhow.unhandledRejections = true
 
