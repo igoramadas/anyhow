@@ -24,6 +24,11 @@ declare class Anyhow {
      */
     readonly lib: string;
     /**
+     * Name of the current running app. This will be used when logging
+     * uncaught exceptions, rejections and in similar cases.
+     */
+    appName: string;
+    /**
      * Messages will be compacted (spaces and breaks removed), default is true.
      * Set to false to log original values including spaces.
      */
@@ -66,12 +71,19 @@ declare class Anyhow {
      */
     preprocessor: Function;
     /**
-     * Function to catch and log uncaught exceptions, set by [[logUncaughtExceptions]].
+     * Function to catch and log uncaught exceptions, set by [[uncaughtExceptions]].
      */
     private _uncaughtExceptionHandler;
+    /**
+     * Function to catch and log unhandled rejections, set by [[unhandledRejections]].
+     */
+    private _unhandledRejectionHandler;
     /** Returns true if the uncaught exception handler is set, false otherwise. */
-    /** Enable or disable the uncaught exception handler to log unhandled exceptions. */
+    /** Enable or disable the uncaught exception handler. */
     uncaughtExceptions: boolean;
+    /** Returns true if the unhandled rejection handler is set, false otherwise. */
+    /** Enable or disable the unhandled rejection handler. */
+    unhandledRejections: boolean;
     /**
      * Default logging method.
      * @param level String representing the level: error, warn, info, verbose, debug, silly

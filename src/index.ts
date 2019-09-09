@@ -49,6 +49,12 @@ class Anyhow {
     }
 
     /**
+     * Name of the current running app. This will be used when logging
+     * uncaught exceptions, rejections and in similar cases.
+     */
+    appName: string
+
+    /**
      * Messages will be compacted (spaces and breaks removed), default is true.
      * Set to false to log original values including spaces.
      */
@@ -108,20 +114,30 @@ class Anyhow {
     preprocessor: Function
 
     /**
-     * Function to catch and log uncaught exceptions, set by [[logUncaughtExceptions]].
+     * Function to catch and log uncaught exceptions, set by [[uncaughtExceptions]].
      */
     private _uncaughtExceptionHandler: Function = null
+
+    /**
+     * Function to catch and log unhandled rejections, set by [[unhandledRejections]].
+     */
+    private _unhandledRejectionHandler: Function = null
 
     /** Returns true if the uncaught exception handler is set, false otherwise. */
     get uncaughtExceptions() {
         return this._uncaughtExceptionHandler != null
     }
 
-    /** Enable or disable the uncaught exception handler to log unhandled exceptions. */
+    /** Enable or disable the uncaught exception handler. */
     set uncaughtExceptions(value) {
         if (value) {
             this._uncaughtExceptionHandler = err => {
-                this.error("Uncaught exception", err)
+                if (this.appName) {
+                    this.error(this.appName, "Uncaught exception", err)
+                } else {
+                    this.error("Uncaught exception", err)
+                }
+
                 return
             }
             process.on("uncaughtException" as any, this._uncaughtExceptionHandler as any)
@@ -130,6 +146,32 @@ class Anyhow {
                 process.off("uncaughtException", this._uncaughtExceptionHandler as any)
             }
             this._uncaughtExceptionHandler = null
+        }
+    }
+
+    /** Returns true if the unhandled rejection handler is set, false otherwise. */
+    get unhandledRejections() {
+        return this._unhandledRejectionHandler != null
+    }
+
+    /** Enable or disable the unhandled rejection handler. */
+    set unhandledRejections(value) {
+        if (value) {
+            this._unhandledRejectionHandler = err => {
+                if (this.appName) {
+                    this.error(this.appName, "Unhandled rejection", err)
+                } else {
+                    this.error("Unhandled rejection", err)
+                }
+
+                return
+            }
+            process.on("unhandledRejection" as any, this._unhandledRejectionHandler as any)
+        } else {
+            if (this._unhandledRejectionHandler) {
+                process.off("Unhandled rejection", this._unhandledRejectionHandler as any)
+            }
+            this._unhandledRejectionHandler = null
         }
     }
 

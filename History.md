@@ -1,5 +1,11 @@
 # Changelog for Anyhow
 
+1.4.0
+=====
+* NEW! Option unhandledRejections to auto log unhandled rejections, defaults to false.
+* NEW! Option appName to define the name or title of the running app.
+* Updated dependencies.
+
 1.3.0
 =====
 * NEW! Option timestamp to prepend timestamp on logged messages.

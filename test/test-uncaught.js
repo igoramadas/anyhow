@@ -7,21 +7,21 @@ let mocha = require("mocha")
 let before = mocha.before
 let describe = mocha.describe
 let it = mocha.it
-let uncaughtProcess
-let uncaughtDone
+let uncaughtProcess, uncaughtDone
+let unhandledProcess, unhandledDone
 
 chai.should()
 
 let messageHandler = message => {
+    let logged = ""
+
     if (message.command == "throwex") {
         let innerAnyhow = require("../lib/index")
         innerAnyhow.setup("console")
         innerAnyhow.uncaughtExceptions = true
 
-        let logged = ""
-
         capcon.startCapture(process.stderr, function(stdout) {
-            logged += stdout;
+            logged += stdout
         })
 
         let callback = () => {
@@ -29,17 +29,47 @@ let messageHandler = message => {
             innerAnyhow.uncaughtExceptions = false
 
             process.send({
-                finished: logged
+                uncaughtFinished: logged
             })
         }
 
         setTimeout(callback, 300)
         throw new Error()
-    } else if (message.finished) {
-        if (message.finished.indexOf("Uncaught exception") >= 0) {
+    } else if (message.command == "reject") {
+        let innerAnyhow = require("../lib/index")
+        innerAnyhow.setup("console")
+        innerAnyhow.unhandledRejections = true
+
+        capcon.startCapture(process.stderr, function(stdout) {
+            logged += stdout
+        })
+
+        let callback = () => {
+            capcon.stopCapture(process.stderr)
+            innerAnyhow.uncaughtExceptions = false
+
+            process.send({
+                unhandledFinished: logged
+            })
+        }
+
+        let asyncFunc = async function() {
+            throw new Error()
+        }
+
+        setTimeout(callback, 300)
+        asyncFunc()
+    } else if (message.uncaughtFinished) {
+        if (message.uncaughtFinished.indexOf("Uncaught exception") >= 0) {
             uncaughtDone()
         } else {
-            uncaughtDone("Console message should have 'Unhanlded exception'.")
+            uncaughtDone("Console message should have 'Uncaught exception'.")
+        }
+    } else if (message.unhandledFinished) {
+        if (message.unhandledFinished.indexOf("Unhandled rejection") >= 0) {
+            unhandledDone()
+        } else {
+            unhandledDone("Console message should have 'Unhanlded rejection'.")
         }
     }
 }
@@ -75,7 +105,28 @@ if (describe) {
             } else {
                 done("The uncaughtExceptions should have returned true.")
             }
+        })
 
+        it("Catch and log unhandled rejection", function(done) {
+            unhandledDone = done
+
+            unhandledProcess = childProcess.fork(`${__dirname}/test-uncaught.js`)
+            unhandledProcess.on("message", messageHandler)
+            unhandledProcess.send({
+                command: "reject"
+            })
+        })
+
+        it("Disable catching unhandled rejections", function(done) {
+            anyhow.unhandledRejections = false
+            anyhow.unhandledRejections = true
+
+            if (anyhow.unhandledRejections) {
+                anyhow.unhandledRejections = false
+                done()
+            } else {
+                done("The unhandledRejections should have returned true.")
+            }
         })
     })
 }
