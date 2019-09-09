@@ -208,17 +208,28 @@ logger.info(user)
 
 <span class="hljs-comment">// User was not mutated, as it will deep clone before logging.</span>
 <span class="hljs-built_in">console</span>.dir(user)</code></pre>
-				<a href="#logging-uncaught-exceptions" id="logging-uncaught-exceptions" style="color: inherit; text-decoration: none;">
-					<h3>Logging uncaught exceptions</h3>
+				<a href="#uncaught-and-unhandled-errors" id="uncaught-and-unhandled-errors" style="color: inherit; text-decoration: none;">
+					<h3>Uncaught and unhandled errors</h3>
 				</a>
-				<pre><code class="language-javascript">logger.uncaughtExceptions = <span class="hljs-literal">true</span>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Enable the uncaught exceptions handled.</span>
+logger.uncaughtExceptions = <span class="hljs-literal">true</span>
 
 <span class="hljs-comment">// Throw some exception.</span>
+<span class="hljs-comment">// Will log the "Not a function" exception to the current transport.</span>
+<span class="hljs-comment">// Code will not execute from here, but exception was logged to the console.</span>
 <span class="hljs-keyword">let</span> notFunction = <span class="hljs-literal">true</span>
 notFunction()
 
-<span class="hljs-comment">// Will log the "Not a function" exception to the current transport.</span>
-<span class="hljs-comment">// Code will not execute from here, but exception was logged to the console.</span></code></pre>
+<span class="hljs-comment">// Also for unhandled rejections.</span>
+logger.unhandledRejections = <span class="hljs-literal">true</span>
+
+<span class="hljs-comment">// Here a sample of unhandled rejection.</span>
+<span class="hljs-keyword">let</span> failFunction = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Oh no!"</span>)
+}
+<span class="hljs-comment">// Will log the unhandled rejection.</span>
+failFunction()
+</code></pre>
 				<a href="#options" id="options" style="color: inherit; text-decoration: none;">
 					<h2>Options</h2>
 				</a>

@@ -154,17 +154,28 @@ logger.info(user)
 console.dir(user)
 ```
 
-### Logging uncaught exceptions
+### Uncaught and unhandled errors
 
 ```javascript
+// Enable the uncaught exceptions handled.
 logger.uncaughtExceptions = true
 
 // Throw some exception.
+// Will log the "Not a function" exception to the current transport.
+// Code will not execute from here, but exception was logged to the console.
 let notFunction = true
 notFunction()
 
-// Will log the "Not a function" exception to the current transport.
-// Code will not execute from here, but exception was logged to the console.
+// Also for unhandled rejections.
+logger.unhandledRejections = true
+
+// Here a sample of unhandled rejection.
+let failFunction = async function() {
+    throw new Error("Oh no!")
+}
+// Will log the unhandled rejection.
+failFunction()
+
 ```
 
 ## Options
