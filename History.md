@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.4.1
+=====
+* Updated dependencies.
+
 1.4.0
 =====
 * NEW! Option unhandledRejections to auto log unhandled rejections, defaults to false.
