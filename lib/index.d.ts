@@ -5,11 +5,11 @@
 declare class Anyhow {
     private static _instance;
     /** @hidden */
-    static readonly Instance: Anyhow;
+    static get Instance(): Anyhow;
     /**
      * Helper to check if [[setup]] was already called and logger is ready to log.
      */
-    readonly isReady: boolean;
+    get isReady(): boolean;
     /**
      * Private logging function. This will be set on [[setup]].
      */
@@ -22,7 +22,7 @@ declare class Anyhow {
     /**
      * Getter for _lib, to be used by external modules.
      */
-    readonly lib: string;
+    get lib(): string;
     /**
      * Name of the current running app. This will be used when logging
      * uncaught exceptions, rejections and in similar cases.
@@ -79,11 +79,13 @@ declare class Anyhow {
      */
     private _unhandledRejectionHandler;
     /** Returns true if the uncaught exception handler is set, false otherwise. */
+    get uncaughtExceptions(): boolean;
     /** Enable or disable the uncaught exception handler. */
-    uncaughtExceptions: boolean;
+    set uncaughtExceptions(value: boolean);
     /** Returns true if the unhandled rejection handler is set, false otherwise. */
+    get unhandledRejections(): boolean;
     /** Enable or disable the unhandled rejection handler. */
-    unhandledRejections: boolean;
+    set unhandledRejections(value: boolean);
     /**
      * Default logging method.
      * @param level String representing the level: error, warn, info, verbose, debug, silly
