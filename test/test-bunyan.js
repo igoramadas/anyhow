@@ -13,15 +13,17 @@ describe("Anyhow Bunyan Tests", function() {
     let anyhow = null
 
     before(function() {
-        anyhow = require("../index")
+        anyhow = require("../lib/index")
     })
 
     it("Log using default auto-created Bunyan console", function(done) {
         anyhow.setup("bunyan", {})
 
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Log to Bunyan")
-        }).trim()
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.info("Log to Bunyan")
+            })
+            .trim()
 
         if (logged.toString().indexOf("Log to Bunyan") > 0) {
             done()
@@ -43,9 +45,11 @@ describe("Anyhow Bunyan Tests", function() {
 
         anyhow.setup(logger)
 
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Log to custom Bunyan")
-        }).trim()
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.info("Log to custom Bunyan")
+            })
+            .trim()
 
         if (logged.toString().indexOf("Log to custom Bunyan") > 0) {
             done()

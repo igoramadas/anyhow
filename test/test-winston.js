@@ -13,7 +13,7 @@ describe("Anyhow Winston Tests", function() {
     let anyhow = null
 
     before(function() {
-        anyhow = require("../index")
+        anyhow = require("../lib/index")
     })
 
     it("Log using Winston default console logger", function(done) {
@@ -22,9 +22,11 @@ describe("Anyhow Winston Tests", function() {
         let winston = require("winston")
         winston.add(new winston.transports.Console())
 
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Log to Winston")
-        }).trim()
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.info("Log to Winston")
+            })
+            .trim()
 
         let expected = '{"level":"info","message":"Log to Winston"}'
 
@@ -45,9 +47,11 @@ describe("Anyhow Winston Tests", function() {
 
         anyhow.setup(logger)
 
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Log to custom Winston")
-        }).trim()
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.info("Log to custom Winston")
+            })
+            .trim()
 
         if (logged.indexOf("Log to custom Winston") >= 0) {
             done()
@@ -63,9 +67,11 @@ describe("Anyhow Winston Tests", function() {
 
         anyhow.setup(logger)
 
-        let logged = capcon.captureStdout(function scope() {
-            anyhow.info("Invalid Winston logger should fallback")
-        }).trim()
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.info("Invalid Winston logger should fallback")
+            })
+            .trim()
 
         if (logged.indexOf("Invalid Winston logger should fallback") >= 0) {
             done()

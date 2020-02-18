@@ -13,12 +13,12 @@ describe("Anyhow Pino Tests", function() {
     let stdout = ""
 
     before(function() {
-        anyhow = require("../index")
+        anyhow = require("../lib/index")
 
         process.stdout.write = (function(write) {
             return function(string) {
-                stdout += string;
-                write.apply(process.stdout, arguments);
+                stdout += string
+                write.apply(process.stdout, arguments)
             }
         })(process.stdout.write)
     })

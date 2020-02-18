@@ -14,7 +14,7 @@ describe("Anyhow Message Tests", function() {
     let anyhow = null
 
     before(function() {
-        anyhow = require("../index")
+        anyhow = require("../lib/index")
     })
 
     after(function() {
