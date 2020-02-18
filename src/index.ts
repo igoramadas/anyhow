@@ -22,7 +22,7 @@ class Anyhow {
     /**
      * Helper to check if [[setup]] was already called and logger is ready to log.
      */
-    get isReady() {
+    get isReady(): boolean {
         if (this._log) {
             return true
         }
@@ -44,7 +44,7 @@ class Anyhow {
     /**
      * Getter for _lib, to be used by external modules.
      */
-    get lib() {
+    get lib(): string {
         return this._lib
     }
 
@@ -124,14 +124,14 @@ class Anyhow {
     private _unhandledRejectionHandler: Function = null
 
     /** Returns true if the uncaught exception handler is set, false otherwise. */
-    get uncaughtExceptions() {
+    get uncaughtExceptions(): boolean {
         return this._uncaughtExceptionHandler != null
     }
 
     /** Enable or disable the uncaught exception handler. */
-    set uncaughtExceptions(value) {
+    set uncaughtExceptions(value: boolean) {
         if (value) {
-            this._uncaughtExceptionHandler = err => {
+            this._uncaughtExceptionHandler = (err) => {
                 this.error(this.appName || "Anyhow", "Uncaught exception", err)
 
                 return
@@ -146,14 +146,14 @@ class Anyhow {
     }
 
     /** Returns true if the unhandled rejection handler is set, false otherwise. */
-    get unhandledRejections() {
+    get unhandledRejections(): boolean {
         return this._unhandledRejectionHandler != null
     }
 
     /** Enable or disable the unhandled rejection handler. */
-    set unhandledRejections(value) {
+    set unhandledRejections(value: boolean) {
         if (value) {
-            this._unhandledRejectionHandler = err => {
+            this._unhandledRejectionHandler = (err) => {
                 this.error(this.appName || "Anyhow", "Unhandled rejection", err)
 
                 return
@@ -420,7 +420,7 @@ class Anyhow {
 
         // Add timestamp to the output?
         if (this.timestamp) {
-            const padLeft = v => {
+            const padLeft = (v) => {
                 return v < 10 ? "0" + v.toString() : v.toString()
             }
 
