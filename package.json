@@ -17,7 +17,8 @@
     "homepage": "https://anyhow.devv.com",
     "subdomain": "anyhow",
     "license": "MIT",
-    "main": "index",
+    "main": "lib/index.js",
+    "types": "lib/index.d.ts",
     "repository": {
         "type": "git",
         "url": "https://github.com/igoramadas/anyhow.git"
