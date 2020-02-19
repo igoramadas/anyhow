@@ -1,8 +1,6 @@
 // Anyhow: index.ts
 
-/** @hidden */
-const _ = require("lodash")
-/** @hidden */
+import _ = require("lodash")
 let chalk = null
 
 /**
