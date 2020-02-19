@@ -193,44 +193,40 @@ class Anyhow {
     /**
      * Shortcut to [[log]]("debug", args).
      */
-    debug(...args: any[]): string {
+    debug = (...args: any[]): string => {
         if (this.levels.indexOf("debug") < 0) return null
         if (args.length < 1) return
-        let params = Array.from(arguments)
-        let message = this.getMessage(params)
+        let message = this.getMessage(args)
         return this.log("debug", message)
     }
 
     /**
      * Shortcut to [[log]]("info", args).
      */
-    info(...args: any[]): string {
+    info = (...args: any[]): string => {
         if (this.levels.indexOf("info") < 0) return null
         if (args.length < 1) return
-        let params = Array.from(arguments)
-        let message = this.getMessage(params)
+        let message = this.getMessage(args)
         return this.log("info", message)
     }
 
     /**
      * Shortcut to [[log]]("warn", args).
      */
-    warn(...args: any[]): string {
+    warn = (...args: any[]): string => {
         if (this.levels.indexOf("warn") < 0) return null
         if (args.length < 1) return
-        let params = Array.from(arguments)
-        let message = this.getMessage(params)
+        let message = this.getMessage(args)
         return this.log("warn", message)
     }
 
     /**
      * Shortcut to [[log]]("error", args).
      */
-    error(...args: any[]): string {
+    error = (...args: any[]): string => {
         if (this.levels.indexOf("error") < 0) return null
         if (args.length < 1) return
-        let params = Array.from(arguments)
-        let message = this.getMessage(params)
+        let message = this.getMessage(args)
         return this.log("error", message)
     }
 
@@ -241,7 +237,7 @@ class Anyhow {
      * @param args Array of arguments to be logged.
      * @returns The generated message that was just logged.
      */
-    console(level: string, args: any): string {
+    console = (level: string, args: any): string => {
         if (this.levels.indexOf(level.toLowerCase()) < 0) return null
 
         let message = _.isString(args) ? args : this.getMessage(args)
@@ -289,7 +285,7 @@ class Anyhow {
      * @param lib Optional, force a specific library to be used. If not passed, will try winston then bunyan then console.
      * @param options Additional options to be passed to the underlying logging library.
      */
-    setup(lib?: string | any, options?: any): void {
+    setup = (lib?: string | any, options?: any): void => {
         let found = false
         let winston, bunyan, pino
 
@@ -409,12 +405,12 @@ class Anyhow {
      * @param args Any single or collection of objects that will be transformed to a message string.
      * @returns Human readable string taken out of the parsed arguments.
      */
-    getMessage(args: any | any[]): string {
-        if (arguments.length > 1) {
-            args = Array.from(arguments)
-        } else if (!_.isArray(args)) {
+    getMessage = (...args: any | any[]): string => {
+        if (!_.isArray(args)) {
             args = [args]
         }
+
+        args = _.flattenDeep(args)
 
         // Add timestamp to the output?
         if (this.timestamp) {

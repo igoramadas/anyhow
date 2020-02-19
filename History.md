@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+1.5.1
+=====
+* Force flatten arrays on getMessage().
+
 1.5.0
 =====
 * TypeScript types are now exported with the library.
