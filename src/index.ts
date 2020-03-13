@@ -1,6 +1,6 @@
 // Anyhow: index.ts
 
-import _ = require("lodash")
+import _ from "lodash"
 let chalk = null
 
 /**
