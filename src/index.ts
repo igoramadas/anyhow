@@ -296,7 +296,7 @@ class Anyhow {
         // Passed "none"? This will effectively disable logging.
         if (lib == "none") {
             this._lib = null
-            this._log = function() {
+            this._log = function () {
                 return false
             }
 
@@ -328,7 +328,7 @@ class Anyhow {
                 }
 
                 this._lib = "winston"
-                this._log = function(level, message) {
+                this._log = function (level, message) {
                     winston.log({level: level, message: message})
                 }
 
@@ -352,7 +352,7 @@ class Anyhow {
                 }
 
                 this._lib = "bunyan"
-                this._log = function(level, message) {
+                this._log = function (level, message) {
                     bunyan[level](message)
                 }
 
@@ -376,7 +376,7 @@ class Anyhow {
                 }
 
                 this._lib = "pino"
-                this._log = function(level, message) {
+                this._log = function (level, message) {
                     pino[level](message)
                 }
 
@@ -477,6 +477,16 @@ class Anyhow {
                             /* istanbul ignore else */
                             if (arg.message) {
                                 arrError.push(arg.message)
+                            }
+
+                            // Errors from axios.
+                            if (arg.response && arg.response.data) {
+                                if (arg.response.data.message) {
+                                    arrError.push(arg.response.data.message.toString())
+                                }
+                                if (arg.response.data.error) {
+                                    arrError.push(arg.response.data.error.toString())
+                                }
                             }
 
                             // Only add stack traces if `errorStack` is set.

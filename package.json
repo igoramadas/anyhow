@@ -1,6 +1,6 @@
 {
     "name": "anyhow",
-    "version": "1.5.3",
+    "version": "1.5.5",
     "description": "Drop-in wrapper for Winston, Bunyan, Pino and console logs.",
     "keywords": [
         "anyhow",
@@ -34,7 +34,7 @@
         "lodash": "4.17.15"
     },
     "devDependencies": {
-        "@types/node": "^13.13.4",
+        "@types/node": "^14.0.1",
         "bunyan": "^1.8.12",
         "capture-console": "^1.0.1",
         "chai": "^4.2.0",
@@ -46,7 +46,7 @@
         "pino": "^6.2.1",
         "supertest": "^4.0.2",
         "typedoc": "^0.17.6",
-        "typescript": "^3.8.3",
+        "typescript": "^3.9.2",
         "winston": "^3.2.1"
     },
     "nyc": {

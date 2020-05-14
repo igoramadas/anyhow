@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+1.5.5
+=====
+* Improved parsing of errors, now getting message from axios responses.
+* Updated dependencies.
+
 1.5.3
 =====
 * Updated dependencies.
