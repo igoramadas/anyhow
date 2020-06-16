@@ -1,17 +1,19 @@
 {
     "name": "anyhow",
-    "version": "1.5.5",
+    "version": "2.0.0",
     "description": "Drop-in wrapper for Winston, Bunyan, Pino and console logs.",
     "keywords": [
         "anyhow",
         "bunyan",
         "console",
+        "gcloud",
         "log",
         "logger",
         "logging",
         "pino",
-        "winston",
-        "syslog"
+        "syslog",
+        "stackdriver",
+        "winston"
     ],
     "author": "Igor Ramadas <igor@devv.com>",
     "homepage": "https://anyhow.devv.com",
@@ -34,19 +36,20 @@
         "lodash": "4.17.15"
     },
     "devDependencies": {
-        "@types/node": "^14.0.1",
+        "@google-cloud/logging": "^8.0.0",
+        "@types/node": "^14.0.13",
         "bunyan": "^1.8.12",
         "capture-console": "^1.0.1",
         "chai": "^4.2.0",
-        "chalk": "^4.0.0",
+        "chalk": "^4.1.0",
         "coveralls": "^3.1.0",
-        "mocha": "^7.1.2",
+        "mocha": "^8.0.1",
         "mocha-lcov-reporter": "^1.3.0",
-        "nyc": "^15.0.1",
-        "pino": "^6.2.1",
+        "nyc": "^15.1.0",
+        "pino": "^6.3.2",
         "supertest": "^4.0.2",
-        "typedoc": "^0.17.6",
-        "typescript": "^3.9.2",
+        "typedoc": "^0.17.7",
+        "typescript": "^3.9.5",
         "winston": "^3.2.1"
     },
     "nyc": {

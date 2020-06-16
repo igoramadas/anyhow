@@ -9,15 +9,15 @@ let it = mocha.it
 
 chai.should()
 
-describe("Anyhow Bunyan Tests", function() {
+describe("Anyhow Bunyan Tests", function () {
     let anyhow = null
 
-    before(function() {
+    before(function () {
         anyhow = require("../lib/index")
     })
 
-    it("Log using default auto-created Bunyan console", function(done) {
-        anyhow.setup("bunyan", {})
+    it("Log using default auto-generated Bunyan logger", function (done) {
+        anyhow.setup("bunyan")
 
         let logged = capcon
             .captureStdout(function scope() {
@@ -32,18 +32,18 @@ describe("Anyhow Bunyan Tests", function() {
         }
     })
 
-    it("Pass custom options to Bunyan", function() {
+    it("Pass custom options to Bunyan", function () {
         anyhow.setup("bunyan", {
             name: "MyApp"
         })
     })
 
-    it("Log passing Bunyan logger directly", function(done) {
+    it("Log passing Bunyan logger directly", function (done) {
         let logger = require("bunyan").createLogger({
             name: "test"
         })
 
-        anyhow.setup(logger)
+        anyhow.setup({name: "bunyan", instance: logger})
 
         let logged = capcon
             .captureStdout(function scope() {

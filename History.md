@@ -1,5 +1,11 @@
 # Changelog for Anyhow
 
+2.0.0
+=====
+* NEW! Support for Google Cloud Logging (formely Stackdriver).
+* NEW! Support for custom loggers.
+* Major code refactoring.
+
 1.5.5
 =====
 * Improved parsing of errors, now getting message from axios responses.

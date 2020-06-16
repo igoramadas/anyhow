@@ -8,23 +8,23 @@ let it = mocha.it
 
 chai.should()
 
-describe("Anyhow Pino Tests", function() {
+describe("Anyhow Pino Tests", function () {
     let anyhow = null
     let stdout = ""
 
-    before(function() {
+    before(function () {
         anyhow = require("../lib/index")
 
-        process.stdout.write = (function(write) {
-            return function(string) {
+        process.stdout.write = (function (write) {
+            return function (string) {
                 stdout += string
                 write.apply(process.stdout, arguments)
             }
         })(process.stdout.write)
     })
 
-    it("Log using default auto-created Pino console", function(done) {
-        anyhow.setup("pino", {})
+    it("Log using default auto-generated Pino logger", function (done) {
+        anyhow.setup("pino")
         anyhow.info("Log to Pino")
 
         if (stdout.indexOf("Log to Pino") > 0) {
@@ -34,16 +34,16 @@ describe("Anyhow Pino Tests", function() {
         }
     })
 
-    it("Pass custom options to Pino", function() {
+    it("Pass custom options to Pino", function () {
         anyhow.setup("pino", {
             name: "MyApp"
         })
     })
 
-    it("Log passing Pino logger directly", function(done) {
+    it("Log passing Pino logger directly", function (done) {
         let logger = require("pino")()
 
-        anyhow.setup(logger)
+        anyhow.setup({name: "pino", instance: logger})
         anyhow.info("Log to custom Pino")
 
         if (stdout.indexOf("Log to custom Pino") < 0) {

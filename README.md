@@ -4,27 +4,20 @@
 [![Build Status](https://img.shields.io/travis/igoramadas/anyhow.svg)](https://travis-ci.org/igoramadas/anyhow)
 [![Coverage Status](https://img.shields.io/coveralls/github/igoramadas/anyhow.svg)](https://coveralls.io/github/igoramadas/anyhow?branch=master)
 
-Drop-in logging wrapper for [winston](https://www.npmjs.com/package/winston),
-[bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino)
-and [console](https://nodejs.org/api/console.html). Let the user decide which one he prefers :-)
+Drop-in logging wrapper for [Winston](https://www.npmjs.com/package/winston), [Bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino), [Google Cloud Logging](https://github.com/googleapis/nodejs-logging) and [console](https://nodejs.org/api/console.html).
 
 ## Why?
 
-The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my
-personal and work projects. Some were using winston. A few other went for bunyan. Some were simply
-streaming to the console.
+The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my personal and work projects. Some were using winston. A few other went for bunyan. Some were simply streaming to the console.
 
-By using Anyhow we can achieve a consistent logging mechanism regardless of what library is
-actually doing the logging. Install anyhow, replace the log calls and let it delegate the
-actual logging to the correct library. It also has some handy features like compacting the
-messages, pre-processing arguments and stylizing the console output.
+By using Anyhow we can achieve a consistent logging mechanism regardless of what library is actually doing the logging. Install Anyhow, replace the log calls and let it delegate the actual logging to the correct library. It also has some handy features like compacting the messages, pre-processing arguments and stylizing the console output.
 
 ## Basic usage
 
 ```javascript
 const logger = require("anyhow")
 
-// Use defaults: will try loading winston, then bunyan, then pino, and fall back to console.
+// Setup passing no arguments will default to the console.
 logger.setup()
 
 // Log some text.
@@ -43,14 +36,15 @@ try {
 // By default "debug" level is disabled, so this won't log anything.
 logger.debug("Debug something", myObject)
 
-// Enable only debug and error logging.
-logger.levels = ["debug", "error"]
+// Enable only warn and error logging.
+logger.levels = ["warn", "error"]
 
-// Now warn calls won't do anything.
-logger.warn("Won't log because we disabled it before")
-logger.debug("This will now be logged")
+// Now info calls won't do anything.
+logger.info("Won't log because we only enabled warn and error")
+logger.warn("This warn will be logged")
 
 // You can also call the .log method directly, passing level as the first argument.
+// Useful when using custom loggers.
 logger.log("info", "This will be called as info", someExtraObject, 123)
 ```
 
@@ -62,20 +56,33 @@ logger.setup("winston")
 
 // Or pass the winston logger directly.
 const winstonLogger = require("winston").createLogger(options)
-logger.setup(winstonLogger)
+logger.setup({name: "winston", instance: winstonLogger})
 
 // Same for bunyan.
 logger.setup("bunyan")
 
 // Or...
 const bunyanLogger = require("bunyan").createLogger(options)
-logger.setup(bunyanLogger)
+logger.setup({name: "winston", instance: bunyanLogger})
 
 // Also pino.
 logger.setup("pino")
 
-// Enforce using the console.
-logger.setup("console")
+// And Google Cloud Logging. Log name will default to the appName, lowercased and with no spaces.
+logger.setup("gcloud")
+
+// Please note that Google Cloud Logging expects the default credentials set up on the machine.
+// If you haven't configured the Google Cloud SDK or credentials on the machine, you must
+// provide the authentication options during setup.
+const googleOptions = {
+    logName: "anyhow-testing",
+    projectId: env.GCP_PROJECT_ID,
+    credentials: {
+        client_email: env.GCP_CLIENT_EMAIL,
+        private_key: env.GCP_PRIVATE_KEY.replace(/\\n/g, "\n")
+    }
+}
+logger.setup("gcloud", googleOptions)
 
 // Disable logging.
 logger.setup("none")

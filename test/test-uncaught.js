@@ -12,7 +12,7 @@ let unhandledProcess, unhandledDone
 
 chai.should()
 
-let messageHandler = message => {
+let messageHandler = (message) => {
     let logged = ""
 
     if (message.command == "throwex") {
@@ -20,7 +20,7 @@ let messageHandler = message => {
         innerAnyhow.setup("console")
         innerAnyhow.uncaughtExceptions = true
 
-        capcon.startCapture(process.stderr, function(stdout) {
+        capcon.startCapture(process.stderr, function (stdout) {
             logged += stdout
         })
 
@@ -41,7 +41,7 @@ let messageHandler = message => {
         innerAnyhow.unhandledRejections = true
         innerAnyhow.appName = "My App"
 
-        capcon.startCapture(process.stderr, function(stdout) {
+        capcon.startCapture(process.stderr, function (stdout) {
             logged += stdout
         })
 
@@ -54,7 +54,7 @@ let messageHandler = message => {
             })
         }
 
-        let asyncFunc = async function() {
+        let asyncFunc = async function () {
             throw new Error()
         }
 
@@ -78,15 +78,15 @@ let messageHandler = message => {
 process.on("message", messageHandler)
 
 if (describe) {
-    describe("Anyhow Uncaught Exception Test", function() {
+    describe("Anyhow Uncaught Exception Test", function () {
         let anyhow = null
 
-        before(function() {
+        before(function () {
             anyhow = require("../lib/index")
             anyhow.setup("console")
         })
 
-        it("Catch and log uncaught exception", function(done) {
+        it("Catch and log uncaught exception", function (done) {
             uncaughtDone = done
 
             uncaughtProcess = childProcess.fork(`${__dirname}/test-uncaught.js`)
@@ -96,7 +96,7 @@ if (describe) {
             })
         })
 
-        it("Disable catching uncaught exceptions", function(done) {
+        it("Disable catching uncaught exceptions", function (done) {
             anyhow.uncaughtExceptions = false
             anyhow.uncaughtExceptions = true
 
@@ -108,7 +108,7 @@ if (describe) {
             }
         })
 
-        it("Catch and log unhandled rejection", function(done) {
+        it("Catch and log unhandled rejection", function (done) {
             unhandledDone = done
 
             unhandledProcess = childProcess.fork(`${__dirname}/test-uncaught.js`)
@@ -118,7 +118,7 @@ if (describe) {
             })
         })
 
-        it("Disable catching unhandled rejections", function(done) {
+        it("Disable catching unhandled rejections", function (done) {
             anyhow.appName = null
             anyhow.unhandledRejections = false
             anyhow.unhandledRejections = true

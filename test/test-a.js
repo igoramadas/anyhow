@@ -10,7 +10,7 @@ let it = mocha.it
 
 chai.should()
 
-describe("Anyhow Tests", function () {
+describe("Anyhow Main Tests", function () {
     let anyhow = null
 
     before(function () {
@@ -262,8 +262,8 @@ describe("Anyhow Tests", function () {
 
         if (logged.indexOf("should") > 0) {
             done(`Nothing should be logged, but got: ${logged}`)
-        } else if (anyhow.lib != null) {
-            done(`The .lib property should be null, but got: ${anyhow.lib}`)
+        } else if (anyhow.lib != "none") {
+            done(`The .lib property should be none, but got: ${anyhow.lib}`)
         } else {
             done()
         }

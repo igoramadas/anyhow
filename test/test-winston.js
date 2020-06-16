@@ -9,15 +9,16 @@ let it = mocha.it
 
 chai.should()
 
-describe("Anyhow Winston Tests", function() {
+describe("Anyhow Winston Tests", function () {
     let anyhow = null
 
-    before(function() {
+    before(function () {
         anyhow = require("../lib/index")
     })
 
-    it("Log using Winston default console logger", function(done) {
+    it("Log using default auto-generated Winston logger", function (done) {
         anyhow.setup("winston")
+        anyhow.timestamp = false
 
         let winston = require("winston")
         winston.add(new winston.transports.Console())
@@ -37,7 +38,7 @@ describe("Anyhow Winston Tests", function() {
         }
     })
 
-    it("Log passing Winston loggger directly", function(done) {
+    it("Log passing Winston loggger directly", function (done) {
         let winston = require("winston")
         let logger = winston.createLogger({
             level: "info",
@@ -45,7 +46,7 @@ describe("Anyhow Winston Tests", function() {
             transports: [new winston.transports.Console()]
         })
 
-        anyhow.setup(logger)
+        anyhow.setup({name: "winston", instance: logger})
 
         let logged = capcon
             .captureStdout(function scope() {
@@ -57,26 +58,6 @@ describe("Anyhow Winston Tests", function() {
             done()
         } else {
             done("Expected to log 'Log to custom Winston' on console.")
-        }
-    })
-
-    it("Passing invalid Winston logger", function(done) {
-        let logger = {
-            invalid: true
-        }
-
-        anyhow.setup(logger)
-
-        let logged = capcon
-            .captureStdout(function scope() {
-                anyhow.info("Invalid Winston logger should fallback")
-            })
-            .trim()
-
-        if (logged.indexOf("Invalid Winston logger should fallback") >= 0) {
-            done()
-        } else {
-            done("Expected to fallback when passing invalid logger object.")
         }
     })
 })

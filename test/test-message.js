@@ -10,18 +10,20 @@ let it = mocha.it
 
 chai.should()
 
-describe("Anyhow Message Tests", function() {
+describe("Anyhow Message Tests", function () {
     let anyhow = null
+    let parser = null
 
-    before(function() {
+    before(function () {
         anyhow = require("../lib/index")
+        parser = require("../lib/parser")
     })
 
-    after(function() {
+    after(function () {
         anyhow.preprocessor = null
     })
 
-    it("Transform mixed arguments into a message using getMessage()", function(done) {
+    it("Transform mixed arguments into a message using getMessage()", function (done) {
         let args = [
             "Some message",
             {
@@ -31,7 +33,7 @@ describe("Anyhow Message Tests", function() {
             new Date()
         ]
 
-        let message = anyhow.getMessage(args, "secondArgument", {})
+        let message = parser.getMessage(args, "secondArgument", {})
 
         if (message.indexOf("1") > 0 && message.indexOf("4") > 0 && message.indexOf("secondArgument") > 0) {
             done()
@@ -40,7 +42,7 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
-    it("Transform error into a message using getMessage()", function(done) {
+    it("Transform error into a message using getMessage()", function (done) {
         let message = null
 
         try {
@@ -49,7 +51,7 @@ describe("Anyhow Message Tests", function() {
             ex.friendlyMessage = "This is a friendly message"
             ex.reason = "This is a reason"
             ex.code = 500
-            message = anyhow.getMessage(ex)
+            message = parser.getMessage(ex)
         }
 
         if (message.indexOf("500") >= 0 && message.indexOf("error") >= 0) {
@@ -59,10 +61,10 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
-    it("Include stack trace with error messages", function(done) {
+    it("Include stack trace with error messages", function (done) {
         anyhow.errorStack = true
 
-        message = anyhow.getMessage(new Error("With stack"))
+        message = parser.getMessage(new Error("With stack"))
 
         if (message.indexOf(".js") >= 0) {
             done()
@@ -71,11 +73,11 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
-    it("Uses a custom separator and do not compact", function(done) {
+    it("Uses a custom separator and do not compact", function (done) {
         anyhow.separator = "/"
         anyhow.compact = false
 
-        let message = anyhow.getMessage("1   ", "2")
+        let message = parser.getMessage("1   ", "2")
 
         if (message == "1   /2") {
             done()
@@ -84,9 +86,9 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
-    it("Append a timestamp on messages", function(done) {
+    it("Append a timestamp on messages", function (done) {
         anyhow.timestamp = true
-        let message = anyhow.getMessage("Should have a timestamp")
+        let message = parser.getMessage("Should have a timestamp")
         anyhow.timestamp = false
 
         let now = new Date()
@@ -99,14 +101,14 @@ describe("Anyhow Message Tests", function() {
         }
     })
 
-    it("Enables message preprocessor to remove properties named 'password'", function(done) {
+    it("Enables message preprocessor to remove properties named 'password'", function (done) {
         let obj = {
             username: "user",
             password: "123"
         }
 
         // Try first returning the arguments as a result.
-        anyhow.preprocessor = function(args) {
+        anyhow.preprocessor = function (args) {
             for (let a of args) {
                 if (a && a.password) {
                     delete a.password
@@ -116,12 +118,12 @@ describe("Anyhow Message Tests", function() {
             return args
         }
 
-        if (anyhow.getMessage(obj).indexOf("123") >= 0) {
+        if (parser.getMessage(obj).indexOf("123") >= 0) {
             return done("Resulting message should not contain the password '123' (preprocessor returning a value).")
         }
 
         // Now without returning the arguments (it gets mutated).
-        anyhow.preprocessor = function(args) {
+        anyhow.preprocessor = function (args) {
             for (let a of args) {
                 if (a && a.password) {
                     delete a.password
@@ -129,7 +131,7 @@ describe("Anyhow Message Tests", function() {
             }
         }
 
-        if (anyhow.getMessage(obj).indexOf("123") >= 0) {
+        if (parser.getMessage(obj).indexOf("123") >= 0) {
             return done("Resulting message should not contain the password '123' (preprocessor NOT returning a value).")
         }
 
