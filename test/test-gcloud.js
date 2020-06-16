@@ -34,30 +34,34 @@ describe("Anyhow Google Cloud Logging Tests", function () {
     })
 
     it("Log using default auto-generated GCloud logger", function (done) {
-        let finished = false
+        let counter = 0
         let options = _.cloneDeep(defaultOptions)
 
         options.callback = (err) => {
-            if (finished) return
-            finished = true
+            counter++
 
-            if (err) {
-                done(err)
-            } else {
-                done()
+            if (counter == 3) {
+                if (err) {
+                    done(err)
+                } else {
+                    done()
+                }
             }
         }
 
         anyhow.setup("gcloud", options)
-        anyhow.info("Log to GCloud")
+
+        anyhow.info("Testing info log", 123, new Date())
+        anyhow.warn("This is a warning")
+        anyhow.error(new Error("This is an error"))
     })
 
     it("Log passing GCloud logger directly", function (done) {
         let finished = false
         let options = _.cloneDeep(defaultOptions)
 
-        options.logName = "anyhow-testing"
         options.partialSuccess = true
+        options.logName = "anyhow-testing"
 
         options.callback = (err) => {
             if (finished) return

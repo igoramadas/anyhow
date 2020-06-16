@@ -134,14 +134,19 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
 
                 // Google Cloud logger helper.
                 anyhow._logger.log = function (level, message) {
-                    const metadata = {
-                        resource: {type: "global"},
-                        severity: level.toUpperCase()
+                    let severity = level.toUpperCase()
+
+                    // Google expects WARNING instead of WARN.
+                    if (severity == "WARN") {
+                        severity = "WARNING"
                     }
 
-                    // Logging write options.
+                    const metadata = {
+                        resource: {type: "global"},
+                        severity: severity
+                    }
+
                     const writeOptions = {
-                        labels: options.labels || null,
                         resource: options.resource || null,
                         partialSuccess: _.isNil(options.partialSuccess) ? true : options.partialSuccess
                     }
