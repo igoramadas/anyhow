@@ -126,6 +126,7 @@ class AnyhowParser {
      */
     getMessage = (...args: any | any[]): string => {
         if (!_.isArray(args)) {
+            /* istanbul ignore next */
             args = [args]
         }
 

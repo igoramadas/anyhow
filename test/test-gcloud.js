@@ -15,7 +15,6 @@ describe("Anyhow Google Cloud Logging Tests", function () {
 
     const env = process.env
     const defaultOptions = {
-        logName: "anyhow-testing",
         projectId: env.GCP_TEST_PROJECT_ID,
         credentials: {
             client_email: env.GCP_TEST_EMAIL,
@@ -56,6 +55,9 @@ describe("Anyhow Google Cloud Logging Tests", function () {
     it("Log passing GCloud logger directly", function (done) {
         let finished = false
         let options = _.cloneDeep(defaultOptions)
+
+        options.logName = "anyhow-testing"
+        options.partialSuccess = true
 
         options.callback = (err) => {
             if (finished) return

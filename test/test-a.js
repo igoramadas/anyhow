@@ -43,6 +43,26 @@ describe("Anyhow Main Tests", function () {
         }
     })
 
+    it("Make sure all parser properties are returning their default values", function (done) {
+        if (!anyhow.compact) {
+            done("Property 'compact' should be true by default.")
+        }
+        if (anyhow.timestamp) {
+            done("Property 'timestamp' should be false by default.")
+        }
+        if (anyhow.errorStack) {
+            done("Property 'errorStack' should be false by default.")
+        }
+        if (anyhow.separator != " | ") {
+            done("Property 'separator' should be a vertical bar by default.")
+        }
+        if (anyhow.preprocessor) {
+            done("Property 'preprocessor' should have no value by default.")
+        }
+
+        done()
+    })
+
     it("Passing null lib should fallback to console", function (done) {
         anyhow.setup(null)
 
@@ -133,11 +153,15 @@ describe("Anyhow Main Tests", function () {
     })
 
     it("Log calls passing empty or null arguments", function () {
+        anyhow.levels = ["debug", "info", "warn", "error"]
+
         anyhow.debug()
         anyhow.info()
         anyhow.warn()
         anyhow.error()
         anyhow.info([null], null, {}.invalid)
+
+        anyhow.levels = ["info", "warn", "error"]
     })
 
     it("Direct call to anyhow.debug()", function (done) {
@@ -260,12 +284,45 @@ describe("Anyhow Main Tests", function () {
             })
             .trim()
 
-        if (logged.indexOf("should") > 0) {
+        if (anyhow.lib != "none") {
+            done("The logger's name should have been set to 'none'")
+        } else if (logged.indexOf("should") > 0) {
             done(`Nothing should be logged, but got: ${logged}`)
         } else if (anyhow.lib != "none") {
             done(`The .lib property should be none, but got: ${anyhow.lib}`)
         } else {
             done()
         }
+    })
+
+    it("Setup with a custom logger", function (done) {
+        let logger = {
+            name: "custom",
+            log: (level, message) => {
+                console.log(level, message)
+            }
+        }
+
+        anyhow.setup(logger)
+
+        if (anyhow.logger === logger) {
+            done()
+        } else {
+            done(`The custom logger was not set properly`)
+        }
+    })
+
+    it("Fails to setup with missing or invalid arguments", function (done) {
+        try {
+            anyhow.setup({wrong: true})
+            return done(`Calling setup() passing no name should fail`)
+        } catch (ex) {}
+
+        try {
+            anyhow.setup({name: "missingArgs"})
+            return done(`Calling setup() passing no log or instance should fail`)
+        } catch (ex) {}
+
+        done()
     })
 })

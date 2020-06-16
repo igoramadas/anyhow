@@ -7,6 +7,7 @@ import _ from "lodash"
  * Setup will try to load compatible loggers, and fall back to the console
  * if nothing was found. Will try using libraries on this order:
  * winston, bunyan, pino, gcloud, console.
+ * @param anyhow The anyhow instance.
  * @param lib Optional, force a specific library to be used.
  * @param options Additional options to be passed to the underlying logging library.
  */
@@ -126,7 +127,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     const gcloudModule = require("@google-cloud/logging")
 
                     // Get log name from options.
-                    const logName = options.logName || anyhow.appName.replace(/ /g, "-").toLowerCase()
+                    const logName = options.logName || anyhow.appName ? anyhow.appName.replace(/ /g, "-").toLowerCase() : "anyhow"
                     const logging = new gcloudModule.Logging(options)
                     gcloud = logging.log(logName)
                 }
@@ -150,6 +151,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     if (_.isFunction(options.callback)) {
                         gcloud.write(entry, writeOptions, options.callback)
                     } else {
+                        /* istanbul ignore next */
                         gcloud.write(entry, writeOptions)
                     }
                 }
@@ -169,7 +171,9 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
             }
         }
     } catch (ex) {
+        /* istanbul ignore next */
         const libName = _.isString(lib) ? lib : (lib as Logger).name
         console.error("Anyhow.setup", `Can't setup ${libName}`, ex)
+        throw ex
     }
 }
