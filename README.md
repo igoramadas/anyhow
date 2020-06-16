@@ -187,40 +187,40 @@ failFunction()
 
 ## Options
 
-#### compact (true)
+#### compact: true
 
 Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.
 
-#### errorStack (false)
+#### errorStack: false
 
 Boolean, defines if stack traces should be logged with errors and exceptions.
 
-#### levels (["info", "warn", "error"])
+#### levels: ["info", "warn", "error"]
 
 Array of string, defines which logging levels are enabled. Possible logging levels are
 ["info", "warn", "error"].
 
-#### levelOnConsole (false)
+#### levelOnConsole: false
 
 Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.
 
-#### uncaughtExceptions (false)
+#### uncaughtException: false
 
 Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).
 
-#### preprocessor
+#### preprocessor(args)
 
 You can define a function(arrayOfObjects) that will be used to process arguments before generating
 the final log messages. This is useful if you want to change or remove information from objects, for
 instance you might want to obfuscate all `password` fields and mask `telephone` fields. The function
 can either mutate the arrayOfObjects or return the new arguments as a result.
 
-#### separator (" | ")
+#### separator: " | "
 
 String, defines the default separator between logged objects. For instance if you do a
 `info(123, "ABC")`, output will be "123 | ABC".
 
-#### styles (object)
+#### styles: object
 
 Object with keys defining the styles for each level on console output. This will only be effective
 if you also have the [chalk](https://www.npmjs.com/package/chalk) module installed. By default
@@ -260,8 +260,10 @@ Shortcut to log("error", args).
 
 You can browse the full API documentation at https://anyhow.devv.com.
 
-Or check these following modules that are using Anyhow for logging:
+Or check these following projects that are using Anyhow for logging:
 
 * [Expresser](https://github.com/igoramadas/expresser)
 * [Monitorado](https://github.com/igoramadas/monitorado)
 * [SetMeUp](https://github.com/igoramadas/setmeup)
+* [PandaGainz](https://github.com/igoramadas/pandagainz)
+* [Strautomator](https://github.com/strautomator/core)

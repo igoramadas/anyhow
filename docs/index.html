@@ -68,85 +68,92 @@
 				<p><a href="https://npmjs.com/package/anyhow"><img src="https://img.shields.io/npm/v/anyhow.svg" alt="Version"></a>
 					<a href="https://travis-ci.org/igoramadas/anyhow"><img src="https://img.shields.io/travis/igoramadas/anyhow.svg" alt="Build Status"></a>
 				<a href="https://coveralls.io/github/igoramadas/anyhow?branch=master"><img src="https://img.shields.io/coveralls/github/igoramadas/anyhow.svg" alt="Coverage Status"></a></p>
-				<p>Drop-in logging wrapper for <a href="https://www.npmjs.com/package/winston">winston</a>,
-					<a href="https://www.npmjs.com/package/bunyan">bunyan</a>, <a href="https://www.npmjs.com/package/pino">pino</a>
-				and <a href="https://nodejs.org/api/console.html">console</a>. Let the user decide which one he prefers :-)</p>
+				<p>Drop-in logging wrapper for <a href="https://www.npmjs.com/package/winston">Winston</a>, <a href="https://www.npmjs.com/package/bunyan">Bunyan</a>, <a href="https://www.npmjs.com/package/pino">pino</a>, <a href="https://github.com/googleapis/nodejs-logging">Google Cloud Logging</a> and <a href="https://nodejs.org/api/console.html">console</a>.</p>
 				<a href="#why" id="why" style="color: inherit; text-decoration: none;">
 					<h2>Why?</h2>
 				</a>
-				<p>The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my
-					personal and work projects. Some were using winston. A few other went for bunyan. Some were simply
-				streaming to the console.</p>
-				<p>By using Anyhow we can achieve a consistent logging mechanism regardless of what library is
-					actually doing the logging. Install anyhow, replace the log calls and let it delegate the
-					actual logging to the correct library. It also has some handy features like compacting the
-				messages, pre-processing arguments and stylizing the console output.</p>
+				<p>The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my personal and work projects. Some were using winston. A few other went for bunyan. Some were simply streaming to the console.</p>
+				<p>By using Anyhow we can achieve a consistent logging mechanism regardless of what library is actually doing the logging. Install Anyhow, replace the log calls and let it delegate the actual logging to the correct library. It also has some handy features like compacting the messages, pre-processing arguments and stylizing the console output.</p>
 				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
 					<h2>Basic usage</h2>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"anyhow"</span>)
+				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;anyhow&quot;</span>)
 
-<span class="hljs-comment">// Use defaults: will try loading winston, then bunyan, then pino, and fall back to console.</span>
+<span class="hljs-comment">// Setup passing no arguments will default to the console.</span>
 logger.setup()
 
 <span class="hljs-comment">// Log some text.</span>
-logger.info(<span class="hljs-string">"My app has started"</span>)
+logger.info(<span class="hljs-string">&quot;My app has started&quot;</span>)
 
 <span class="hljs-comment">// Mix and match arguments.</span>
-logger.info({<span class="hljs-attr">someJson</span>: <span class="hljs-string">"text"</span>}, <span class="hljs-string">"Some string"</span>, <span class="hljs-number">123</span>)
+logger.info({<span class="hljs-attr">someJson</span>: <span class="hljs-string">&quot;text&quot;</span>}, <span class="hljs-string">&quot;Some string&quot;</span>, <span class="hljs-number">123</span>)
 
 <span class="hljs-comment">// Log exceptions.</span>
 <span class="hljs-keyword">try</span> {
     oops.itFailed()
 } <span class="hljs-keyword">catch</span> (ex) {
-    logger.error(<span class="hljs-string">"MyApp.method"</span>, ex)
+    logger.error(<span class="hljs-string">&quot;MyApp.method&quot;</span>, ex)
 }
 
-<span class="hljs-comment">// By default "debug" level is disabled, so this won't log anything.</span>
-logger.debug(<span class="hljs-string">"Debug something"</span>, myObject)
+<span class="hljs-comment">// By default &quot;debug&quot; level is disabled, so this won&#x27;t log anything.</span>
+logger.debug(<span class="hljs-string">&quot;Debug something&quot;</span>, myObject)
 
-<span class="hljs-comment">// Enable only debug and error logging.</span>
-logger.levels = [<span class="hljs-string">"debug"</span>, <span class="hljs-string">"error"</span>]
+<span class="hljs-comment">// Enable only warn and error logging.</span>
+logger.levels = [<span class="hljs-string">&quot;warn&quot;</span>, <span class="hljs-string">&quot;error&quot;</span>]
 
-<span class="hljs-comment">// Now warn calls won't do anything.</span>
-logger.warn(<span class="hljs-string">"Won't log because we disabled it before"</span>)
-logger.debug(<span class="hljs-string">"This will now be logged"</span>)
+<span class="hljs-comment">// Now info calls won&#x27;t do anything.</span>
+logger.info(<span class="hljs-string">&quot;Won&#x27;t log because we only enabled warn and error&quot;</span>)
+logger.warn(<span class="hljs-string">&quot;This warn will be logged&quot;</span>)
 
 <span class="hljs-comment">// You can also call the .log method directly, passing level as the first argument.</span>
-logger.log(<span class="hljs-string">"info"</span>, <span class="hljs-string">"This will be called as info"</span>, someExtraObject, <span class="hljs-number">123</span>)</code></pre>
+<span class="hljs-comment">// Useful when using custom loggers.</span>
+logger.log(<span class="hljs-string">&quot;info&quot;</span>, <span class="hljs-string">&quot;This will be called as info&quot;</span>, someExtraObject, <span class="hljs-number">123</span>)</code></pre>
 				<a href="#enforcing-a-specific-library" id="enforcing-a-specific-library" style="color: inherit; text-decoration: none;">
 					<h3>Enforcing a specific library</h3>
 				</a>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Use winston default logger.</span>
-logger.setup(<span class="hljs-string">"winston"</span>)
+logger.setup(<span class="hljs-string">&quot;winston&quot;</span>)
 
 <span class="hljs-comment">// Or pass the winston logger directly.</span>
-<span class="hljs-keyword">const</span> winstonLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"winston"</span>).createLogger(options)
-logger.setup(winstonLogger)
+<span class="hljs-keyword">const</span> winstonLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;winston&quot;</span>).createLogger(options)
+logger.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&quot;winston&quot;</span>, <span class="hljs-attr">instance</span>: winstonLogger})
 
 <span class="hljs-comment">// Same for bunyan.</span>
-logger.setup(<span class="hljs-string">"bunyan"</span>)
+logger.setup(<span class="hljs-string">&quot;bunyan&quot;</span>)
 
 <span class="hljs-comment">// Or...</span>
-<span class="hljs-keyword">const</span> bunyanLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">"bunyan"</span>).createLogger(options)
-logger.setup(bunyanLogger)
+<span class="hljs-keyword">const</span> bunyanLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;bunyan&quot;</span>).createLogger(options)
+logger.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&quot;winston&quot;</span>, <span class="hljs-attr">instance</span>: bunyanLogger})
 
 <span class="hljs-comment">// Also pino.</span>
-logger.setup(<span class="hljs-string">"pino"</span>)
+logger.setup(<span class="hljs-string">&quot;pino&quot;</span>)
 
-<span class="hljs-comment">// Enforce using the console.</span>
-logger.setup(<span class="hljs-string">"console"</span>)
+<span class="hljs-comment">// And Google Cloud Logging. Log name will default to the appName, lowercased and with no spaces.</span>
+logger.setup(<span class="hljs-string">&quot;gcloud&quot;</span>)
+
+<span class="hljs-comment">// Please note that Google Cloud Logging expects the default credentials set up on the machine.</span>
+<span class="hljs-comment">// If you haven&#x27;t configured the Google Cloud SDK or credentials on the machine, you must</span>
+<span class="hljs-comment">// provide the authentication options during setup.</span>
+<span class="hljs-keyword">const</span> googleOptions = {
+    <span class="hljs-attr">logName</span>: <span class="hljs-string">&quot;anyhow-testing&quot;</span>,
+    <span class="hljs-attr">projectId</span>: env.GCP_PROJECT_ID,
+    <span class="hljs-attr">credentials</span>: {
+        <span class="hljs-attr">client_email</span>: env.GCP_CLIENT_EMAIL,
+        <span class="hljs-attr">private_key</span>: env.GCP_PRIVATE_KEY.replace(<span class="hljs-regexp">/\\n/g</span>, <span class="hljs-string">&quot;\n&quot;</span>)
+    }
+}
+logger.setup(<span class="hljs-string">&quot;gcloud&quot;</span>, googleOptions)
 
 <span class="hljs-comment">// Disable logging.</span>
-logger.setup(<span class="hljs-string">"none"</span>)</code></pre>
+logger.setup(<span class="hljs-string">&quot;none&quot;</span>)</code></pre>
 				<a href="#changing-default-settings" id="changing-default-settings" style="color: inherit; text-decoration: none;">
 					<h3>Changing default settings</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Separate logged arguments with a ", " comma instead of default " | " pipe.</span>
-logger.separator = <span class="hljs-string">", "</span>
+				<pre><code class="language-javascript"><span class="hljs-comment">// Separate logged arguments with a &quot;, &quot; comma instead of default &quot; | &quot; pipe.</span>
+logger.separator = <span class="hljs-string">&quot;, &quot;</span>
 
-<span class="hljs-comment">// Outputs "This is, now separated, by comma".</span>
-logger.info(<span class="hljs-string">"This is"</span>, <span class="hljs-string">"now separated"</span>, <span class="hljs-string">"by comma"</span>)
+<span class="hljs-comment">// Outputs &quot;This is, now separated, by comma&quot;.</span>
+logger.info(<span class="hljs-string">&quot;This is&quot;</span>, <span class="hljs-string">&quot;now separated&quot;</span>, <span class="hljs-string">&quot;by comma&quot;</span>)
 
 <span class="hljs-comment">// Do not compact messages (default is compact = true).</span>
 logger.compact = <span class="hljs-literal">false</span>
@@ -154,38 +161,38 @@ logger.compact = <span class="hljs-literal">false</span>
 <span class="hljs-comment">// Logged output will contain JSON with spaces and line breaks.</span>
 logger.info(someComplexObject, somethingElse)
 
-<span class="hljs-comment">// Make warn messages red and italic instead of default yellow (depends on "chalk" module).</span>
-logger.styles.warn = [<span class="hljs-string">"red"</span>, <span class="hljs-string">"italic"</span>]
-logger.warn(<span class="hljs-string">"Console output now shows yellow italic for this"</span>)
-logger.info(<span class="hljs-string">"Info is still default gray"</span>)
+<span class="hljs-comment">// Make warn messages red and italic instead of default yellow (depends on &quot;chalk&quot; module).</span>
+logger.styles.warn = [<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;italic&quot;</span>]
+logger.warn(<span class="hljs-string">&quot;Console output now shows yellow italic for this&quot;</span>)
+logger.info(<span class="hljs-string">&quot;Info is still default gray&quot;</span>)
 
 <span class="hljs-comment">// Disable styling.</span>
 logger.styles = <span class="hljs-literal">null</span>
-logger.warn(<span class="hljs-string">"No console styles anymore, even if chalk is installed"</span>)
+logger.warn(<span class="hljs-string">&quot;No console styles anymore, even if chalk is installed&quot;</span>)
 
 <span class="hljs-comment">// Prepend log level on the console.</span>
 logger.levelOnConsole = <span class="hljs-literal">true</span>
-logger.info(<span class="hljs-string">"This will now have 'INFO:' on the beginning of the message"</span>)
+logger.info(<span class="hljs-string">&quot;This will now have &#x27;INFO:&#x27; on the beginning of the message&quot;</span>)
 
 <span class="hljs-keyword">try</span> {
     <span class="hljs-comment">// Some exception thrown.</span>
     myApp.method(fails)
 } <span class="hljs-keyword">catch</span> (ex) {
     <span class="hljs-comment">// By default the stack trace is not logged...</span>
-    logger.error(<span class="hljs-string">"error without stack trace"</span>, ex)
+    logger.error(<span class="hljs-string">&quot;error without stack trace&quot;</span>, ex)
 
     <span class="hljs-comment">// Include stack trace by setting errorStack = true.</span>
     logger.errorStack = <span class="hljs-literal">true</span>
-    logger.error(<span class="hljs-string">"error with stack trace"</span>, ex)
+    logger.error(<span class="hljs-string">&quot;error with stack trace&quot;</span>, ex)
 }</code></pre>
 				<a href="#pre-processing-logged-messages" id="pre-processing-logged-messages" style="color: inherit; text-decoration: none;">
 					<h3>Pre-processing logged messages</h3>
 				</a>
 				<pre><code class="language-javascript"><span class="hljs-comment">// Sample user object.</span>
 <span class="hljs-keyword">const</span> user = {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">"John Doe"</span>,
-    <span class="hljs-attr">password</span>: <span class="hljs-string">"mypass"</span>,
-    <span class="hljs-attr">token</span>: <span class="hljs-string">"sometoken"</span>
+    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John Doe&quot;</span>,
+    <span class="hljs-attr">password</span>: <span class="hljs-string">&quot;mypass&quot;</span>,
+    <span class="hljs-attr">token</span>: <span class="hljs-string">&quot;sometoken&quot;</span>
 }
 
 <span class="hljs-comment">// No preprocessor by default, will log all user data.</span>
@@ -203,7 +210,7 @@ logger.preprocessor = <span class="hljs-function"><span class="hljs-keyword">fun
     <span class="hljs-keyword">return</span> args
 }
 
-<span class="hljs-comment">// User's password and token won't be loggged.</span>
+<span class="hljs-comment">// User&#x27;s password and token won&#x27;t be loggged.</span>
 logger.info(user)
 
 <span class="hljs-comment">// User was not mutated, as it will deep clone before logging.</span>
@@ -215,7 +222,7 @@ logger.info(user)
 logger.uncaughtExceptions = <span class="hljs-literal">true</span>
 
 <span class="hljs-comment">// Throw some exception.</span>
-<span class="hljs-comment">// Will log the "Not a function" exception to the current transport.</span>
+<span class="hljs-comment">// Will log the &quot;Not a function&quot; exception to the current transport.</span>
 <span class="hljs-comment">// Code will not execute from here, but exception was logged to the console.</span>
 <span class="hljs-keyword">let</span> notFunction = <span class="hljs-literal">true</span>
 notFunction()
@@ -225,7 +232,7 @@ logger.unhandledRejections = <span class="hljs-literal">true</span>
 
 <span class="hljs-comment">// Here a sample of unhandled rejection.</span>
 <span class="hljs-keyword">let</span> failFunction = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">"Oh no!"</span>)
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&quot;Oh no!&quot;</span>)
 }
 <span class="hljs-comment">// Will log the unhandled rejection.</span>
 failFunction()
@@ -234,40 +241,40 @@ failFunction()
 					<h2>Options</h2>
 				</a>
 				<a href="#compact-true" id="compact-true" style="color: inherit; text-decoration: none;">
-					<h4>compact (true)</h4>
+					<h4>compact: true</h4>
 				</a>
 				<p>Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.</p>
 				<a href="#errorstack-false" id="errorstack-false" style="color: inherit; text-decoration: none;">
-					<h4>errorStack (false)</h4>
+					<h4>errorStack: false</h4>
 				</a>
 				<p>Boolean, defines if stack traces should be logged with errors and exceptions.</p>
 				<a href="#levels-quotinfoquot-quotwarnquot-quoterrorquot" id="levels-quotinfoquot-quotwarnquot-quoterrorquot" style="color: inherit; text-decoration: none;">
-					<h4>levels ([&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;])</h4>
+					<h4>levels: [&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;]</h4>
 				</a>
 				<p>Array of string, defines which logging levels are enabled. Possible logging levels are
 				[&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;].</p>
 				<a href="#levelonconsole-false" id="levelonconsole-false" style="color: inherit; text-decoration: none;">
-					<h4>levelOnConsole (false)</h4>
+					<h4>levelOnConsole: false</h4>
 				</a>
 				<p>Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.</p>
-				<a href="#uncaughtexceptions-false" id="uncaughtexceptions-false" style="color: inherit; text-decoration: none;">
-					<h4>uncaughtExceptions (false)</h4>
+				<a href="#uncaughtexception-false" id="uncaughtexception-false" style="color: inherit; text-decoration: none;">
+					<h4>uncaughtException: false</h4>
 				</a>
 				<p>Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).</p>
-				<a href="#preprocessor" id="preprocessor" style="color: inherit; text-decoration: none;">
-					<h4>preprocessor</h4>
+				<a href="#preprocessorargs" id="preprocessorargs" style="color: inherit; text-decoration: none;">
+					<h4>preprocessor(args)</h4>
 				</a>
 				<p>You can define a function(arrayOfObjects) that will be used to process arguments before generating
 					the final log messages. This is useful if you want to change or remove information from objects, for
 					instance you might want to obfuscate all <code>password</code> fields and mask <code>telephone</code> fields. The function
 				can either mutate the arrayOfObjects or return the new arguments as a result.</p>
 				<a href="#separator-quot--quot" id="separator-quot--quot" style="color: inherit; text-decoration: none;">
-					<h4>separator (&quot; | &quot;)</h4>
+					<h4>separator: &quot; | &quot;</h4>
 				</a>
 				<p>String, defines the default separator between logged objects. For instance if you do a
 				<code>info(123, &quot;ABC&quot;)</code>, output will be &quot;123 | ABC&quot;.</p>
 				<a href="#styles-object" id="styles-object" style="color: inherit; text-decoration: none;">
-					<h4>styles (object)</h4>
+					<h4>styles: object</h4>
 				</a>
 				<p>Object with keys defining the styles for each level on console output. This will only be effective
 					if you also have the <a href="https://www.npmjs.com/package/chalk">chalk</a> module installed. By default
@@ -307,11 +314,13 @@ failFunction()
 					<h2>API documentation</h2>
 				</a>
 				<p>You can browse the full API documentation at <a href="https://anyhow.devv.com">https://anyhow.devv.com</a>.</p>
-				<p>Or check these following modules that are using Anyhow for logging:</p>
+				<p>Or check these following projects that are using Anyhow for logging:</p>
 				<ul>
 					<li><a href="https://github.com/igoramadas/expresser">Expresser</a></li>
 					<li><a href="https://github.com/igoramadas/monitorado">Monitorado</a></li>
 					<li><a href="https://github.com/igoramadas/setmeup">SetMeUp</a></li>
+					<li><a href="https://github.com/igoramadas/pandagainz">PandaGainz</a></li>
+					<li><a href="https://github.com/strautomator/core">Strautomator</a></li>
 				</ul>
 			</div>
 		</div>
@@ -323,6 +332,15 @@ failFunction()
 					</li>
 					<li class=" tsd-kind-module">
 						<a href="modules/_index_.html">&quot;index&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_parser_.html">&quot;parser&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_setup_.html">&quot;setup&quot;</a>
+					</li>
+					<li class=" tsd-kind-module">
+						<a href="modules/_types_.html">&quot;types&quot;</a>
 					</li>
 				</ul>
 			</nav>
@@ -339,6 +357,10 @@ failFunction()
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
 				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
+				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
+			</ul>
+			<ul class="tsd-legend">
+				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
