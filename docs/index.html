@@ -237,6 +237,14 @@ logger.unhandledRejections = <span class="hljs-literal">true</span>
 <span class="hljs-comment">// Will log the unhandled rejection.</span>
 failFunction()
 </code></pre>
+				<a href="#version-2-breaking-changes" id="version-2-breaking-changes" style="color: inherit; text-decoration: none;">
+					<h2>Version 2 breaking changes</h2>
+				</a>
+				<p>If you were using Anyhow and passing a logger instance directly on <code>setup()</code>, you&#39;ll need to update the call to the new signature.</p>
+				<pre><code class="language-javascript"><span class="hljs-comment">// From...</span>
+anyhow.setup(myWinstonLogger)
+<span class="hljs-comment">// To...</span>
+anyhow.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&quot;winston&quot;</span>, <span class="hljs-attr">instance</span>: myWinstonLogger})</code></pre>
 				<a href="#options" id="options" style="color: inherit; text-decoration: none;">
 					<h2>Options</h2>
 				</a>

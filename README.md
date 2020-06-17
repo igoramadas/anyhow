@@ -185,6 +185,17 @@ failFunction()
 
 ```
 
+## Version 2 breaking changes
+
+If you were using Anyhow and passing a logger instance directly on `setup()`, you'll need to update the call to the new signature.
+
+```javascript
+// From...
+anyhow.setup(myWinstonLogger)
+// To...
+anyhow.setup({name: "winston", instance: myWinstonLogger})
+```
+
 ## Options
 
 #### compact: true
