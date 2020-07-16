@@ -33,7 +33,7 @@
         "test": "make test-cover"
     },
     "dependencies": {
-        "lodash": "4.17.15"
+        "lodash": "4.17.19"
     },
     "devDependencies": {
         "@google-cloud/logging": "^8.0.0",
