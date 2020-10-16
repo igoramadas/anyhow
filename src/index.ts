@@ -199,6 +199,13 @@ class Anyhow {
         parser.preprocessor = value
     }
 
+    /**
+     * Helper to get a friendly message to be logged, out of the passed arguments.
+     */
+    get getMessage(): Function {
+        return parser.getMessage
+    }
+
     // LOGGING METHODS
     // --------------------------------------------------------------------------
 
