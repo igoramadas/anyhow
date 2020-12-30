@@ -7,6 +7,7 @@
 	<meta name="description" content="Documentation for Anyhow">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="assets/css/main.css">
+	<script async src="assets/js/search.js" id="search-script"></script>
 </head>
 <body>
 <header>
@@ -38,8 +39,6 @@
 							</div>
 							<input type="checkbox" id="tsd-filter-inherited" checked />
 							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-							<input type="checkbox" id="tsd-filter-only-exported" />
-							<label class="tsd-widget" for="tsd-filter-only-exported">Only exported</label>
 						</div>
 					</div>
 					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
@@ -49,11 +48,6 @@
 	</div>
 	<div class="tsd-page-title">
 		<div class="container">
-			<ul class="tsd-breadcrumb">
-				<li>
-					<a href="globals.html">Globals</a>
-				</li>
-			</ul>
 			<h1>Anyhow</h1>
 		</div>
 	</div>
@@ -77,174 +71,180 @@
 				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
 					<h2>Basic usage</h2>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-keyword">const</span> logger = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;anyhow&quot;</span>)
+				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">logger</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;anyhow&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Setup passing no arguments will default to the console.</span>
-logger.setup()
+<span style="color: #008000">// Setup passing no arguments will default to the console.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">()</span>
 
-<span class="hljs-comment">// Log some text.</span>
-logger.info(<span class="hljs-string">&quot;My app has started&quot;</span>)
+<span style="color: #008000">// Log some text.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;My app has started&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Mix and match arguments.</span>
-logger.info({<span class="hljs-attr">someJson</span>: <span class="hljs-string">&quot;text&quot;</span>}, <span class="hljs-string">&quot;Some string&quot;</span>, <span class="hljs-number">123</span>)
+<span style="color: #008000">// Mix and match arguments.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">({</span><span style="color: #001080">someJson:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;text&quot;</span><span style="color: #000000">}, </span><span style="color: #A31515">&quot;Some string&quot;</span><span style="color: #000000">, </span><span style="color: #098658">123</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Log exceptions.</span>
-<span class="hljs-keyword">try</span> {
-    oops.itFailed()
-} <span class="hljs-keyword">catch</span> (ex) {
-    logger.error(<span class="hljs-string">&quot;MyApp.method&quot;</span>, ex)
-}
+<span style="color: #008000">// Log exceptions.</span>
+<span style="color: #AF00DB">try</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #001080">oops</span><span style="color: #000000">.</span><span style="color: #795E26">itFailed</span><span style="color: #000000">()</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">catch</span><span style="color: #000000"> (</span><span style="color: #001080">ex</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;MyApp.method&quot;</span><span style="color: #000000">, </span><span style="color: #001080">ex</span><span style="color: #000000">)</span>
+<span style="color: #000000">}</span>
 
-<span class="hljs-comment">// By default &quot;debug&quot; level is disabled, so this won&#x27;t log anything.</span>
-logger.debug(<span class="hljs-string">&quot;Debug something&quot;</span>, myObject)
+<span style="color: #008000">// By default &quot;debug&quot; level is disabled, so this won&#039;t log anything.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">debug</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Debug something&quot;</span><span style="color: #000000">, </span><span style="color: #001080">myObject</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Enable only warn and error logging.</span>
-logger.levels = [<span class="hljs-string">&quot;warn&quot;</span>, <span class="hljs-string">&quot;error&quot;</span>]
+<span style="color: #008000">// Enable only warn and error logging.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">levels</span><span style="color: #000000"> = [</span><span style="color: #A31515">&quot;warn&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;error&quot;</span><span style="color: #000000">]</span>
 
-<span class="hljs-comment">// Now info calls won&#x27;t do anything.</span>
-logger.info(<span class="hljs-string">&quot;Won&#x27;t log because we only enabled warn and error&quot;</span>)
-logger.warn(<span class="hljs-string">&quot;This warn will be logged&quot;</span>)
+<span style="color: #008000">// Now info calls won&#039;t do anything.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Won&#039;t log because we only enabled warn and error&quot;</span><span style="color: #000000">)</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">warn</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;This warn will be logged&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// You can also call the .log method directly, passing level as the first argument.</span>
-<span class="hljs-comment">// Useful when using custom loggers.</span>
-logger.log(<span class="hljs-string">&quot;info&quot;</span>, <span class="hljs-string">&quot;This will be called as info&quot;</span>, someExtraObject, <span class="hljs-number">123</span>)</code></pre>
+<span style="color: #008000">// You can also call the .log method directly, passing level as the first argument.</span>
+<span style="color: #008000">// Useful when using custom loggers.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;info&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;This will be called as info&quot;</span><span style="color: #000000">, </span><span style="color: #001080">someExtraObject</span><span style="color: #000000">, </span><span style="color: #098658">123</span><span style="color: #000000">)</span>
+</code></pre>
 				<a href="#enforcing-a-specific-library" id="enforcing-a-specific-library" style="color: inherit; text-decoration: none;">
 					<h3>Enforcing a specific library</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Use winston default logger.</span>
-logger.setup(<span class="hljs-string">&quot;winston&quot;</span>)
+				<pre><code class="language-javascript"><span style="color: #008000">// Use winston default logger.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Or pass the winston logger directly.</span>
-<span class="hljs-keyword">const</span> winstonLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;winston&quot;</span>).createLogger(options)
-logger.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&quot;winston&quot;</span>, <span class="hljs-attr">instance</span>: winstonLogger})
+<span style="color: #008000">// Or pass the winston logger directly.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">winstonLogger</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">).</span><span style="color: #795E26">createLogger</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">({</span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">, </span><span style="color: #001080">instance:</span><span style="color: #000000"> </span><span style="color: #001080">winstonLogger</span><span style="color: #000000">})</span>
 
-<span class="hljs-comment">// Same for bunyan.</span>
-logger.setup(<span class="hljs-string">&quot;bunyan&quot;</span>)
+<span style="color: #008000">// Same for bunyan.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;bunyan&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Or...</span>
-<span class="hljs-keyword">const</span> bunyanLogger = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;bunyan&quot;</span>).createLogger(options)
-logger.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&quot;winston&quot;</span>, <span class="hljs-attr">instance</span>: bunyanLogger})
+<span style="color: #008000">// Or...</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">bunyanLogger</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;bunyan&quot;</span><span style="color: #000000">).</span><span style="color: #795E26">createLogger</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">({</span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">, </span><span style="color: #001080">instance:</span><span style="color: #000000"> </span><span style="color: #001080">bunyanLogger</span><span style="color: #000000">})</span>
 
-<span class="hljs-comment">// Also pino.</span>
-logger.setup(<span class="hljs-string">&quot;pino&quot;</span>)
+<span style="color: #008000">// Also pino.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;pino&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// And Google Cloud Logging. Log name will default to the appName, lowercased and with no spaces.</span>
-logger.setup(<span class="hljs-string">&quot;gcloud&quot;</span>)
+<span style="color: #008000">// And Google Cloud Logging. Log name will default to the appName, lowercased and with no spaces.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;gcloud&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Please note that Google Cloud Logging expects the default credentials set up on the machine.</span>
-<span class="hljs-comment">// If you haven&#x27;t configured the Google Cloud SDK or credentials on the machine, you must</span>
-<span class="hljs-comment">// provide the authentication options during setup.</span>
-<span class="hljs-keyword">const</span> googleOptions = {
-    <span class="hljs-attr">logName</span>: <span class="hljs-string">&quot;anyhow-testing&quot;</span>,
-    <span class="hljs-attr">projectId</span>: env.GCP_PROJECT_ID,
-    <span class="hljs-attr">credentials</span>: {
-        <span class="hljs-attr">client_email</span>: env.GCP_CLIENT_EMAIL,
-        <span class="hljs-attr">private_key</span>: env.GCP_PRIVATE_KEY.replace(<span class="hljs-regexp">/\\n/g</span>, <span class="hljs-string">&quot;\n&quot;</span>)
-    }
-}
-logger.setup(<span class="hljs-string">&quot;gcloud&quot;</span>, googleOptions)
+<span style="color: #008000">// Please note that Google Cloud Logging expects the default credentials set up on the machine.</span>
+<span style="color: #008000">// If you haven&#039;t configured the Google Cloud SDK or credentials on the machine, you must</span>
+<span style="color: #008000">// provide the authentication options during setup.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">googleOptions</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">logName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;anyhow-testing&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">projectId:</span><span style="color: #000000"> </span><span style="color: #001080">env</span><span style="color: #000000">.</span><span style="color: #0070C1">GCP_PROJECT_ID</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">credentials:</span><span style="color: #000000"> {</span>
+<span style="color: #000000">        </span><span style="color: #001080">client_email:</span><span style="color: #000000"> </span><span style="color: #001080">env</span><span style="color: #000000">.</span><span style="color: #0070C1">GCP_CLIENT_EMAIL</span><span style="color: #000000">,</span>
+<span style="color: #000000">        </span><span style="color: #001080">private_key:</span><span style="color: #000000"> </span><span style="color: #001080">env</span><span style="color: #000000">.</span><span style="color: #0070C1">GCP_PRIVATE_KEY</span><span style="color: #000000">.</span><span style="color: #795E26">replace</span><span style="color: #000000">(</span><span style="color: #811F3F">/</span><span style="color: #EE0000">\\</span><span style="color: #811F3F">n/</span><span style="color: #0000FF">g</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;</span><span style="color: #EE0000">\n</span><span style="color: #A31515">&quot;</span><span style="color: #000000">)</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">}</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;gcloud&quot;</span><span style="color: #000000">, </span><span style="color: #001080">googleOptions</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Disable logging.</span>
-logger.setup(<span class="hljs-string">&quot;none&quot;</span>)</code></pre>
+<span style="color: #008000">// Disable logging.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;none&quot;</span><span style="color: #000000">)</span>
+</code></pre>
 				<a href="#changing-default-settings" id="changing-default-settings" style="color: inherit; text-decoration: none;">
 					<h3>Changing default settings</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Separate logged arguments with a &quot;, &quot; comma instead of default &quot; | &quot; pipe.</span>
-logger.separator = <span class="hljs-string">&quot;, &quot;</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// Separate logged arguments with a &quot;, &quot; comma instead of default &quot; | &quot; pipe.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">separator</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;, &quot;</span>
 
-<span class="hljs-comment">// Outputs &quot;This is, now separated, by comma&quot;.</span>
-logger.info(<span class="hljs-string">&quot;This is&quot;</span>, <span class="hljs-string">&quot;now separated&quot;</span>, <span class="hljs-string">&quot;by comma&quot;</span>)
+<span style="color: #008000">// Outputs &quot;This is, now separated, by comma&quot;.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;This is&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;now separated&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;by comma&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Do not compact messages (default is compact = true).</span>
-logger.compact = <span class="hljs-literal">false</span>
+<span style="color: #008000">// Do not compact messages (default is compact = true).</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">compact</span><span style="color: #000000"> = </span><span style="color: #0000FF">false</span>
 
-<span class="hljs-comment">// Logged output will contain JSON with spaces and line breaks.</span>
-logger.info(someComplexObject, somethingElse)
+<span style="color: #008000">// Logged output will contain JSON with spaces and line breaks.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #001080">someComplexObject</span><span style="color: #000000">, </span><span style="color: #001080">somethingElse</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Make warn messages red and italic instead of default yellow (depends on &quot;chalk&quot; module).</span>
-logger.styles.warn = [<span class="hljs-string">&quot;red&quot;</span>, <span class="hljs-string">&quot;italic&quot;</span>]
-logger.warn(<span class="hljs-string">&quot;Console output now shows yellow italic for this&quot;</span>)
-logger.info(<span class="hljs-string">&quot;Info is still default gray&quot;</span>)
+<span style="color: #008000">// Make warn messages red and italic instead of default yellow (depends on &quot;chalk&quot; module).</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">styles</span><span style="color: #000000">.</span><span style="color: #001080">warn</span><span style="color: #000000"> = [</span><span style="color: #A31515">&quot;red&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;italic&quot;</span><span style="color: #000000">]</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">warn</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Console output now shows yellow italic for this&quot;</span><span style="color: #000000">)</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Info is still default gray&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Disable styling.</span>
-logger.styles = <span class="hljs-literal">null</span>
-logger.warn(<span class="hljs-string">&quot;No console styles anymore, even if chalk is installed&quot;</span>)
+<span style="color: #008000">// Disable styling.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">styles</span><span style="color: #000000"> = </span><span style="color: #0000FF">null</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">warn</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;No console styles anymore, even if chalk is installed&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Prepend log level on the console.</span>
-logger.levelOnConsole = <span class="hljs-literal">true</span>
-logger.info(<span class="hljs-string">&quot;This will now have &#x27;INFO:&#x27; on the beginning of the message&quot;</span>)
+<span style="color: #008000">// Prepend log level on the console.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">levelOnConsole</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;This will now have &#039;INFO:&#039; on the beginning of the message&quot;</span><span style="color: #000000">)</span>
 
-<span class="hljs-keyword">try</span> {
-    <span class="hljs-comment">// Some exception thrown.</span>
-    myApp.method(fails)
-} <span class="hljs-keyword">catch</span> (ex) {
-    <span class="hljs-comment">// By default the stack trace is not logged...</span>
-    logger.error(<span class="hljs-string">&quot;error without stack trace&quot;</span>, ex)
+<span style="color: #AF00DB">try</span><span style="color: #000000"> {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// Some exception thrown.</span>
+<span style="color: #000000">    </span><span style="color: #001080">myApp</span><span style="color: #000000">.</span><span style="color: #795E26">method</span><span style="color: #000000">(</span><span style="color: #001080">fails</span><span style="color: #000000">)</span>
+<span style="color: #000000">} </span><span style="color: #AF00DB">catch</span><span style="color: #000000"> (</span><span style="color: #001080">ex</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #008000">// By default the stack trace is not logged...</span>
+<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;error without stack trace&quot;</span><span style="color: #000000">, </span><span style="color: #001080">ex</span><span style="color: #000000">)</span>
 
-    <span class="hljs-comment">// Include stack trace by setting errorStack = true.</span>
-    logger.errorStack = <span class="hljs-literal">true</span>
-    logger.error(<span class="hljs-string">&quot;error with stack trace&quot;</span>, ex)
-}</code></pre>
+<span style="color: #000000">    </span><span style="color: #008000">// Include stack trace by setting errorStack = true.</span>
+<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">errorStack</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
+<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;error with stack trace&quot;</span><span style="color: #000000">, </span><span style="color: #001080">ex</span><span style="color: #000000">)</span>
+<span style="color: #000000">}</span>
+</code></pre>
 				<a href="#pre-processing-logged-messages" id="pre-processing-logged-messages" style="color: inherit; text-decoration: none;">
 					<h3>Pre-processing logged messages</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Sample user object.</span>
-<span class="hljs-keyword">const</span> user = {
-    <span class="hljs-attr">name</span>: <span class="hljs-string">&quot;John Doe&quot;</span>,
-    <span class="hljs-attr">password</span>: <span class="hljs-string">&quot;mypass&quot;</span>,
-    <span class="hljs-attr">token</span>: <span class="hljs-string">&quot;sometoken&quot;</span>
-}
+				<pre><code class="language-javascript"><span style="color: #008000">// Sample user object.</span>
+<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">user</span><span style="color: #000000"> = {</span>
+<span style="color: #000000">    </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;John Doe&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">password:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mypass&quot;</span><span style="color: #000000">,</span>
+<span style="color: #000000">    </span><span style="color: #001080">token:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;sometoken&quot;</span>
+<span style="color: #000000">}</span>
 
-<span class="hljs-comment">// No preprocessor by default, will log all user data.</span>
-logger.info(user)
+<span style="color: #008000">// No preprocessor by default, will log all user data.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #001080">user</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// Add preprocessor to remove passwords and tokens from logged objects.</span>
-logger.preprocessor = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">args</span>) </span>{
-    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">let</span> a <span class="hljs-keyword">of</span> args) {
-        <span class="hljs-keyword">if</span> (a &amp;&amp; a.password) {
-            <span class="hljs-keyword">delete</span> a.password
-        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (a &amp;&amp; a.token) {
-            <span class="hljs-keyword">delete</span> a.token
-        }
-    }
-    <span class="hljs-keyword">return</span> args
-}
+<span style="color: #008000">// Add preprocessor to remove passwords and tokens from logged objects.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">preprocessor</span><span style="color: #000000"> = </span><span style="color: #0000FF">function</span><span style="color: #000000">(</span><span style="color: #001080">args</span><span style="color: #000000">) {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">for</span><span style="color: #000000"> (</span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000"> </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">args</span><span style="color: #000000">) {</span>
+<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">a</span><span style="color: #000000"> &amp;&amp; </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">password</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #0000FF">delete</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">password</span>
+<span style="color: #000000">        } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">a</span><span style="color: #000000"> &amp;&amp; </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">token</span><span style="color: #000000">) {</span>
+<span style="color: #000000">            </span><span style="color: #0000FF">delete</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">token</span>
+<span style="color: #000000">        }</span>
+<span style="color: #000000">    }</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">args</span>
+<span style="color: #000000">}</span>
 
-<span class="hljs-comment">// User&#x27;s password and token won&#x27;t be loggged.</span>
-logger.info(user)
+<span style="color: #008000">// User&#039;s password and token won&#039;t be loggged.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #001080">user</span><span style="color: #000000">)</span>
 
-<span class="hljs-comment">// User was not mutated, as it will deep clone before logging.</span>
-<span class="hljs-built_in">console</span>.dir(user)</code></pre>
+<span style="color: #008000">// User was not mutated, as it will deep clone before logging.</span>
+<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">dir</span><span style="color: #000000">(</span><span style="color: #001080">user</span><span style="color: #000000">)</span>
+</code></pre>
 				<a href="#uncaught-and-unhandled-errors" id="uncaught-and-unhandled-errors" style="color: inherit; text-decoration: none;">
 					<h3>Uncaught and unhandled errors</h3>
 				</a>
-				<pre><code class="language-javascript"><span class="hljs-comment">// Enable the uncaught exceptions handled.</span>
-logger.uncaughtExceptions = <span class="hljs-literal">true</span>
+				<pre><code class="language-javascript"><span style="color: #008000">// Enable the uncaught exceptions handled.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">uncaughtExceptions</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
 
-<span class="hljs-comment">// Throw some exception.</span>
-<span class="hljs-comment">// Will log the &quot;Not a function&quot; exception to the current transport.</span>
-<span class="hljs-comment">// Code will not execute from here, but exception was logged to the console.</span>
-<span class="hljs-keyword">let</span> notFunction = <span class="hljs-literal">true</span>
-notFunction()
+<span style="color: #008000">// Throw some exception.</span>
+<span style="color: #008000">// Will log the &quot;Not a function&quot; exception to the current transport.</span>
+<span style="color: #008000">// Code will not execute from here, but exception was logged to the console.</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">notFunction</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
+<span style="color: #795E26">notFunction</span><span style="color: #000000">()</span>
 
-<span class="hljs-comment">// Also for unhandled rejections.</span>
-logger.unhandledRejections = <span class="hljs-literal">true</span>
+<span style="color: #008000">// Also for unhandled rejections.</span>
+<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">unhandledRejections</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
 
-<span class="hljs-comment">// Here a sample of unhandled rejection.</span>
-<span class="hljs-keyword">let</span> failFunction = <span class="hljs-keyword">async</span> <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
-    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">&quot;Oh no!&quot;</span>)
-}
-<span class="hljs-comment">// Will log the unhandled rejection.</span>
-failFunction()
+<span style="color: #008000">// Here a sample of unhandled rejection.</span>
+<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #795E26">failFunction</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #0000FF">function</span><span style="color: #000000">() {</span>
+<span style="color: #000000">    </span><span style="color: #AF00DB">throw</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Oh no!&quot;</span><span style="color: #000000">)</span>
+<span style="color: #000000">}</span>
+<span style="color: #008000">// Will log the unhandled rejection.</span>
+<span style="color: #795E26">failFunction</span><span style="color: #000000">()</span>
+
 </code></pre>
 				<a href="#version-2-breaking-changes" id="version-2-breaking-changes" style="color: inherit; text-decoration: none;">
 					<h2>Version 2 breaking changes</h2>
 				</a>
 				<p>If you were using Anyhow and passing a logger instance directly on <code>setup()</code>, you&#39;ll need to update the call to the new signature.</p>
-				<pre><code class="language-javascript"><span class="hljs-comment">// From...</span>
-anyhow.setup(myWinstonLogger)
-<span class="hljs-comment">// To...</span>
-anyhow.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&quot;winston&quot;</span>, <span class="hljs-attr">instance</span>: myWinstonLogger})</code></pre>
+				<pre><code class="language-javascript"><span style="color: #008000">// From...</span>
+<span style="color: #001080">anyhow</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #001080">myWinstonLogger</span><span style="color: #000000">)</span>
+<span style="color: #008000">// To...</span>
+<span style="color: #001080">anyhow</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">({</span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">, </span><span style="color: #001080">instance:</span><span style="color: #000000"> </span><span style="color: #001080">myWinstonLogger</span><span style="color: #000000">})</span>
+</code></pre>
 				<a href="#options" id="options" style="color: inherit; text-decoration: none;">
 					<h2>Options</h2>
 				</a>
@@ -335,20 +335,14 @@ anyhow.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&qu
 		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
 			<nav class="tsd-navigation primary">
 				<ul>
-					<li class="globals  ">
-						<a href="globals.html"><em>Globals</em></a>
+					<li class=" ">
+						<a href="modules.html">Exports</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_src_index_.html">&quot;src/index&quot;</a>
+						<a href="modules/setup.html">setup</a>
 					</li>
 					<li class=" tsd-kind-module">
-						<a href="modules/_src_parser_.html">&quot;src/parser&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/_src_setup_.html">&quot;src/setup&quot;</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/_src_types_.html">&quot;src/types&quot;</a>
+						<a href="modules/types.html">types</a>
 					</li>
 				</ul>
 			</nav>
@@ -364,14 +358,10 @@ anyhow.setup({<span class="hljs-attr">name</span>: <span class="hljs-string">&qu
 		<h2>Legend</h2>
 		<div class="tsd-legend-group">
 			<ul class="tsd-legend">
-				<li class="tsd-kind-variable"><span class="tsd-kind-icon">Variable</span></li>
 				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
 			</ul>
 			<ul class="tsd-legend">
 				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-class"><span class="tsd-kind-icon">Class</span></li>
 			</ul>
 		</div>
 	</div>

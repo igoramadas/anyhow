@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+2.0.6
+=====
+* Updated dependencies.
+
 2.0.5
 =====
 * The parser.getMessage() helper is now exposed on the main module.
