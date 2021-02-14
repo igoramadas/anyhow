@@ -235,7 +235,7 @@ String, defines the default separator between logged objects. For instance if yo
 
 Object with keys defining the styles for each level on console output. This will only be effective
 if you also have the [chalk](https://www.npmjs.com/package/chalk) module installed. By default
-`debug` is gray, `info` is white, `warn` is yellow and `error` is bold red.
+`debug` is gray, `info` white, `warn` yellow and `error` bold red. To disable, set it to null.
 
 ## Methods
 

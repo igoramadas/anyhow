@@ -5,7 +5,7 @@ import parser from "./parser"
 import _ from "lodash"
 import {libSetup} from "./setup"
 
-// Chalk (colorized console output).
+// Chalk (colorized console output). Will be instantiated on setup().
 let chalk = null
 
 /**
@@ -222,7 +222,8 @@ class Anyhow {
 
         // If setup was not called yet, defaults to console logging and emit warning.
         if (!this.isReady) {
-            console.warn("Anyhow: please call Anyhow's setup() on your application init. Will default to console.log() for now.")
+            console.warn("Anyhow: please call Anyhow's setup() on your application startup. Will default to console.log() for now.")
+            this.setup("console")
             this.console(level, message)
         } else {
             this._logger.log(level, message)
@@ -296,15 +297,7 @@ class Anyhow {
             logMethod = console[level]
         }
 
-        try {
-            if (chalk === null) {
-                chalk = require("chalk")
-            }
-        } catch (ex) {
-            chalk = false
-        }
-
-        // Is chalk installed? Use it to colorize the messages.
+        // Is chalk enabled? Use it to colorize the messages.
         if (chalk && this.styles) {
             let styles = this.styles[level]
             let chalkStyle
@@ -330,11 +323,23 @@ class Anyhow {
      * Setup will try to load compatible loggers, and fall back to the console
      * if nothing was found. Will try using libraries on this order:
      * winston, bunyan, pino, gcloud, console.
-     * @param lib Optional, force a specific library or Logger to be used.
+     * @param lib Optional, force a specific library or Logger to be used, defaults to console.
      * @param options Additional options to be passed to the underlying logging library.
      */
     setup = (lib?: "winston" | "bunyan" | "pino" | "gcloud" | "console" | "none" | Logger, options?: any): void => {
+        if (!lib) lib = "console"
+
         libSetup(this, lib, options)
+
+        if (lib == "console" && this.styles) {
+            try {
+                if (chalk === null) {
+                    chalk = require("chalk")
+                }
+            } catch (ex) {
+                chalk = false
+            }
+        }
     }
 }
 

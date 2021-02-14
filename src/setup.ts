@@ -13,7 +13,6 @@ import _ from "lodash"
  */
 export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" | "console" | "none" | Logger, options?: any): void => {
     try {
-        if (!lib) lib = "console"
         if (!options) options = {}
 
         let libObj = lib as Logger

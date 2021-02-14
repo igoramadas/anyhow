@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+2.1.0
+=====
+* The chalk module will only be instantiated if using console as the logger.
+* Updated dependencies.
+
 2.0.6
 =====
 * Updated dependencies.
