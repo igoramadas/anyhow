@@ -1,6 +1,6 @@
 // Anyhow: Parser
 
-import _ from "lodash"
+import {isArray, isError, isObject, flattenArray} from "./utils"
 
 /**
  * Parser methods to build a message out of passed logging arguments.
@@ -53,34 +53,26 @@ class AnyhowParser {
                     let stringified = ""
 
                     try {
-                        if (_.isArray(arg)) {
+                        if (isArray(arg)) {
                             result = result.concat(this.argumentsParser(arg))
-                        } else if (_.isError(arg)) {
+                        } else if (isError(arg)) {
                             const arrError = []
 
                             // Add error information separately.
-                            if (arg.friendlyMessage) {
-                                arrError.push(arg.friendlyMessage)
-                            }
-                            if (arg.reason) {
-                                arrError.push(arg.reason)
-                            }
-                            if (arg.code) {
-                                arrError.push(arg.code)
-                            }
-
-                            /* istanbul ignore else */
-                            if (arg.message) {
-                                arrError.push(arg.message)
-                            }
+                            if (arg.friendlyMessage) arrError.push(arg.friendlyMessage)
+                            if (arg.reason) arrError.push(arg.reason)
+                            if (arg.code) arrError.push(arg.code)
+                            if (arg.message) arrError.push(arg.message)
 
                             // Errors from axios.
                             if (arg.response && arg.response.data) {
                                 if (arg.response.data.message) {
-                                    arrError.push(arg.response.data.message.toString())
+                                    const dataMessage = arg.response.data.message.toString()
+                                    if (dataMessage != "[object Object]") arrError.push(arg.response.data.message.toString())
                                 }
                                 if (arg.response.data.error) {
-                                    arrError.push(arg.response.data.error.toString())
+                                    const dataError = arg.response.data.error.toString()
+                                    if (dataError != "[object Object]") arrError.push(arg.response.data.error.toString())
                                 }
                             }
 
@@ -90,7 +82,7 @@ class AnyhowParser {
                             }
 
                             stringified = arrError.join(this.separator)
-                        } else if (_.isObject(arg)) {
+                        } else if (isObject(arg)) {
                             stringified = JSON.stringify(arg, null, 2)
                         } else {
                             stringified = arg.toString()
@@ -125,12 +117,12 @@ class AnyhowParser {
      * @returns Human readable string taken out of the parsed arguments.
      */
     getMessage = (...args: any | any[]): string => {
-        if (!_.isArray(args)) {
+        if (!isArray(args)) {
             /* istanbul ignore next */
             args = [args]
         }
 
-        args = _.flattenDeep(args)
+        args = flattenArray(args)
 
         // Add timestamp to the output?
         if (this.timestamp) {

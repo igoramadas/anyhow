@@ -1,9 +1,9 @@
 // Anyhow: index.ts
 
 import {Logger} from "./types"
-import parser from "./parser"
-import _ from "lodash"
 import {libSetup} from "./setup"
+import {isString} from "./utils"
+import parser from "./parser"
 
 // Chalk (colorized console output). Will be instantiated on setup().
 let chalk = null
@@ -218,7 +218,7 @@ class Anyhow {
     log(level: string, args: any | any[]): string {
         if (this.levels.indexOf(level.toLowerCase()) < 0) return null
 
-        let message = _.isString(args) ? args : parser.getMessage(args)
+        let message = isString(args) ? args : parser.getMessage(args)
 
         // If setup was not called yet, defaults to console logging and emit warning.
         if (!this.isReady) {
@@ -282,7 +282,7 @@ class Anyhow {
     console = (level: string, args: any): string => {
         if (this.levels.indexOf(level.toLowerCase()) < 0) return null
 
-        let message = _.isString(args) ? args : parser.getMessage(args)
+        let message = isString(args) ? args : parser.getMessage(args)
 
         // Add level to the output?
         if (this.levelOnConsole) {

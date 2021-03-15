@@ -1,7 +1,7 @@
 // Anyhow: Setup
 
 import {Logger} from "./types"
-import _ from "lodash"
+import {isFunction, isNil, isObject, isString} from "./utils"
 
 /**
  * Setup will try to load compatible loggers, and fall back to the console
@@ -31,7 +31,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
         }
 
         // Passed logger object directly? Check its signature.
-        if (_.isObject(lib)) {
+        if (isObject(lib)) {
             if (!libObj.name) {
                 throw new Error("Passed logger has an invalid signature, must have name=string")
             }
@@ -41,7 +41,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
             }
 
             // Passed an actual logging function? Set the logger object as stop here.
-            if (_.isFunction(libObj.log)) {
+            if (isFunction(libObj.log)) {
                 anyhow._logger = lib as Logger
                 return
             }
@@ -147,12 +147,12 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
 
                     const writeOptions = {
                         resource: options.resource || null,
-                        partialSuccess: _.isNil(options.partialSuccess) ? true : options.partialSuccess
+                        partialSuccess: isNil(options.partialSuccess) ? true : options.partialSuccess
                     }
 
                     const entry = gcloud.entry(metadata, message)
 
-                    if (_.isFunction(options.callback)) {
+                    if (isFunction(options.callback)) {
                         gcloud.write(entry, writeOptions, options.callback)
                     } else {
                         /* istanbul ignore next */
@@ -176,7 +176,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
         }
     } catch (ex) {
         /* istanbul ignore next */
-        const libName = _.isString(lib) ? lib : (lib as Logger).name
+        const libName = isString(lib) ? lib : (lib as Logger).name
         console.error("Anyhow.setup", `Can't setup ${libName}`, ex)
         throw ex
     }
