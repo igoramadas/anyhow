@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+2.2.1
+=====
+* Updated dependencies.
+
 2.2.0
 =====
 * Improved error parsing.
