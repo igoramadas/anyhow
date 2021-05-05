@@ -5,7 +5,6 @@ let mocha = require("mocha")
 let before = mocha.before
 let describe = mocha.describe
 let it = mocha.it
-let _ = require("lodash")
 
 chai.should()
 
@@ -35,7 +34,7 @@ describe("Anyhow Google Cloud Logging Tests", function () {
 
     it("Log using default auto-generated GCloud logger", function (done) {
         let counter = 0
-        let options = _.cloneDeep(defaultOptions)
+        let options = JSON.parse(JSON.stringify(defaultOptions, null, 0))
 
         options.callback = (err) => {
             counter++
@@ -58,7 +57,7 @@ describe("Anyhow Google Cloud Logging Tests", function () {
 
     it("Log passing GCloud logger directly", function (done) {
         let finished = false
-        let options = _.cloneDeep(defaultOptions)
+        let options = JSON.parse(JSON.stringify(defaultOptions, null, 0))
 
         options.partialSuccess = true
         options.logName = "anyhow-testing"

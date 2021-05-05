@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+2.2.2
+=====
+* Removed lodash references from testing.
+
 2.2.1
 =====
 * Updated dependencies.
