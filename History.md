@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+2.2.5
+=====
+* Updated dependencies.
+
 2.2.4
 =====
 * Updated dependencies.

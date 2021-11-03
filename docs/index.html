@@ -1,393 +1,154 @@
-<!doctype html>
-<html class="default no-js">
-<head>
-	<meta charset="utf-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>Anyhow</title>
-	<meta name="description" content="Documentation for Anyhow">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link rel="stylesheet" href="assets/css/main.css">
-	<script async src="assets/js/search.js" id="search-script"></script>
-</head>
-<body>
-<header>
-	<div class="tsd-page-toolbar">
-		<div class="container">
-			<div class="table-wrap">
-				<div class="table-cell" id="tsd-search" data-index="assets/js/search.json" data-base=".">
-					<div class="field">
-						<label for="tsd-search-field" class="tsd-widget search no-caption">Search</label>
-						<input id="tsd-search-field" type="text" />
-					</div>
-					<ul class="results">
-						<li class="state loading">Preparing search index...</li>
-						<li class="state failure">The search index is not available</li>
-					</ul>
-					<a href="index.html" class="title">Anyhow</a>
-				</div>
-				<div class="table-cell" id="tsd-widgets">
-					<div id="tsd-filter">
-						<a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a>
-						<div class="tsd-filter-group">
-							<div class="tsd-select" id="tsd-filter-visibility">
-								<span class="tsd-select-label">All</span>
-								<ul class="tsd-select-list">
-									<li data-value="public">Public</li>
-									<li data-value="protected">Public/Protected</li>
-									<li data-value="private" class="selected">All</li>
-								</ul>
-							</div>
-							<input type="checkbox" id="tsd-filter-inherited" checked />
-							<label class="tsd-widget" for="tsd-filter-inherited">Inherited</label>
-						</div>
-					</div>
-					<a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div class="tsd-page-title">
-		<div class="container">
-			<h1>Anyhow</h1>
-		</div>
-	</div>
-</header>
-<div class="container container-main">
-	<div class="row">
-		<div class="col-8 col-content">
-			<div class="tsd-panel tsd-typography">
-				<a href="#anyhow" id="anyhow" style="color: inherit; text-decoration: none;">
-					<h1>Anyhow</h1>
-				</a>
-				<p><a href="https://npmjs.com/package/anyhow"><img src="https://img.shields.io/npm/v/anyhow.svg" alt="Version"></a>
-					<a href="https://travis-ci.org/igoramadas/anyhow"><img src="https://img.shields.io/travis/igoramadas/anyhow.svg" alt="Build Status"></a>
-				<a href="https://coveralls.io/github/igoramadas/anyhow?branch=master"><img src="https://img.shields.io/coveralls/github/igoramadas/anyhow.svg" alt="Coverage Status"></a></p>
-				<p>Drop-in logging wrapper for <a href="https://www.npmjs.com/package/winston">Winston</a>, <a href="https://www.npmjs.com/package/bunyan">Bunyan</a>, <a href="https://www.npmjs.com/package/pino">pino</a>, <a href="https://github.com/googleapis/nodejs-logging">Google Cloud Logging</a> and <a href="https://nodejs.org/api/console.html">console</a>.</p>
-				<a href="#why" id="why" style="color: inherit; text-decoration: none;">
-					<h2>Why?</h2>
-				</a>
-				<p>The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my personal and work projects. Some were using winston. A few other went for bunyan. Some were simply streaming to the console.</p>
-				<p>By using Anyhow we can achieve a consistent logging mechanism regardless of what library is actually doing the logging. Install Anyhow, replace the log calls and let it delegate the actual logging to the correct library. It also has some handy features like compacting the messages, pre-processing arguments and stylizing the console output.</p>
-				<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
-					<h2>Basic usage</h2>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">logger</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;anyhow&quot;</span><span style="color: #000000">)</span>
+<!DOCTYPE html><html class="default no-js"><head><meta charSet="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Anyhow</title><meta name="description" content="Documentation for Anyhow"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="assets/style.css"/><link rel="stylesheet" href="assets/highlight.css"/><script async src="assets/search.js" id="search-script"></script></head><body><script>document.body.classList.add(localStorage.getItem("tsd-theme") || "os")</script><header><div class="tsd-page-toolbar"><div class="container"><div class="table-wrap"><div class="table-cell" id="tsd-search" data-base="."><div class="field"><label for="tsd-search-field" class="tsd-widget search no-caption">Search</label><input type="text" id="tsd-search-field"/></div><ul class="results"><li class="state loading">Preparing search index...</li><li class="state failure">The search index is not available</li></ul><a href="index.html" class="title">Anyhow</a></div><div class="table-cell" id="tsd-widgets"><div id="tsd-filter"><a href="#" class="tsd-widget options no-caption" data-toggle="options">Options</a><div class="tsd-filter-group"><div class="tsd-select" id="tsd-filter-visibility"><span class="tsd-select-label">All</span><ul class="tsd-select-list"><li data-value="public">Public</li><li data-value="protected">Public/Protected</li><li data-value="private" class="selected">All</li></ul></div> <input type="checkbox" id="tsd-filter-inherited" checked/><label class="tsd-widget" for="tsd-filter-inherited">Inherited</label></div></div><a href="#" class="tsd-widget menu no-caption" data-toggle="menu">Menu</a></div></div></div></div><div class="tsd-page-title"><div class="container"><h1>Anyhow</h1></div></div></header><div class="container container-main"><div class="row"><div class="col-8 col-content"><div class="tsd-panel tsd-typography">
+<a href="#anyhow" id="anyhow" style="color: inherit; text-decoration: none;">
+  <h1>Anyhow</h1>
+</a>
+<p><a href="https://npmjs.com/package/anyhow"><img src="https://img.shields.io/npm/v/anyhow.svg" alt="Version"></a>
+<a href="https://travis-ci.org/igoramadas/anyhow"><img src="https://img.shields.io/travis/igoramadas/anyhow.svg" alt="Build Status"></a>
+<a href="https://coveralls.io/github/igoramadas/anyhow?branch=master"><img src="https://img.shields.io/coveralls/github/igoramadas/anyhow.svg" alt="Coverage Status"></a></p>
+<p>Drop-in logging wrapper for <a href="https://www.npmjs.com/package/winston">Winston</a>, <a href="https://www.npmjs.com/package/bunyan">Bunyan</a>, <a href="https://www.npmjs.com/package/pino">pino</a>, <a href="https://github.com/googleapis/nodejs-logging">Google Cloud Logging</a> and <a href="https://nodejs.org/api/console.html">console</a>.</p>
 
-<span style="color: #008000">// Setup passing no arguments will default to the console.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">()</span>
+<a href="#why" id="why" style="color: inherit; text-decoration: none;">
+  <h2>Why?</h2>
+</a>
+<p>The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my personal and work projects. Some were using winston. A few other went for bunyan. Some were simply streaming to the console.</p>
+<p>By using Anyhow we can achieve a consistent logging mechanism regardless of what library is actually doing the logging. Install Anyhow, replace the log calls and let it delegate the actual logging to the correct library. It also has some handy features like compacting the messages, pre-processing arguments and stylizing the console output.</p>
 
-<span style="color: #008000">// Log some text.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;My app has started&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Mix and match arguments.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">({</span><span style="color: #001080">someJson:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;text&quot;</span><span style="color: #000000">}, </span><span style="color: #A31515">&quot;Some string&quot;</span><span style="color: #000000">, </span><span style="color: #098658">123</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Log exceptions.</span>
-<span style="color: #AF00DB">try</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #001080">oops</span><span style="color: #000000">.</span><span style="color: #795E26">itFailed</span><span style="color: #000000">()</span>
-<span style="color: #000000">} </span><span style="color: #AF00DB">catch</span><span style="color: #000000"> (</span><span style="color: #001080">ex</span><span style="color: #000000">) {</span>
-<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;MyApp.method&quot;</span><span style="color: #000000">, </span><span style="color: #001080">ex</span><span style="color: #000000">)</span>
-<span style="color: #000000">}</span>
-
-<span style="color: #008000">// By default &quot;debug&quot; level is disabled, so this won&#039;t log anything.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">debug</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Debug something&quot;</span><span style="color: #000000">, </span><span style="color: #001080">myObject</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Enable only warn and error logging.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">levels</span><span style="color: #000000"> = [</span><span style="color: #A31515">&quot;warn&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;error&quot;</span><span style="color: #000000">]</span>
-
-<span style="color: #008000">// Now info calls won&#039;t do anything.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Won&#039;t log because we only enabled warn and error&quot;</span><span style="color: #000000">)</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">warn</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;This warn will be logged&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// You can also call the .log method directly, passing level as the first argument.</span>
-<span style="color: #008000">// Useful when using custom loggers.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">log</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;info&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;This will be called as info&quot;</span><span style="color: #000000">, </span><span style="color: #001080">someExtraObject</span><span style="color: #000000">, </span><span style="color: #098658">123</span><span style="color: #000000">)</span>
+<a href="#basic-usage" id="basic-usage" style="color: inherit; text-decoration: none;">
+  <h2>Basic usage</h2>
+</a>
+<pre><code class="language-javascript"><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">logger</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&quot;anyhow&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Setup passing no arguments will default to the console.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">()</span><br/><br/><span class="hl-5">// Log some text.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-4">&quot;My app has started&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Mix and match arguments.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">({</span><span class="hl-6">someJson:</span><span class="hl-1"> </span><span class="hl-4">&quot;text&quot;</span><span class="hl-1">}, </span><span class="hl-4">&quot;Some string&quot;</span><span class="hl-1">, </span><span class="hl-7">123</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Log exceptions.</span><br/><span class="hl-8">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-6">oops</span><span class="hl-1">.</span><span class="hl-3">itFailed</span><span class="hl-1">()</span><br/><span class="hl-1">} </span><span class="hl-8">catch</span><span class="hl-1"> (</span><span class="hl-6">ex</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">error</span><span class="hl-1">(</span><span class="hl-4">&quot;MyApp.method&quot;</span><span class="hl-1">, </span><span class="hl-6">ex</span><span class="hl-1">)</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-5">// By default &quot;debug&quot; level is disabled, so this won&#39;t log anything.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">debug</span><span class="hl-1">(</span><span class="hl-4">&quot;Debug something&quot;</span><span class="hl-1">, </span><span class="hl-6">myObject</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Enable only warn and error logging.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">levels</span><span class="hl-1"> = [</span><span class="hl-4">&quot;warn&quot;</span><span class="hl-1">, </span><span class="hl-4">&quot;error&quot;</span><span class="hl-1">]</span><br/><br/><span class="hl-5">// Now info calls won&#39;t do anything.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-4">&quot;Won&#39;t log because we only enabled warn and error&quot;</span><span class="hl-1">)</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">warn</span><span class="hl-1">(</span><span class="hl-4">&quot;This warn will be logged&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// You can also call the .log method directly, passing level as the first argument.</span><br/><span class="hl-5">// Useful when using custom loggers.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">log</span><span class="hl-1">(</span><span class="hl-4">&quot;info&quot;</span><span class="hl-1">, </span><span class="hl-4">&quot;This will be called as info&quot;</span><span class="hl-1">, </span><span class="hl-6">someExtraObject</span><span class="hl-1">, </span><span class="hl-7">123</span><span class="hl-1">)</span>
 </code></pre>
-				<a href="#enforcing-a-specific-library" id="enforcing-a-specific-library" style="color: inherit; text-decoration: none;">
-					<h3>Enforcing a specific library</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #008000">// Use winston default logger.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">)</span>
 
-<span style="color: #008000">// Or pass the winston logger directly.</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">winstonLogger</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">).</span><span style="color: #795E26">createLogger</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">({</span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">, </span><span style="color: #001080">instance:</span><span style="color: #000000"> </span><span style="color: #001080">winstonLogger</span><span style="color: #000000">})</span>
-
-<span style="color: #008000">// Same for bunyan.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;bunyan&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Or...</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">bunyanLogger</span><span style="color: #000000"> = </span><span style="color: #795E26">require</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;bunyan&quot;</span><span style="color: #000000">).</span><span style="color: #795E26">createLogger</span><span style="color: #000000">(</span><span style="color: #001080">options</span><span style="color: #000000">)</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">({</span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">, </span><span style="color: #001080">instance:</span><span style="color: #000000"> </span><span style="color: #001080">bunyanLogger</span><span style="color: #000000">})</span>
-
-<span style="color: #008000">// Also pino.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;pino&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// And Google Cloud Logging. Log name will default to the appName, lowercased and with no spaces.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;gcloud&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Please note that Google Cloud Logging expects the default credentials set up on the machine.</span>
-<span style="color: #008000">// If you haven&#039;t configured the Google Cloud SDK or credentials on the machine, you must</span>
-<span style="color: #008000">// provide the authentication options during setup.</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">googleOptions</span><span style="color: #000000"> = {</span>
-<span style="color: #000000">    </span><span style="color: #001080">logName:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;anyhow-testing&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">projectId:</span><span style="color: #000000"> </span><span style="color: #001080">env</span><span style="color: #000000">.</span><span style="color: #0070C1">GCP_PROJECT_ID</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">credentials:</span><span style="color: #000000"> {</span>
-<span style="color: #000000">        </span><span style="color: #001080">client_email:</span><span style="color: #000000"> </span><span style="color: #001080">env</span><span style="color: #000000">.</span><span style="color: #0070C1">GCP_CLIENT_EMAIL</span><span style="color: #000000">,</span>
-<span style="color: #000000">        </span><span style="color: #001080">private_key:</span><span style="color: #000000"> </span><span style="color: #001080">env</span><span style="color: #000000">.</span><span style="color: #0070C1">GCP_PRIVATE_KEY</span><span style="color: #000000">.</span><span style="color: #795E26">replace</span><span style="color: #000000">(</span><span style="color: #811F3F">/</span><span style="color: #EE0000">\\</span><span style="color: #811F3F">n/</span><span style="color: #0000FF">g</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;</span><span style="color: #EE0000">\n</span><span style="color: #A31515">&quot;</span><span style="color: #000000">)</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">}</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;gcloud&quot;</span><span style="color: #000000">, </span><span style="color: #001080">googleOptions</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Disable logging.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;none&quot;</span><span style="color: #000000">)</span>
+<a href="#enforcing-a-specific-library" id="enforcing-a-specific-library" style="color: inherit; text-decoration: none;">
+  <h3>Enforcing a specific library</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-5">// Use winston default logger.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-4">&quot;winston&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Or pass the winston logger directly.</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">winstonLogger</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&quot;winston&quot;</span><span class="hl-1">).</span><span class="hl-3">createLogger</span><span class="hl-1">(</span><span class="hl-6">options</span><span class="hl-1">)</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">({</span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-4">&quot;winston&quot;</span><span class="hl-1">, </span><span class="hl-6">instance:</span><span class="hl-1"> </span><span class="hl-6">winstonLogger</span><span class="hl-1">})</span><br/><br/><span class="hl-5">// Same for bunyan.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-4">&quot;bunyan&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Or...</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">bunyanLogger</span><span class="hl-1"> = </span><span class="hl-3">require</span><span class="hl-1">(</span><span class="hl-4">&quot;bunyan&quot;</span><span class="hl-1">).</span><span class="hl-3">createLogger</span><span class="hl-1">(</span><span class="hl-6">options</span><span class="hl-1">)</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">({</span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-4">&quot;winston&quot;</span><span class="hl-1">, </span><span class="hl-6">instance:</span><span class="hl-1"> </span><span class="hl-6">bunyanLogger</span><span class="hl-1">})</span><br/><br/><span class="hl-5">// Also pino.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-4">&quot;pino&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// And Google Cloud Logging. Log name will default to the appName, lowercased and with no spaces.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-4">&quot;gcloud&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Please note that Google Cloud Logging expects the default credentials set up on the machine.</span><br/><span class="hl-5">// If you haven&#39;t configured the Google Cloud SDK or credentials on the machine, you must</span><br/><span class="hl-5">// provide the authentication options during setup.</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">googleOptions</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-6">logName:</span><span class="hl-1"> </span><span class="hl-4">&quot;anyhow-testing&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-6">projectId:</span><span class="hl-1"> </span><span class="hl-6">env</span><span class="hl-1">.</span><span class="hl-2">GCP_PROJECT_ID</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-6">credentials:</span><span class="hl-1"> {</span><br/><span class="hl-1">        </span><span class="hl-6">client_email:</span><span class="hl-1"> </span><span class="hl-6">env</span><span class="hl-1">.</span><span class="hl-2">GCP_CLIENT_EMAIL</span><span class="hl-1">,</span><br/><span class="hl-1">        </span><span class="hl-6">private_key:</span><span class="hl-1"> </span><span class="hl-6">env</span><span class="hl-1">.</span><span class="hl-2">GCP_PRIVATE_KEY</span><span class="hl-1">.</span><span class="hl-3">replace</span><span class="hl-1">(</span><span class="hl-9">/</span><span class="hl-10">\\</span><span class="hl-9">n/</span><span class="hl-0">g</span><span class="hl-1">, </span><span class="hl-4">&quot;</span><span class="hl-10">\n</span><span class="hl-4">&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">}</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-4">&quot;gcloud&quot;</span><span class="hl-1">, </span><span class="hl-6">googleOptions</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Disable logging.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-4">&quot;none&quot;</span><span class="hl-1">)</span>
 </code></pre>
-				<a href="#changing-default-settings" id="changing-default-settings" style="color: inherit; text-decoration: none;">
-					<h3>Changing default settings</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #008000">// Separate logged arguments with a &quot;, &quot; comma instead of default &quot; | &quot; pipe.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">separator</span><span style="color: #000000"> = </span><span style="color: #A31515">&quot;, &quot;</span>
 
-<span style="color: #008000">// Outputs &quot;This is, now separated, by comma&quot;.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;This is&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;now separated&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;by comma&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Do not compact messages (default is compact = true).</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">compact</span><span style="color: #000000"> = </span><span style="color: #0000FF">false</span>
-
-<span style="color: #008000">// Logged output will contain JSON with spaces and line breaks.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #001080">someComplexObject</span><span style="color: #000000">, </span><span style="color: #001080">somethingElse</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Make warn messages red and italic instead of default yellow (depends on &quot;chalk&quot; module).</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">styles</span><span style="color: #000000">.</span><span style="color: #001080">warn</span><span style="color: #000000"> = [</span><span style="color: #A31515">&quot;red&quot;</span><span style="color: #000000">, </span><span style="color: #A31515">&quot;italic&quot;</span><span style="color: #000000">]</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">warn</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Console output now shows yellow italic for this&quot;</span><span style="color: #000000">)</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Info is still default gray&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Disable styling.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">styles</span><span style="color: #000000"> = </span><span style="color: #0000FF">null</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">warn</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;No console styles anymore, even if chalk is installed&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Prepend log level on the console.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">levelOnConsole</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;This will now have &#039;INFO:&#039; on the beginning of the message&quot;</span><span style="color: #000000">)</span>
-
-<span style="color: #AF00DB">try</span><span style="color: #000000"> {</span>
-<span style="color: #000000">    </span><span style="color: #008000">// Some exception thrown.</span>
-<span style="color: #000000">    </span><span style="color: #001080">myApp</span><span style="color: #000000">.</span><span style="color: #795E26">method</span><span style="color: #000000">(</span><span style="color: #001080">fails</span><span style="color: #000000">)</span>
-<span style="color: #000000">} </span><span style="color: #AF00DB">catch</span><span style="color: #000000"> (</span><span style="color: #001080">ex</span><span style="color: #000000">) {</span>
-<span style="color: #000000">    </span><span style="color: #008000">// By default the stack trace is not logged...</span>
-<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;error without stack trace&quot;</span><span style="color: #000000">, </span><span style="color: #001080">ex</span><span style="color: #000000">)</span>
-
-<span style="color: #000000">    </span><span style="color: #008000">// Include stack trace by setting errorStack = true.</span>
-<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">errorStack</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
-<span style="color: #000000">    </span><span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;error with stack trace&quot;</span><span style="color: #000000">, </span><span style="color: #001080">ex</span><span style="color: #000000">)</span>
-<span style="color: #000000">}</span>
+<a href="#changing-default-settings" id="changing-default-settings" style="color: inherit; text-decoration: none;">
+  <h3>Changing default settings</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-5">// Separate logged arguments with a &quot;, &quot; comma instead of default &quot; | &quot; pipe.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">separator</span><span class="hl-1"> = </span><span class="hl-4">&quot;, &quot;</span><br/><br/><span class="hl-5">// Outputs &quot;This is, now separated, by comma&quot;.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-4">&quot;This is&quot;</span><span class="hl-1">, </span><span class="hl-4">&quot;now separated&quot;</span><span class="hl-1">, </span><span class="hl-4">&quot;by comma&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Do not compact messages (default is compact = true).</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">compact</span><span class="hl-1"> = </span><span class="hl-0">false</span><br/><br/><span class="hl-5">// Logged output will contain JSON with spaces and line breaks.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-6">someComplexObject</span><span class="hl-1">, </span><span class="hl-6">somethingElse</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Make warn messages red and italic instead of default yellow (depends on &quot;chalk&quot; module).</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">styles</span><span class="hl-1">.</span><span class="hl-6">warn</span><span class="hl-1"> = [</span><span class="hl-4">&quot;red&quot;</span><span class="hl-1">, </span><span class="hl-4">&quot;italic&quot;</span><span class="hl-1">]</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">warn</span><span class="hl-1">(</span><span class="hl-4">&quot;Console output now shows yellow italic for this&quot;</span><span class="hl-1">)</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-4">&quot;Info is still default gray&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Disable styling.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">styles</span><span class="hl-1"> = </span><span class="hl-0">null</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">warn</span><span class="hl-1">(</span><span class="hl-4">&quot;No console styles anymore, even if chalk is installed&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Prepend log level on the console.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">levelOnConsole</span><span class="hl-1"> = </span><span class="hl-0">true</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-4">&quot;This will now have &#39;INFO:&#39; on the beginning of the message&quot;</span><span class="hl-1">)</span><br/><br/><span class="hl-8">try</span><span class="hl-1"> {</span><br/><span class="hl-1">    </span><span class="hl-5">// Some exception thrown.</span><br/><span class="hl-1">    </span><span class="hl-6">myApp</span><span class="hl-1">.</span><span class="hl-3">method</span><span class="hl-1">(</span><span class="hl-6">fails</span><span class="hl-1">)</span><br/><span class="hl-1">} </span><span class="hl-8">catch</span><span class="hl-1"> (</span><span class="hl-6">ex</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-5">// By default the stack trace is not logged...</span><br/><span class="hl-1">    </span><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">error</span><span class="hl-1">(</span><span class="hl-4">&quot;error without stack trace&quot;</span><span class="hl-1">, </span><span class="hl-6">ex</span><span class="hl-1">)</span><br/><br/><span class="hl-1">    </span><span class="hl-5">// Include stack trace by setting errorStack = true.</span><br/><span class="hl-1">    </span><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">errorStack</span><span class="hl-1"> = </span><span class="hl-0">true</span><br/><span class="hl-1">    </span><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">error</span><span class="hl-1">(</span><span class="hl-4">&quot;error with stack trace&quot;</span><span class="hl-1">, </span><span class="hl-6">ex</span><span class="hl-1">)</span><br/><span class="hl-1">}</span>
 </code></pre>
-				<a href="#pre-processing-logged-messages" id="pre-processing-logged-messages" style="color: inherit; text-decoration: none;">
-					<h3>Pre-processing logged messages</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #008000">// Sample user object.</span>
-<span style="color: #0000FF">const</span><span style="color: #000000"> </span><span style="color: #0070C1">user</span><span style="color: #000000"> = {</span>
-<span style="color: #000000">    </span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;John Doe&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">password:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;mypass&quot;</span><span style="color: #000000">,</span>
-<span style="color: #000000">    </span><span style="color: #001080">token:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;sometoken&quot;</span>
-<span style="color: #000000">}</span>
 
-<span style="color: #008000">// No preprocessor by default, will log all user data.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #001080">user</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// Add preprocessor to remove passwords and tokens from logged objects.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">preprocessor</span><span style="color: #000000"> = </span><span style="color: #0000FF">function</span><span style="color: #000000">(</span><span style="color: #001080">args</span><span style="color: #000000">) {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">for</span><span style="color: #000000"> (</span><span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000"> </span><span style="color: #0000FF">of</span><span style="color: #000000"> </span><span style="color: #001080">args</span><span style="color: #000000">) {</span>
-<span style="color: #000000">        </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">a</span><span style="color: #000000"> &amp;&amp; </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">password</span><span style="color: #000000">) {</span>
-<span style="color: #000000">            </span><span style="color: #0000FF">delete</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">password</span>
-<span style="color: #000000">        } </span><span style="color: #AF00DB">else</span><span style="color: #000000"> </span><span style="color: #AF00DB">if</span><span style="color: #000000"> (</span><span style="color: #001080">a</span><span style="color: #000000"> &amp;&amp; </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">token</span><span style="color: #000000">) {</span>
-<span style="color: #000000">            </span><span style="color: #0000FF">delete</span><span style="color: #000000"> </span><span style="color: #001080">a</span><span style="color: #000000">.</span><span style="color: #001080">token</span>
-<span style="color: #000000">        }</span>
-<span style="color: #000000">    }</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">return</span><span style="color: #000000"> </span><span style="color: #001080">args</span>
-<span style="color: #000000">}</span>
-
-<span style="color: #008000">// User&#039;s password and token won&#039;t be loggged.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #795E26">info</span><span style="color: #000000">(</span><span style="color: #001080">user</span><span style="color: #000000">)</span>
-
-<span style="color: #008000">// User was not mutated, as it will deep clone before logging.</span>
-<span style="color: #001080">console</span><span style="color: #000000">.</span><span style="color: #795E26">dir</span><span style="color: #000000">(</span><span style="color: #001080">user</span><span style="color: #000000">)</span>
+<a href="#pre-processing-logged-messages" id="pre-processing-logged-messages" style="color: inherit; text-decoration: none;">
+  <h3>Pre-processing logged messages</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-5">// Sample user object.</span><br/><span class="hl-0">const</span><span class="hl-1"> </span><span class="hl-2">user</span><span class="hl-1"> = {</span><br/><span class="hl-1">    </span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-4">&quot;John Doe&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-6">password:</span><span class="hl-1"> </span><span class="hl-4">&quot;mypass&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-6">token:</span><span class="hl-1"> </span><span class="hl-4">&quot;sometoken&quot;</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-5">// No preprocessor by default, will log all user data.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-6">user</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// Add preprocessor to remove passwords and tokens from logged objects.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">preprocessor</span><span class="hl-1"> = </span><span class="hl-0">function</span><span class="hl-1">(</span><span class="hl-6">args</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-8">for</span><span class="hl-1"> (</span><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-6">a</span><span class="hl-1"> </span><span class="hl-0">of</span><span class="hl-1"> </span><span class="hl-6">args</span><span class="hl-1">) {</span><br/><span class="hl-1">        </span><span class="hl-8">if</span><span class="hl-1"> (</span><span class="hl-6">a</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">a</span><span class="hl-1">.</span><span class="hl-6">password</span><span class="hl-1">) {</span><br/><span class="hl-1">            </span><span class="hl-0">delete</span><span class="hl-1"> </span><span class="hl-6">a</span><span class="hl-1">.</span><span class="hl-6">password</span><br/><span class="hl-1">        } </span><span class="hl-8">else</span><span class="hl-1"> </span><span class="hl-8">if</span><span class="hl-1"> (</span><span class="hl-6">a</span><span class="hl-1"> &amp;&amp; </span><span class="hl-6">a</span><span class="hl-1">.</span><span class="hl-6">token</span><span class="hl-1">) {</span><br/><span class="hl-1">            </span><span class="hl-0">delete</span><span class="hl-1"> </span><span class="hl-6">a</span><span class="hl-1">.</span><span class="hl-6">token</span><br/><span class="hl-1">        }</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">    </span><span class="hl-8">return</span><span class="hl-1"> </span><span class="hl-6">args</span><br/><span class="hl-1">}</span><br/><br/><span class="hl-5">// User&#39;s password and token won&#39;t be loggged.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-3">info</span><span class="hl-1">(</span><span class="hl-6">user</span><span class="hl-1">)</span><br/><br/><span class="hl-5">// User was not mutated, as it will deep clone before logging.</span><br/><span class="hl-6">console</span><span class="hl-1">.</span><span class="hl-3">dir</span><span class="hl-1">(</span><span class="hl-6">user</span><span class="hl-1">)</span>
 </code></pre>
-				<a href="#uncaught-and-unhandled-errors" id="uncaught-and-unhandled-errors" style="color: inherit; text-decoration: none;">
-					<h3>Uncaught and unhandled errors</h3>
-				</a>
-				<pre><code class="language-javascript"><span style="color: #008000">// Enable the uncaught exceptions handled.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">uncaughtExceptions</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
 
-<span style="color: #008000">// Throw some exception.</span>
-<span style="color: #008000">// Will log the &quot;Not a function&quot; exception to the current transport.</span>
-<span style="color: #008000">// Code will not execute from here, but exception was logged to the console.</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #001080">notFunction</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
-<span style="color: #795E26">notFunction</span><span style="color: #000000">()</span>
-
-<span style="color: #008000">// Also for unhandled rejections.</span>
-<span style="color: #001080">logger</span><span style="color: #000000">.</span><span style="color: #001080">unhandledRejections</span><span style="color: #000000"> = </span><span style="color: #0000FF">true</span>
-
-<span style="color: #008000">// Here a sample of unhandled rejection.</span>
-<span style="color: #0000FF">let</span><span style="color: #000000"> </span><span style="color: #795E26">failFunction</span><span style="color: #000000"> = </span><span style="color: #0000FF">async</span><span style="color: #000000"> </span><span style="color: #0000FF">function</span><span style="color: #000000">() {</span>
-<span style="color: #000000">    </span><span style="color: #AF00DB">throw</span><span style="color: #000000"> </span><span style="color: #0000FF">new</span><span style="color: #000000"> </span><span style="color: #267F99">Error</span><span style="color: #000000">(</span><span style="color: #A31515">&quot;Oh no!&quot;</span><span style="color: #000000">)</span>
-<span style="color: #000000">}</span>
-<span style="color: #008000">// Will log the unhandled rejection.</span>
-<span style="color: #795E26">failFunction</span><span style="color: #000000">()</span>
-
+<a href="#uncaught-and-unhandled-errors" id="uncaught-and-unhandled-errors" style="color: inherit; text-decoration: none;">
+  <h3>Uncaught and unhandled errors</h3>
+</a>
+<pre><code class="language-javascript"><span class="hl-5">// Enable the uncaught exceptions handled.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">uncaughtExceptions</span><span class="hl-1"> = </span><span class="hl-0">true</span><br/><br/><span class="hl-5">// Throw some exception.</span><br/><span class="hl-5">// Will log the &quot;Not a function&quot; exception to the current transport.</span><br/><span class="hl-5">// Code will not execute from here, but exception was logged to the console.</span><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-6">notFunction</span><span class="hl-1"> = </span><span class="hl-0">true</span><br/><span class="hl-3">notFunction</span><span class="hl-1">()</span><br/><br/><span class="hl-5">// Also for unhandled rejections.</span><br/><span class="hl-6">logger</span><span class="hl-1">.</span><span class="hl-6">unhandledRejections</span><span class="hl-1"> = </span><span class="hl-0">true</span><br/><br/><span class="hl-5">// Here a sample of unhandled rejection.</span><br/><span class="hl-0">let</span><span class="hl-1"> </span><span class="hl-3">failFunction</span><span class="hl-1"> = </span><span class="hl-0">async</span><span class="hl-1"> </span><span class="hl-0">function</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-8">throw</span><span class="hl-1"> </span><span class="hl-0">new</span><span class="hl-1"> </span><span class="hl-11">Error</span><span class="hl-1">(</span><span class="hl-4">&quot;Oh no!&quot;</span><span class="hl-1">)</span><br/><span class="hl-1">}</span><br/><span class="hl-5">// Will log the unhandled rejection.</span><br/><span class="hl-3">failFunction</span><span class="hl-1">()</span><br/>
 </code></pre>
-				<a href="#version-2-breaking-changes" id="version-2-breaking-changes" style="color: inherit; text-decoration: none;">
-					<h2>Version 2 breaking changes</h2>
-				</a>
-				<p>If you were using Anyhow and passing a logger instance directly on <code>setup()</code>, you&#39;ll need to update the call to the new signature.</p>
-				<pre><code class="language-javascript"><span style="color: #008000">// From...</span>
-<span style="color: #001080">anyhow</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">(</span><span style="color: #001080">myWinstonLogger</span><span style="color: #000000">)</span>
-<span style="color: #008000">// To...</span>
-<span style="color: #001080">anyhow</span><span style="color: #000000">.</span><span style="color: #795E26">setup</span><span style="color: #000000">({</span><span style="color: #001080">name:</span><span style="color: #000000"> </span><span style="color: #A31515">&quot;winston&quot;</span><span style="color: #000000">, </span><span style="color: #001080">instance:</span><span style="color: #000000"> </span><span style="color: #001080">myWinstonLogger</span><span style="color: #000000">})</span>
-</code></pre>
-				<a href="#options" id="options" style="color: inherit; text-decoration: none;">
-					<h2>Options</h2>
-				</a>
-				<a href="#compact-true" id="compact-true" style="color: inherit; text-decoration: none;">
-					<h4>compact: true</h4>
-				</a>
-				<p>Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.</p>
-				<a href="#errorstack-false" id="errorstack-false" style="color: inherit; text-decoration: none;">
-					<h4>errorStack: false</h4>
-				</a>
-				<p>Boolean, defines if stack traces should be logged with errors and exceptions.</p>
-				<a href="#levels-quotinfoquot-quotwarnquot-quoterrorquot" id="levels-quotinfoquot-quotwarnquot-quoterrorquot" style="color: inherit; text-decoration: none;">
-					<h4>levels: [&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;]</h4>
-				</a>
-				<p>Array of string, defines which logging levels are enabled. Possible logging levels are
-				[&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;].</p>
-				<a href="#levelonconsole-false" id="levelonconsole-false" style="color: inherit; text-decoration: none;">
-					<h4>levelOnConsole: false</h4>
-				</a>
-				<p>Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.</p>
-				<a href="#uncaughtexception-false" id="uncaughtexception-false" style="color: inherit; text-decoration: none;">
-					<h4>uncaughtException: false</h4>
-				</a>
-				<p>Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).</p>
-				<a href="#preprocessorargs" id="preprocessorargs" style="color: inherit; text-decoration: none;">
-					<h4>preprocessor(args)</h4>
-				</a>
-				<p>You can define a function(arrayOfObjects) that will be used to process arguments before generating
-					the final log messages. This is useful if you want to change or remove information from objects, for
-					instance you might want to obfuscate all <code>password</code> fields and mask <code>telephone</code> fields. The function
-				can either mutate the arrayOfObjects or return the new arguments as a result.</p>
-				<a href="#separator-quot--quot" id="separator-quot--quot" style="color: inherit; text-decoration: none;">
-					<h4>separator: &quot; | &quot;</h4>
-				</a>
-				<p>String, defines the default separator between logged objects. For instance if you do a
-				<code>info(123, &quot;ABC&quot;)</code>, output will be &quot;123 | ABC&quot;.</p>
-				<a href="#styles-object" id="styles-object" style="color: inherit; text-decoration: none;">
-					<h4>styles: object</h4>
-				</a>
-				<p>Object with keys defining the styles for each level on console output. This will only be effective
-					if you also have the <a href="https://www.npmjs.com/package/chalk">chalk</a> module installed. By default
-				<code>debug</code> is gray, <code>info</code> white, <code>warn</code> yellow and <code>error</code> bold red. To disable, set it to null.</p>
-				<a href="#methods" id="methods" style="color: inherit; text-decoration: none;">
-					<h2>Methods</h2>
-				</a>
-				<a href="#consolelevel-args--gt-string" id="consolelevel-args--gt-string" style="color: inherit; text-decoration: none;">
-					<h4>console(level, args) -&gt; string</h4>
-				</a>
-				<p>Log to console directly, regardless of which library is currently active. First argument is
-					the <code>level</code> string, and second is array of things to be logged.
-				Returns the final, parsed message that was logged.</p>
-				<a href="#loglevel-args--gt-string" id="loglevel-args--gt-string" style="color: inherit; text-decoration: none;">
-					<h4>log(level, args) -&gt; string</h4>
-				</a>
-				<p>Main logging method. First argument is the <code>level</code> string, and second is array of things to be logged.
-					Please note that only &quot;info&quot;, &quot;warn&quot; and &quot;error&quot; levels are enabled by default.
-				Returns the final, parsed message that was logged.</p>
-				<a href="#debugargs--gt-string" id="debugargs--gt-string" style="color: inherit; text-decoration: none;">
-					<h4>debug(...args) -&gt; string</h4>
-				</a>
-				<p>Shortcut to log(&quot;debug&quot;, args). Please note that &quot;debug&quot; is not included on the default <code>levels</code>.</p>
-				<a href="#infoargs--gt-string" id="infoargs--gt-string" style="color: inherit; text-decoration: none;">
-					<h4>info(...args) -&gt; string</h4>
-				</a>
-				<p>Shortcut to log(&quot;info&quot;, args).</p>
-				<a href="#warnargs--gt-string" id="warnargs--gt-string" style="color: inherit; text-decoration: none;">
-					<h4>warn(...args) -&gt; string</h4>
-				</a>
-				<p>Shortcut to log(&quot;warn&quot;, args).</p>
-				<a href="#errorargs--gt-string" id="errorargs--gt-string" style="color: inherit; text-decoration: none;">
-					<h4>error(...args) -&gt; string</h4>
-				</a>
-				<p>Shortcut to log(&quot;error&quot;, args).</p>
-				<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
-					<h2>API documentation</h2>
-				</a>
-				<p>You can browse the full API documentation at <a href="https://anyhow.devv.com">https://anyhow.devv.com</a>.</p>
-				<p>Or check these following projects that are using Anyhow for logging:</p>
-				<ul>
-					<li><a href="https://github.com/igoramadas/expresser">Expresser</a></li>
-					<li><a href="https://github.com/igoramadas/monitorado">Monitorado</a></li>
-					<li><a href="https://github.com/igoramadas/setmeup">SetMeUp</a></li>
-					<li><a href="https://github.com/igoramadas/pandagainz">PandaGainz</a></li>
-					<li><a href="https://github.com/strautomator/core">Strautomator</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="col-4 col-menu menu-sticky-wrap menu-highlight">
-			<nav class="tsd-navigation primary">
-				<ul>
-					<li class=" ">
-						<a href="modules.html">Modules</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/index.html">index</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/parser.html">parser</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/setup.html">setup</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/types.html">types</a>
-					</li>
-					<li class=" tsd-kind-module">
-						<a href="modules/utils.html">utils</a>
-					</li>
-				</ul>
-			</nav>
-			<nav class="tsd-navigation secondary menu-sticky">
-				<ul class="before-current">
-				</ul>
-			</nav>
-		</div>
-	</div>
-</div>
-<footer class="with-border-bottom">
-	<div class="container">
-		<h2>Legend</h2>
-		<div class="tsd-legend-group">
-			<ul class="tsd-legend">
-				<li class="tsd-kind-function"><span class="tsd-kind-icon">Function</span></li>
-			</ul>
-			<ul class="tsd-legend">
-				<li class="tsd-kind-interface"><span class="tsd-kind-icon">Interface</span></li>
-			</ul>
-		</div>
-	</div>
-</footer>
-<div class="container tsd-generator">
-	<p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p>
-</div>
-<div class="overlay"></div>
-<script src="assets/js/main.js"></script>
-<script>
-        (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-            (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-        })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-        ga('create', 'UA-9331973-4', 'auto');
-        ga('send', 'pageview');
-    </script>
-</body>
-</html>
+<a href="#version-2-breaking-changes" id="version-2-breaking-changes" style="color: inherit; text-decoration: none;">
+  <h2>Version 2 breaking changes</h2>
+</a>
+<p>If you were using Anyhow and passing a logger instance directly on <code>setup()</code>, you&#39;ll need to update the call to the new signature.</p>
+<pre><code class="language-javascript"><span class="hl-5">// From...</span><br/><span class="hl-6">anyhow</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">(</span><span class="hl-6">myWinstonLogger</span><span class="hl-1">)</span><br/><span class="hl-5">// To...</span><br/><span class="hl-6">anyhow</span><span class="hl-1">.</span><span class="hl-3">setup</span><span class="hl-1">({</span><span class="hl-6">name:</span><span class="hl-1"> </span><span class="hl-4">&quot;winston&quot;</span><span class="hl-1">, </span><span class="hl-6">instance:</span><span class="hl-1"> </span><span class="hl-6">myWinstonLogger</span><span class="hl-1">})</span>
+</code></pre>
+
+<a href="#options" id="options" style="color: inherit; text-decoration: none;">
+  <h2>Options</h2>
+</a>
+
+<a href="#compact-true" id="compact-true" style="color: inherit; text-decoration: none;">
+  <h4>compact: true</h4>
+</a>
+<p>Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.</p>
+
+<a href="#errorstack-false" id="errorstack-false" style="color: inherit; text-decoration: none;">
+  <h4>errorStack: false</h4>
+</a>
+<p>Boolean, defines if stack traces should be logged with errors and exceptions.</p>
+
+<a href="#levels-quotinfoquot-quotwarnquot-quoterrorquot" id="levels-quotinfoquot-quotwarnquot-quoterrorquot" style="color: inherit; text-decoration: none;">
+  <h4>levels: [&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;]</h4>
+</a>
+<p>Array of string, defines which logging levels are enabled. Possible logging levels are
+[&quot;info&quot;, &quot;warn&quot;, &quot;error&quot;].</p>
+
+<a href="#levelonconsole-false" id="levelonconsole-false" style="color: inherit; text-decoration: none;">
+  <h4>levelOnConsole: false</h4>
+</a>
+<p>Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.</p>
+
+<a href="#uncaughtexception-false" id="uncaughtexception-false" style="color: inherit; text-decoration: none;">
+  <h4>uncaughtException: false</h4>
+</a>
+<p>Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).</p>
+
+<a href="#preprocessorargs" id="preprocessorargs" style="color: inherit; text-decoration: none;">
+  <h4>preprocessor(args)</h4>
+</a>
+<p>You can define a function(arrayOfObjects) that will be used to process arguments before generating
+the final log messages. This is useful if you want to change or remove information from objects, for
+instance you might want to obfuscate all <code>password</code> fields and mask <code>telephone</code> fields. The function
+can either mutate the arrayOfObjects or return the new arguments as a result.</p>
+
+<a href="#separator-quot--quot" id="separator-quot--quot" style="color: inherit; text-decoration: none;">
+  <h4>separator: &quot; | &quot;</h4>
+</a>
+<p>String, defines the default separator between logged objects. For instance if you do a
+<code>info(123, &quot;ABC&quot;)</code>, output will be &quot;123 | ABC&quot;.</p>
+
+<a href="#styles-object" id="styles-object" style="color: inherit; text-decoration: none;">
+  <h4>styles: object</h4>
+</a>
+<p>Object with keys defining the styles for each level on console output. This will only be effective
+if you also have the <a href="https://www.npmjs.com/package/chalk">chalk</a> module installed. By default
+<code>debug</code> is gray, <code>info</code> white, <code>warn</code> yellow and <code>error</code> bold red. To disable, set it to null.</p>
+
+<a href="#methods" id="methods" style="color: inherit; text-decoration: none;">
+  <h2>Methods</h2>
+</a>
+
+<a href="#consolelevel-args--gt-string" id="consolelevel-args--gt-string" style="color: inherit; text-decoration: none;">
+  <h4>console(level, args) -&gt; string</h4>
+</a>
+<p>Log to console directly, regardless of which library is currently active. First argument is
+the <code>level</code> string, and second is array of things to be logged.
+Returns the final, parsed message that was logged.</p>
+
+<a href="#loglevel-args--gt-string" id="loglevel-args--gt-string" style="color: inherit; text-decoration: none;">
+  <h4>log(level, args) -&gt; string</h4>
+</a>
+<p>Main logging method. First argument is the <code>level</code> string, and second is array of things to be logged.
+Please note that only &quot;info&quot;, &quot;warn&quot; and &quot;error&quot; levels are enabled by default.
+Returns the final, parsed message that was logged.</p>
+
+<a href="#debugargs--gt-string" id="debugargs--gt-string" style="color: inherit; text-decoration: none;">
+  <h4>debug(...args) -&gt; string</h4>
+</a>
+<p>Shortcut to log(&quot;debug&quot;, args). Please note that &quot;debug&quot; is not included on the default <code>levels</code>.</p>
+
+<a href="#infoargs--gt-string" id="infoargs--gt-string" style="color: inherit; text-decoration: none;">
+  <h4>info(...args) -&gt; string</h4>
+</a>
+<p>Shortcut to log(&quot;info&quot;, args).</p>
+
+<a href="#warnargs--gt-string" id="warnargs--gt-string" style="color: inherit; text-decoration: none;">
+  <h4>warn(...args) -&gt; string</h4>
+</a>
+<p>Shortcut to log(&quot;warn&quot;, args).</p>
+
+<a href="#errorargs--gt-string" id="errorargs--gt-string" style="color: inherit; text-decoration: none;">
+  <h4>error(...args) -&gt; string</h4>
+</a>
+<p>Shortcut to log(&quot;error&quot;, args).</p>
+
+<a href="#api-documentation" id="api-documentation" style="color: inherit; text-decoration: none;">
+  <h2>API documentation</h2>
+</a>
+<p>You can browse the full API documentation at <a href="https://anyhow.devv.com">https://anyhow.devv.com</a>.</p>
+<p>Or check these following projects that are using Anyhow for logging:</p>
+<ul>
+<li><a href="https://github.com/igoramadas/expresser">Expresser</a></li>
+<li><a href="https://github.com/igoramadas/monitorado">Monitorado</a></li>
+<li><a href="https://github.com/igoramadas/setmeup">SetMeUp</a></li>
+<li><a href="https://github.com/igoramadas/pandagainz">PandaGainz</a></li>
+<li><a href="https://github.com/strautomator/core">Strautomator</a></li>
+</ul>
+</div></div><div class="col-4 col-menu menu-sticky-wrap menu-highlight"><nav class="tsd-navigation primary"><ul><li class="current"><a href="modules.html">Exports</a></li></ul></nav><nav class="tsd-navigation secondary menu-sticky"><ul></ul></nav></div></div></div><footer class="with-border-bottom"><div class="container"><h2>Settings</h2><p>Theme <select id="theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></p></div></footer><div class="container tsd-generator"><p>Generated using <a href="https://typedoc.org/" target="_blank">TypeDoc</a></p></div><div class="overlay"></div><script src="assets/main.js"></script><script>(function(i,s,o,g,r,a,m){i[&#39;GoogleAnalyticsObject&#39;]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o), m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)})(window,document,&#39;script&#39;,&#39;//www.google-analytics.com/analytics.js&#39;,&#39;ga&#39;); ga(&#39;create&#39;, &#39;UA-9331973-4&#39;, &#39;auto&#39;); ga(&#39;send&#39;, &#39;pageview&#39;);</script></body></html>
