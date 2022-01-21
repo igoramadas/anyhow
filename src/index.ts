@@ -1,12 +1,31 @@
 // Anyhow: index.ts
 
-import {Logger} from "./types"
+import {AnyhowOptions, Logger} from "./types"
 import {libSetup} from "./setup"
-import {isString} from "./utils"
+import {cloneDeep, dedupArray, mergeDeep} from "./utils"
 import parser from "./parser"
 
 // Chalk (colorized console output). Will be instantiated on setup().
 let chalk = null
+
+// Default options.
+const defaultOptions: AnyhowOptions = {
+    compact: true,
+    maxDepth: 5,
+    appName: "Anyhow",
+    levels: ["info", "warn", "error"],
+    styles: {
+        debug: ["gray"],
+        info: ["white"],
+        warn: ["yellow"],
+        error: ["red", "bold"]
+    },
+    preprocessors: [],
+    preprocessorOptions: {
+        maskedFields: ["password", "passcode", "secret", "token", "accessToken", "access_token", "refreshToken", "refresh_token", "clientSecret", "client_secret"],
+        stringify: true
+    }
+}
 
 /**
  * This is the main class of the Anyhow library.
@@ -17,6 +36,13 @@ class Anyhow {
     /** @hidden */
     static get Instance() {
         return this._instance || (this._instance = new this())
+    }
+
+    /**
+     * Init with default options.
+     */
+    constructor() {
+        this.options = cloneDeep(defaultOptions)
     }
 
     // PROPERTIES
@@ -53,36 +79,23 @@ class Anyhow {
     }
 
     /**
-     * Name of the current running app. This will be used when logging
-     * uncaught exceptions, rejections and in similar cases.
+     * Library options (internal).
      */
-    appName: string
+    private _options: AnyhowOptions
 
     /**
-     * Include level (INFO, WARN, ERROR etc...) on the output message when
-     * logging to the console? Default is true.
+     * Get library options.
      */
-    levelOnConsole: boolean = false
+    get options(): AnyhowOptions {
+        return this._options
+    }
 
     /**
-     * Array that controls which log calls are enabled. By default
-     * it's [[info]], [[warn]] and [[error]], so [[debug]] won't log anything.
+     * Set library options.
      */
-    levels: string[] = ["info", "warn", "error"]
-
-    /**
-     * Default console logging styles to be used in case the `chalk` module is installed.
-     * Please check the `chalk` documentation for the available styles.
-     */
-    styles: any = {
-        /** Display debug logs in gray. */
-        debug: ["gray"],
-        /** Display info logs in white. */
-        info: ["white"],
-        /** Display warn logs in yellow. */
-        warn: ["yellow"],
-        /** Display error messages in bold red. */
-        error: ["red", "bold"]
+    set options(value: AnyhowOptions) {
+        const newOptions = value ? mergeDeep(defaultOptions, value) : cloneDeep(defaultOptions)
+        this.applyOptions(newOptions)
     }
 
     /**
@@ -91,20 +104,12 @@ class Anyhow {
     private _uncaughtExceptionHandler: Function = null
 
     /**
-     * Function to catch and log unhandled rejections, set by [[unhandledRejections]].
+     * Enable or disable the uncaught exception handler.
      */
-    private _unhandledRejectionHandler: Function = null
-
-    /** Returns true if the uncaught exception handler is set, false otherwise. */
-    get uncaughtExceptions(): boolean {
-        return this._uncaughtExceptionHandler != null
-    }
-
-    /** Enable or disable the uncaught exception handler. */
-    set uncaughtExceptions(value: boolean) {
+    private set uncaughtExceptions(value: boolean) {
         if (value) {
             this._uncaughtExceptionHandler = (err) => {
-                this.error(this.appName || "Anyhow", "Uncaught exception", err)
+                this.error(this._options.appName, "Uncaught exception", err)
 
                 return
             }
@@ -117,16 +122,18 @@ class Anyhow {
         }
     }
 
-    /** Returns true if the unhandled rejection handler is set, false otherwise. */
-    get unhandledRejections(): boolean {
-        return this._unhandledRejectionHandler != null
-    }
+    /**
+     * Function to catch and log unhandled rejections, set by [[unhandledRejections]].
+     */
+    private _unhandledRejectionHandler: Function = null
 
-    /** Enable or disable the unhandled rejection handler. */
-    set unhandledRejections(value: boolean) {
+    /**
+     * Enable or disable the unhandled rejection handler.
+     */
+    private set unhandledRejections(value: boolean) {
         if (value) {
             this._unhandledRejectionHandler = (err) => {
-                this.error(this.appName || "Anyhow", "Unhandled rejection", err)
+                this.error(this._options.appName, "Unhandled rejection", err)
 
                 return
             }
@@ -139,71 +146,91 @@ class Anyhow {
         }
     }
 
-    // PARSER PROPERTIES
+    /**
+     * Auto-generated list of messages that should not be logged.
+     */
+    private ignoreMessages: {[message: string]: number} = {}
+
+    // LEGACY PROPERTIES
     // --------------------------------------------------------------------------
 
     /**
-     * Messages will be compacted (spaces and breaks removed), default is true.
-     * Set to false to log original values including spaces.
+     * Please use options.appName.
+     * @deprecated
      */
-    get compact(): boolean {
-        return parser.compact
+    /* istanbul ignore next */
+    set appName(value: string) {
+        this.deprecated("appName", `Please use setOptions({appName: "${value}"})`)
+        this.setOptions({appName: value})
     }
+
+    /**
+     * Please use options.compact.
+     * @deprecated
+     */
+    /* istanbul ignore next */
     set compact(value: boolean) {
-        parser.compact = value
+        this.deprecated("compact", `Please use setOptions({compact: ${value}})`)
+        this.setOptions({compact: value})
     }
 
     /**
-     * Prepend logged messages with a timestamp on the format YY-MM-DD hh:mm:ss.
-     * default is false.
+     * Please use options.errorStack.
+     * @deprecated
      */
-    get timestamp(): boolean {
-        return parser.timestamp
-    }
-    set timestamp(value: boolean) {
-        parser.timestamp = value
-    }
-
-    /**
-     * Log error stack traces? Default is false. Use it with care!
-     * Set to true to add stack traces to the log output.
-     */
-    get errorStack(): boolean {
-        return parser.errorStack
-    }
+    /* istanbul ignore next */
     set errorStack(value: boolean) {
-        parser.errorStack = value
+        this.deprecated("errorStack", `Please use setOptions({errorStack: ${value}})`)
     }
 
     /**
-     * Set the separator between arguments when generating logging messages.
-     * Default separator is a pipe symbol " | ".
+     * Please use options.levels.
+     * @deprecated
      */
-    get separator(): string {
-        return parser.separator
+    /* istanbul ignore next */
+    set levels(value: string[]) {
+        this.deprecated("levels", `Please use setOptions({levels: []})`)
+        this.setOptions({levels: value})
     }
+
+    /**
+     * Please use options.separator.
+     * @deprecated
+     */
+    /* istanbul ignore next */
     set separator(value: string) {
-        parser.separator = value
+        this.deprecated("separator", `Please use setOptions({separator: "${value}"})`)
+        this.setOptions({separator: value})
     }
 
     /**
-     * A function(arrayOfObjects) that should be called to preprocess the arguments.
-     * This is useful if you wish to remove or obfuscate data before generating the
-     * logging message. Can either mutate the passed arguments or return the
-     * processed array as a result.
+     * Please use options.timestamp.
+     * @deprecated
      */
-    get preprocessor(): Function {
-        return parser.preprocessor
+    /* istanbul ignore next */
+    set timestamp(value: boolean) {
+        this.deprecated("timestamp", `Please use setOptions({timestamp: ${value}})`)
+        this.setOptions({timestamp: value})
     }
+
+    /**
+     * Please use options.preprocessors.
+     * @deprecated
+     */
+    /* istanbul ignore next */
     set preprocessor(value: Function) {
-        parser.preprocessor = value
+        this.deprecated("preprocessor", `Please use setOptions({preprocessors: [id_or_function]})`)
+        this.setOptions({preprocessors: [value]})
     }
 
     /**
-     * Helper to get a friendly message to be logged, out of the passed arguments.
+     * Please use options.styles.
+     * @deprecated
      */
-    get getMessage(): Function {
-        return parser.getMessage
+    /* istanbul ignore next */
+    set styles(value: any) {
+        this.deprecated("styles", `Please use setOptions({styles: {}})`)
+        this.setOptions({styles: value})
     }
 
     // LOGGING METHODS
@@ -216,9 +243,9 @@ class Anyhow {
      * @returns The generated message that was just logged.
      */
     log(level: string, args: any | any[]): string {
-        if (this.levels.indexOf(level.toLowerCase()) < 0) return null
+        if (this._options.levels.indexOf(level) < 0) return null
 
-        let message = isString(args) ? args : parser.getMessage(args)
+        let message = parser.getMessage(args)
 
         // If setup was not called yet, defaults to console logging and emit warning.
         if (!this.isReady) {
@@ -236,7 +263,7 @@ class Anyhow {
      * Shortcut to [[log]]("debug", args).
      */
     debug = (...args: any[]): string => {
-        if (this.levels.indexOf("debug") < 0) return null
+        if (this._options.levels.indexOf("debug") < 0) return null
         if (args.length < 1) return
         let message = parser.getMessage(args)
         return this.log("debug", message)
@@ -246,7 +273,7 @@ class Anyhow {
      * Shortcut to [[log]]("info", args).
      */
     info = (...args: any[]): string => {
-        if (this.levels.indexOf("info") < 0) return null
+        if (this._options.levels.indexOf("info") < 0) return null
         if (args.length < 1) return
         let message = parser.getMessage(args)
         return this.log("info", message)
@@ -256,7 +283,7 @@ class Anyhow {
      * Shortcut to [[log]]("warn", args).
      */
     warn = (...args: any[]): string => {
-        if (this.levels.indexOf("warn") < 0) return null
+        if (this._options.levels.indexOf("warn") < 0) return null
         if (args.length < 1) return
         let message = parser.getMessage(args)
         return this.log("warn", message)
@@ -266,10 +293,34 @@ class Anyhow {
      * Shortcut to [[log]]("error", args).
      */
     error = (...args: any[]): string => {
-        if (this.levels.indexOf("error") < 0) return null
+        if (this._options.levels.indexOf("error") < 0) return null
         if (args.length < 1) return
         let message = parser.getMessage(args)
         return this.log("error", message)
+    }
+
+    /**
+     * Shortcut to [[log]]("warn", args), with a deprecation notice.
+     * Will not log if the noDeprecation flag is set.
+     */
+    deprecated = (...args: any[]): string => {
+        if (args.length < 1 || process["noDeprecation"]) return
+        let message = parser.getMessage(args)
+        if (this.ignoreMessages[message]) {
+            this.ignoreMessages[message]++
+            return ""
+        }
+        this.ignoreMessages[message] = 1
+        return this.log("warn", `DEPRECATED! ${message}`)
+    }
+
+    /**
+     * Shortcut to [[log]]("debug", args) with object inspection instead of plain text.
+     */
+    inspect = (...args: any[]): string => {
+        if (args.length < 1) return
+        let message = parser.getInspection(args)
+        return this.log("debug", message)
     }
 
     /**
@@ -280,12 +331,12 @@ class Anyhow {
      * @returns The generated message that was just logged.
      */
     console = (level: string, args: any): string => {
-        if (this.levels.indexOf(level.toLowerCase()) < 0) return null
+        if (this._options.levels.indexOf(level.toLowerCase()) < 0) return null
 
-        let message = isString(args) ? args : parser.getMessage(args)
+        let message = parser.getMessage(args)
 
         // Add level to the output?
-        if (this.levelOnConsole) {
+        if (this._options.levelOnConsole) {
             message = `${level.toUpperCase()}: ${message}`
         }
 
@@ -298,8 +349,8 @@ class Anyhow {
         }
 
         // Is chalk enabled? Use it to colorize the messages.
-        if (chalk && this.styles) {
-            let styles = this.styles[level]
+        if (chalk && this._options.styles) {
+            let styles = this._options.styles[level]
             let chalkStyle
 
             if (styles) {
@@ -319,27 +370,80 @@ class Anyhow {
         return message
     }
 
+    // SETUP AND CONFIGURING
+    // --------------------------------------------------------------------------
+
     /**
      * Setup will try to load compatible loggers, and fall back to the console
      * if nothing was found. Will try using libraries on this order:
      * winston, bunyan, pino, gcloud, console.
      * @param lib Optional, force a specific library or Logger to be used, defaults to console.
-     * @param options Additional options to be passed to the underlying logging library.
+     * @param libOptions Additional options to be passed to the underlying logging library.
      */
-    setup = (lib?: "winston" | "bunyan" | "pino" | "gcloud" | "console" | "none" | Logger, options?: any): void => {
+    setup = (lib?: "winston" | "bunyan" | "pino" | "gcloud" | "console" | "none" | Logger, libOptions?: any): void => {
         if (!lib) lib = "console"
 
-        libSetup(this, lib, options)
+        libSetup(this, lib, libOptions)
 
-        if (lib == "console" && this.styles) {
+        if (lib == "console" && this._options.styles) {
             try {
                 if (chalk === null) {
                     chalk = require("chalk")
                 }
             } catch (ex) {
+                /* istanbul ignore next */
                 chalk = false
             }
         }
+    }
+
+    /**
+     * Helper to set partial library options. Only the passed parameters will be updated.
+     * @param options Options to be updated.
+     */
+    setOptions = (options: AnyhowOptions): void => {
+        if (!options) return
+
+        const newOptions = mergeDeep(this._options, options)
+        this.applyOptions(newOptions)
+    }
+
+    /**
+     * Apply a new options object to the library.
+     * @param newOptions New options object to be applied.
+     */
+    private applyOptions = (newOptions: AnyhowOptions): void => {
+        if (newOptions.levels && newOptions.levels.length > 0) {
+            newOptions.levels = dedupArray(newOptions.levels)
+        } else {
+            newOptions.levels = []
+        }
+
+        if (newOptions.preprocessors && newOptions.preprocessors.length > 0) {
+            newOptions.preprocessors = dedupArray(newOptions.preprocessors)
+        } else {
+            newOptions.preprocessors = []
+        }
+
+        if (newOptions.preprocessorOptions && newOptions.preprocessorOptions.maskedFields && newOptions.preprocessorOptions.maskedFields.length > 0) {
+            newOptions.preprocessorOptions.maskedFields = dedupArray(newOptions.preprocessorOptions.maskedFields)
+        }
+
+        if (newOptions.styles) {
+            for (let key in newOptions.styles) {
+                if (newOptions.styles[key].length > 0) {
+                    newOptions.styles[key] = dedupArray(newOptions.styles[key])
+                }
+            }
+        } else {
+            newOptions.styles = {}
+        }
+
+        this.uncaughtExceptions = newOptions.uncaughtExceptions
+        this.unhandledRejections = newOptions.unhandledRejections
+
+        this._options = newOptions
+        parser.options = newOptions
     }
 }
 

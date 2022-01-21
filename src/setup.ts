@@ -9,11 +9,11 @@ import {isFunction, isNil, isObject, isString} from "./utils"
  * winston, bunyan, pino, gcloud, console.
  * @param anyhow The anyhow instance.
  * @param lib Optional, force a specific library to be used.
- * @param options Additional options to be passed to the underlying logging library.
+ * @param libOptions Additional options to be passed to the underlying logging library.
  */
-export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" | "console" | "none" | Logger, options?: any): void => {
+export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" | "console" | "none" | Logger, libOptions?: any): void => {
     try {
-        if (!options) options = {}
+        if (!libOptions) libOptions = {}
 
         let libObj = lib as Logger
         let found = false
@@ -68,18 +68,19 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                 found = true
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow.setup", "Could not setup winston", ex)
+                console.error("Anyhow: can't setup winston")
+                console.error(ex)
             }
         }
 
         // Then Bunyan.
         else if (libName == "bunyan") {
             try {
-                if (!options.name) {
-                    options.name = "Anyhow"
+                if (!libOptions.name) {
+                    libOptions.name = "Anyhow"
                 }
 
-                const bunyan = libObj.instance ? libObj.instance : require("bunyan").createLogger(options)
+                const bunyan = libObj.instance ? libObj.instance : require("bunyan").createLogger(libOptions)
 
                 // Bunyan logger helper.
                 anyhow._logger.log = function (level, message) {
@@ -89,15 +90,16 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                 found = true
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow.setup", "Could not setup bunyan", ex)
+                console.error("Anyhow: can't setup bunyan")
+                console.error(ex)
             }
         }
 
         // Then Pino.
         else if (libName == "pino") {
             try {
-                if (!options.name) {
-                    options.name = "Anyhow"
+                if (!libOptions.name) {
+                    libOptions.name = "Anyhow"
                 }
 
                 const pino = libObj.instance ? libObj.instance : require("pino")()
@@ -110,7 +112,8 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                 found = true
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow.setup", "Could not setup pino", ex)
+                console.error("Anyhow: can't setup pino")
+                console.error(ex)
             }
         }
 
@@ -126,8 +129,8 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     const gcloudModule = require("@google-cloud/logging")
 
                     // Get log name from options.
-                    const logName = options.logName || anyhow.appName ? anyhow.appName.replace(/ /g, "-").toLowerCase() : "anyhow"
-                    const logging = new gcloudModule.Logging(options)
+                    const logName = libOptions.logName || anyhow.appName ? anyhow.appName.replace(/ /g, "-").toLowerCase() : "anyhow"
+                    const logging = new gcloudModule.Logging(libOptions)
                     gcloud = logging.log(logName)
                 }
 
@@ -146,14 +149,14 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     }
 
                     const writeOptions = {
-                        resource: options.resource || null,
-                        partialSuccess: isNil(options.partialSuccess) ? true : options.partialSuccess
+                        resource: libOptions.resource || null,
+                        partialSuccess: isNil(libOptions.partialSuccess) ? true : libOptions.partialSuccess
                     }
 
                     const entry = gcloud.entry(metadata, message)
 
-                    if (isFunction(options.callback)) {
-                        gcloud.write(entry, writeOptions, options.callback)
+                    if (isFunction(libOptions.callback)) {
+                        gcloud.write(entry, writeOptions, libOptions.callback)
                     } else {
                         /* istanbul ignore next */
                         gcloud.write(entry, writeOptions)
@@ -163,7 +166,8 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                 found = true
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow.setup", "Could not setup gcloud", ex)
+                console.error("Anyhow: can't setup gcloud")
+                console.error(ex)
             }
         }
 
@@ -177,7 +181,8 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
     } catch (ex) {
         /* istanbul ignore next */
         const libName = isString(lib) ? lib : (lib as Logger).name
-        console.error("Anyhow.setup", `Can't setup ${libName}`, ex)
+        console.error(`Anyhow: can't setup ${libName}`)
+        console.error(ex)
         throw ex
     }
 }

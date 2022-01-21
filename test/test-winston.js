@@ -18,7 +18,7 @@ describe("Anyhow Winston Tests", function () {
 
     it("Log using default auto-generated Winston logger", function (done) {
         anyhow.setup("winston")
-        anyhow.timestamp = false
+        anyhow.setOptions({timestamp: false})
 
         let winston = require("winston")
         winston.add(new winston.transports.Console())

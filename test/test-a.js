@@ -15,15 +15,16 @@ describe("Anyhow Main Tests", function () {
 
     before(function () {
         anyhow = require("../lib/index")
-    })
 
-    after(function () {
-        anyhow.preprocessor = null
+        anyhow.options = {aaaaaa: true}
     })
 
     it("Calling log() before setup() warns and defaults to console", function (done) {
         if (anyhow.isReady) {
             return done("Calling isReady should have returned false.")
+        }
+        if (anyhow.lib != "none") {
+            return done("The lib property should return none when isReady = false.")
         }
 
         let logged = capcon.captureStdout(() => anyhow.info("Log before setup")).toString()
@@ -33,26 +34,6 @@ describe("Anyhow Main Tests", function () {
         } else {
             done("Expected warning to call setup() first.")
         }
-    })
-
-    it("Make sure all parser properties are returning their default values", function (done) {
-        if (!anyhow.compact) {
-            done("Property 'compact' should be true by default.")
-        }
-        if (anyhow.timestamp) {
-            done("Property 'timestamp' should be false by default.")
-        }
-        if (anyhow.errorStack) {
-            done("Property 'errorStack' should be false by default.")
-        }
-        if (anyhow.separator != " | ") {
-            done("Property 'separator' should be a vertical bar by default.")
-        }
-        if (anyhow.preprocessor) {
-            done("Property 'preprocessor' should have no value by default.")
-        }
-
-        done()
     })
 
     it("Passing null lib should fallback to console", function (done) {
@@ -125,8 +106,77 @@ describe("Anyhow Main Tests", function () {
         }
     })
 
+    it("Log deprecation notice only once", function (done) {
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.deprecated("Test")
+                anyhow.deprecated("Test")
+                anyhow.deprecated("Test")
+                anyhow.deprecated("Test")
+            })
+            .toString()
+
+        let arr = logged.split("DEPRECATED")
+
+        if (arr.length == 0) {
+            done("Expected a 'DEPRECATED' label")
+        } else if (arr.length > 1) {
+            done(`Deprecation notice should be logged only once, but was ${arr.length}`)
+        } else {
+            done()
+        }
+    })
+
+    it("Do not log deprecation if the noDeprecation flag is set", function (done) {
+        process["noDeprecation"] = true
+
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.deprecated("Test")
+            })
+            .toString()
+
+        process["noDeprecation"] = false
+
+        if (logged.includes("DEPRECATED")) {
+            done("Deprecation message should not have been logged")
+        } else {
+            done()
+        }
+    })
+
+    it("Log an object inspection", function (done) {
+        function Foo() {}
+
+        let logged = capcon
+            .captureStdout(function scope() {
+                anyhow.inspect()
+                anyhow.inspect(null)
+                anyhow.inspect(new Foo())
+                anyhow.setOptions({timestamp: true})
+                anyhow.inspect({
+                    a: 1,
+                    b: 2,
+                    c: {
+                        c1: 3,
+                        c2: 4
+                    },
+                    foo: new Foo()
+                })
+                anyhow.inspect([null, 1, 2])
+                anyhow.setOptions({timestamp: false})
+            })
+            .toString()
+
+        if (logged.indexOf(`"a": 1`)) {
+            done()
+        } else {
+            done(`Object inspection did not return the expected message: ${logged}`)
+        }
+    })
+
     it("Output level to console with levelOnConsole = true", function (done) {
-        anyhow.levelOnConsole = true
+        anyhow.setOptions({levelOnConsole: true})
 
         let logged = capcon
             .captureStdout(function scope() {
@@ -135,7 +185,7 @@ describe("Anyhow Main Tests", function () {
             })
             .toString()
 
-        anyhow.levelOnConsole = false
+        anyhow.setOptions({levelOnConsole: false})
 
         if (logged.indexOf("INFO") && logged.indexOf("ERROR")) {
             done()
@@ -145,7 +195,7 @@ describe("Anyhow Main Tests", function () {
     })
 
     it("Log calls passing empty or null arguments", function () {
-        anyhow.levels = ["debug", "info", "warn", "error"]
+        anyhow.setOptions({levels: ["debug", "info", "warn", "error"]})
 
         anyhow.debug()
         anyhow.info()
@@ -153,12 +203,12 @@ describe("Anyhow Main Tests", function () {
         anyhow.error()
         anyhow.info([null], null, {}.invalid)
 
-        anyhow.levels = ["info", "warn", "error"]
+        anyhow.setOptions({levels: ["info", "warn", "error"]})
     })
 
     it("Direct call to anyhow.debug()", function (done) {
-        let originalLevels = anyhow.levels
-        anyhow.levels = ["debug"]
+        let originalLevels = anyhow.options.levels
+        anyhow.setOptions({levels: ["debug"]})
 
         let logged = capcon
             .captureStdout(function scope() {
@@ -166,7 +216,7 @@ describe("Anyhow Main Tests", function () {
             })
             .toString()
 
-        anyhow.levels = originalLevels
+        anyhow.setOptions({levels: originalLevels})
 
         if (logged.indexOf("debug log") > 0) {
             done()
@@ -190,20 +240,28 @@ describe("Anyhow Main Tests", function () {
     })
 
     it("Do not output using disabled levels", function (done) {
-        let originalLevels = anyhow.levels
-        anyhow.levels = []
+        let originalLevels = anyhow.options.levels
+        anyhow.setOptions({levels: []})
 
         let logged = capcon
             .captureStdout(function scope() {
                 anyhow.log("invalidLevel", "This should not come up on the console.")
                 anyhow.debug("This should not come up on the console.")
+                anyhow.debug([])
+                anyhow.debug(null)
                 anyhow.info("This should not come up on the console.")
+                anyhow.info([])
+                anyhow.info(null)
                 anyhow.warn("This should not come up on the console.")
+                anyhow.warn([])
+                anyhow.warn(null)
                 anyhow.error("This should not come up on the console.")
+                anyhow.error([])
+                anyhow.error(null)
             })
             .toString()
 
-        anyhow.levels = originalLevels
+        anyhow.setOptions({levels: originalLevels})
 
         if (logged.indexOf("should not come up") < 0) {
             done()
@@ -213,7 +271,7 @@ describe("Anyhow Main Tests", function () {
     })
 
     it("Direct call to anyhow.console() passing custom level and a string", function (done) {
-        anyhow.levels.push("custom")
+        anyhow.setOptions({levels: ["info", "warn", "error", "custom"]})
 
         let logged = capcon
             .captureStdout(function scope() {
@@ -229,10 +287,10 @@ describe("Anyhow Main Tests", function () {
     })
 
     it("Change and disable console styles", function () {
-        delete anyhow.styles.warn
+        delete anyhow.options.styles.warn
         anyhow.warn("This should have no styles on it")
 
-        anyhow.styles = null
+        anyhow.setOptions({styles: null})
         anyhow.info("Styles fully disabled")
     })
 
@@ -307,12 +365,12 @@ describe("Anyhow Main Tests", function () {
     it("Fails to setup with missing or invalid arguments", function (done) {
         try {
             anyhow.setup({wrong: true})
-            return done(`Calling setup() passing no name should fail`)
+            return done("Calling setup() passing no name should fail")
         } catch (ex) {}
 
         try {
             anyhow.setup({name: "missingArgs"})
-            return done(`Calling setup() passing no log or instance should fail`)
+            return done("Calling setup() passing no log or instance should fail")
         } catch (ex) {}
 
         done()

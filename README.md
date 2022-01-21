@@ -4,7 +4,7 @@
 [![Build Status](https://img.shields.io/travis/igoramadas/anyhow.svg)](https://travis-ci.org/igoramadas/anyhow)
 [![Coverage Status](https://img.shields.io/coveralls/github/igoramadas/anyhow.svg)](https://coveralls.io/github/igoramadas/anyhow?branch=master)
 
-Drop-in logging wrapper for [Winston](https://www.npmjs.com/package/winston), [Bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino), [Google Cloud Logging](https://github.com/googleapis/nodejs-logging) and [console](https://nodejs.org/api/console.html).
+Drop-in (and slightly improved) logging wrapper for [Winston](https://www.npmjs.com/package/winston), [Bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino), [Google Cloud Logging](https://github.com/googleapis/nodejs-logging) and [console](https://nodejs.org/api/console.html).
 
 ## Why?
 
@@ -19,6 +19,24 @@ const logger = require("anyhow")
 
 // Setup passing no arguments will default to the console.
 logger.setup()
+
+// Setting the library options.
+logger.options = {
+    compact: true,
+    maxDepth: 5,
+    appName: "Anyhow",
+    levels: ["info", "warn", "error"],
+    styles: {
+        debug: ["gray"],
+        info: ["white"],
+        warn: ["yellow"],
+        error: ["red", "bold"]
+    },
+    preprocessorOptions: {
+        maskedFields: ["password", "token", "access_token", "refresh_token", "client_secret"],
+        stringify: true
+    }
+}
 
 // Log some text.
 logger.info("My app has started")
@@ -42,6 +60,9 @@ logger.levels = ["warn", "error"]
 // Now info calls won't do anything.
 logger.info("Won't log because we only enabled warn and error")
 logger.warn("This warn will be logged")
+
+// Enable debug, info, warn and error.
+logger.levels = ["debug", "info", "warn", "error"]
 
 // You can also call the .log method directly, passing level as the first argument.
 // Useful when using custom loggers.
@@ -92,44 +113,32 @@ logger.setup("none")
 
 ```javascript
 // Separate logged arguments with a ", " comma instead of default " | " pipe.
-logger.separator = ", "
+logger.setOptions({separator: ", "})
 
 // Outputs "This is, now separated, by comma".
 logger.info("This is", "now separated", "by comma")
 
 // Do not compact messages (default is compact = true).
-logger.compact = false
+logger.setOptions({compact: false})
 
 // Logged output will contain JSON with spaces and line breaks.
 logger.info(someComplexObject, somethingElse)
 
 // Make warn messages red and italic instead of default yellow (depends on "chalk" module).
-logger.styles.warn = ["red", "italic"]
+logger.setOptions({styles: {warn: ["red", "italic"]}})
 logger.warn("Console output now shows yellow italic for this")
 logger.info("Info is still default gray")
 
 // Disable styling.
-logger.styles = null
+logger.setOptions({styles: null})
 logger.warn("No console styles anymore, even if chalk is installed")
 
 // Prepend log level on the console.
-logger.levelOnConsole = true
+logger.setOptions({levelOnConsole: true})
 logger.info("This will now have 'INFO:' on the beginning of the message")
-
-try {
-    // Some exception thrown.
-    myApp.method(fails)
-} catch (ex) {
-    // By default the stack trace is not logged...
-    logger.error("error without stack trace", ex)
-
-    // Include stack trace by setting errorStack = true.
-    logger.errorStack = true
-    logger.error("error with stack trace", ex)
-}
 ```
 
-### Pre-processing logged messages
+### Preprocessors
 
 ```javascript
 // Sample user object.
@@ -142,30 +151,35 @@ const user = {
 // No preprocessor by default, will log all user data.
 logger.info(user)
 
-// Add preprocessor to remove passwords and tokens from logged objects.
-logger.preprocessor = function(args) {
-    for (let a of args) {
-        if (a && a.password) {
-            delete a.password
-        } else if (a && a.token) {
-            delete a.token
-        }
-    }
-    return args
-}
+// Enable the "maskSecrets" preprocessor to mask the password and token.
+logger.setOptions({preprocessors: ["maskSecrets"]})
 
-// User's password and token won't be loggged.
+// Now password and token gets replaced with [***].
 logger.info(user)
 
-// User was not mutated, as it will deep clone before logging.
-console.dir(user)
+// Enable the "friendlyErrors" preprocessor to extract error details.
+logger.setOptions({preprocessors: ["friendlyErrors"]})
+
+// This should log the status code and message.
+try{
+    axios.get("https://my.api.com/something-to-fail")
+} catch (ex) {
+    logger.error(ex)
+}
+
+// Add preprocessor to stringify and prepend all values with @.
+const numToString = (args) => args.map(a => `@ ${a.toString()}`)
+logger.setOptions({preprocessors: [numToString]})
+
+// Will output @ 1 | @ 2 | @ Sat Jan 01 2000 00:00:00 GMT+0100 (Central European Standard Time)
+logger.info(1, 2, new Date("2000-01-01T00:00:00"))
 ```
 
 ### Uncaught and unhandled errors
 
 ```javascript
 // Enable the uncaught exceptions handled.
-logger.uncaughtExceptions = true
+logger.setOptions({uncaughtExceptions: true})
 
 // Throw some exception.
 // Will log the "Not a function" exception to the current transport.
@@ -174,7 +188,7 @@ let notFunction = true
 notFunction()
 
 // Also for unhandled rejections.
-logger.unhandledRejections = true
+logger.setOptions({unhandledRejections: true})
 
 // Here a sample of unhandled rejection.
 let failFunction = async function() {
@@ -185,46 +199,65 @@ failFunction()
 
 ```
 
-## Version 2 breaking changes
-
-If you were using Anyhow and passing a logger instance directly on `setup()`, you'll need to update the call to the new signature.
-
-```javascript
-// From...
-anyhow.setup(myWinstonLogger)
-// To...
-anyhow.setup({name: "winston", instance: myWinstonLogger})
-```
-
 ## Options
 
-#### compact: true
+### appName: "Anyhow"
+
+String, optional, the name of your app / tool / service.
+
+### compact: true
 
 Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.
 
-#### errorStack: false
+### errorStack: false
 
 Boolean, defines if stack traces should be logged with errors and exceptions.
 
-#### levels: ["info", "warn", "error"]
+### levels: ["info", "warn", "error"]
 
 Array of string, defines which logging levels are enabled. Possible logging levels are
 ["info", "warn", "error"].
 
-#### levelOnConsole: false
+### maxDepth: 5
+
+Number, the maximum depth to reach when processing and logging arrays and objects.
+
+### levelOnConsole: false
 
 Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.
 
-#### uncaughtException: false
-
-Boolean, if true it will log uncaught exceptions to the console (but will NOT quit execution).
-
-#### preprocessor(args)
+### preprocessors: null
 
 You can define a function(arrayOfObjects) that will be used to process arguments before generating
 the final log messages. This is useful if you want to change or remove information from objects, for
 instance you might want to obfuscate all `password` fields and mask `telephone` fields. The function
 can either mutate the arrayOfObjects or return the new arguments as a result.
+
+### preprocessorOptions: object
+
+Additional options to be passed to the preprocessors:
+
+#### errorStack: false
+
+Boolean, if set to true then exception stack traces will also be logged.
+
+#### maskedFields: array
+
+Array of strings, property names that should be masked with the maskSecrets preprocessor. Defaults to:
+password, passcode, secret, token, accessToken, access_token, refreshToken, refreshToken, clientSecret, client_secret
+
+#### stringify: true
+
+Boolean, if set to false then objects will not be cloned before running the preprocessors.
+Only set to false if you are dealing exclusively with JSON data that can be mutated by the logger.
+
+#### uncaughtException: false
+
+Boolean, if true it will log uncaught exceptions to the console (and will NOT quit execution).
+
+#### unhandledRejections: false
+
+Boolean, if true it will log uncaught exceptions to the console (and will NOT quit execution).
 
 #### separator: " | "
 
@@ -236,6 +269,10 @@ String, defines the default separator between logged objects. For instance if yo
 Object with keys defining the styles for each level on console output. This will only be effective
 if you also have the [chalk](https://www.npmjs.com/package/chalk) module installed. By default
 `debug` is gray, `info` white, `warn` yellow and `error` bold red. To disable, set it to null.
+
+### timestamp: false
+
+Boolean, if true it will prepend log messages with a timestamp.
 
 ## Methods
 
@@ -266,6 +303,40 @@ Shortcut to log("warn", args).
 #### error(...args) -> string
 
 Shortcut to log("error", args).
+
+## Version 3 breaking changes
+
+Version 3 will be released soon!
+
+If you are using the default options, there's nothing to worry about - the logging methods are all
+backwards-compatible. Otherwise, please use the new `options` object:
+
+### New options
+
+```javascript
+// Before
+anyhow.appName = "My App"
+anyhow.compact = true
+anyhow.levels = ["debug", "info", "warn", "error"]
+anyhow.preprocessor = someFunction
+
+// Now: option 1, here the levels and preprocessors are replaced with the new values:
+anyhow.options = {
+    appName: "My App",
+    compact: true,
+    levels: ["debug", "info", "warn", "error"],
+    preprocessors: [someFunction]
+}
+
+// And here levels and preprocessors are not passed, so they'll revert back to the defaults:
+anyhow.options = {
+    appName: "My App",
+    compact: true
+}
+
+// Or option 2: set only specific options. Here the levels and preprocessors are left untouched.
+anyhow.setOptions({appName: "MyApp", compact: true})
+```
 
 ## API documentation
 

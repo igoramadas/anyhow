@@ -1,6 +1,9 @@
 // Anyhow: Parser
 
-import {isArray, isError, isObject, flattenArray} from "./utils"
+import {AnyhowOptions, PreProcessor} from "./types"
+import {flattenArray, getTimestamp, isArray, isFunction, isObject, isString} from "./utils"
+import preprocessors from "./preprocessors"
+import util from "util"
 
 /**
  * Parser methods to build a message out of passed logging arguments.
@@ -13,29 +16,58 @@ class AnyhowParser {
     }
 
     /**
-     * Compact logged messages?
+     * Library options (internal).
      */
-    compact: boolean = true
+    private _options: AnyhowOptions
 
     /**
-     * Prepend logged messages with a timestamp?
+     * Get library options.
      */
-    timestamp: boolean = false
+    get options(): AnyhowOptions {
+        return this._options
+    }
 
     /**
-     * Log error stack traces?
+     * Set library options.
      */
-    errorStack: boolean = false
+    set options(value: AnyhowOptions) {
+        this._options = value
+
+        if (value.preprocessors && isArray(value.preprocessors)) {
+            this.builtinPreProcessors = value.preprocessors.filter((pp) => isString(pp)) as string[]
+            this.customPreProcessors = value.preprocessors.filter((pp) => isFunction(pp)) as Function[]
+        } else {
+            this.builtinPreProcessors = []
+            this.customPreProcessors = []
+        }
+
+        this._isDebug = this.options.levels.includes("debug")
+    }
 
     /**
-     * Arguments seperator on messages.
+     * Is the "debug" level active?
      */
-    separator: string = " | "
+    private _isDebug: boolean
 
     /**
-     * Function to pre-process arguments.
+     * Is the "debug" level active?
      */
-    preprocessor: Function
+    get isDebug(): boolean {
+        return this._isDebug
+    }
+
+    /**
+     * List of active built-in preprocessors.
+     */
+    private builtinPreProcessors: string[]
+
+    /**
+     * List of active custom preprocessors.
+     */
+    private customPreProcessors: Function[]
+
+    // METHODS
+    // --------------------------------------------------------------------------
 
     /**
      * Used by [[getMessage]] to parse and return the individual log strings
@@ -53,36 +85,7 @@ class AnyhowParser {
                     let stringified = ""
 
                     try {
-                        if (isArray(arg)) {
-                            result = result.concat(this.argumentsParser(arg))
-                        } else if (isError(arg)) {
-                            const arrError = []
-
-                            // Add error information separately.
-                            if (arg.friendlyMessage) arrError.push(arg.friendlyMessage)
-                            if (arg.reason) arrError.push(arg.reason)
-                            if (arg.code) arrError.push(arg.code)
-                            if (arg.message) arrError.push(arg.message)
-
-                            // Errors from axios.
-                            if (arg.response && arg.response.data) {
-                                if (arg.response.data.message) {
-                                    const dataMessage = arg.response.data.message.toString()
-                                    if (dataMessage != "[object Object]") arrError.push(arg.response.data.message.toString())
-                                }
-                                if (arg.response.data.error) {
-                                    const dataError = arg.response.data.error.toString()
-                                    if (dataError != "[object Object]") arrError.push(arg.response.data.error.toString())
-                                }
-                            }
-
-                            // Only add stack traces if `errorStack` is set.
-                            if (arg.stack && this.errorStack) {
-                                arrError.push(arg.stack)
-                            }
-
-                            stringified = arrError.join(this.separator)
-                        } else if (isObject(arg)) {
+                        if (isObject(arg)) {
                             stringified = JSON.stringify(arg, null, 2)
                         } else {
                             stringified = arg.toString()
@@ -92,19 +95,19 @@ class AnyhowParser {
                         stringified = arg.toString()
                     }
 
-                    // Check if a valid message was taken, and if it needs to be compacted.
-                    /* istanbul ignore else */
-                    if (typeof stringified != "undefined" && stringified !== null) {
-                        if (this.compact) {
-                            stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
-                        }
-
-                        result.push(stringified)
+                    // Compact the output message?
+                    if (stringified && this.options.compact) {
+                        stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
                     }
+
+                    result.push(stringified)
                 }
             } catch (ex) {
                 /* istanbul ignore next */
-                console.error("Anyhow.argumentsParser", ex)
+                if (this.isDebug) {
+                    console.error("Anyhow.argumentsParser: failed to parse arguments")
+                    console.error(ex)
+                }
             }
         }
 
@@ -113,45 +116,110 @@ class AnyhowParser {
 
     /**
      * Gets a nice, readable message out of the passed arguments, which can be of any type.
-     * @param args Any single or collection of objects that will be transformed to a message string.
+     * @param args Objects or variables that should be stringified.
      * @returns Human readable string taken out of the parsed arguments.
      */
-    getMessage = (...args: any | any[]): string => {
-        if (!isArray(args)) {
-            /* istanbul ignore next */
-            args = [args]
+    getMessage = (...args: any): string => {
+        let strMessage: string = null
+
+        if (args.length == 0) {
+            strMessage = ""
+        } else if (args.length == 1 && isString(args[0])) {
+            strMessage = args[0]
         }
 
-        args = flattenArray(args)
-
-        // Add timestamp to the output?
-        if (this.timestamp) {
-            const padLeft = (v) => {
-                return v < 10 ? "0" + v.toString() : v.toString()
+        if (strMessage !== null) {
+            if (this.options.timestamp) {
+                strMessage = `${getTimestamp()}${this.options.separator}${strMessage}`
             }
 
-            // Get date elements.
-            const now = new Date()
-            let year: any = now.getUTCFullYear().toString()
-            let month: any = now.getUTCMonth() + 1
-            let day: any = now.getUTCDate()
-            let hour: any = now.getUTCHours()
-            let minute: any = now.getUTCMinutes()
-            let second: any = now.getUTCSeconds()
-
-            // Append timestamp to the message.
-            let timestamp = `${padLeft(year.substring(2))}-${padLeft(month)}-${padLeft(day)} ${padLeft(hour)}:${padLeft(minute)}:${padLeft(second)}`
-            args.unshift(timestamp)
+            return strMessage
         }
 
-        // If the preprocessor returns a value, use it as the new args.
-        if (this.preprocessor) {
-            let processedArgs = this.preprocessor(args)
-            args = processedArgs ? processedArgs : args
+        try {
+            const hasPreprocessors = this.builtinPreProcessors.length > 0 || this.customPreProcessors.length > 0
+
+            // Flatten the array if the compact option is set.
+            if (this.options.compact) {
+                args = flattenArray(args)
+            }
+
+            // Stringify and clone objects when using preprocessors?
+            if (hasPreprocessors && this.options.preprocessorOptions && this.options.preprocessorOptions.stringify) {
+                args = JSON.parse(JSON.stringify(args))
+            }
+
+            // Execute built-in preprocessors (if any).
+            if (this.builtinPreProcessors.length > 0) {
+                preprocessors.run(this.options, args, this.builtinPreProcessors as PreProcessor[])
+            }
+
+            // Execute custom preprocessors (if any).
+            for (let pp of this.customPreProcessors) {
+                try {
+                    args = pp(args) || args
+                } catch (ex) {
+                    if (this.isDebug) {
+                        console.error("Anyhow: failed to execute custom preprocessor")
+                        console.error(ex)
+                    }
+                }
+            }
+
+            const messages = this.argumentsParser(args)
+
+            // Add timestamp?
+            if (this.options.timestamp) {
+                messages.unshift(getTimestamp())
+            }
+
+            // Return single string log message.
+            return messages.join(this.options.separator)
+        } catch (ex) {
+            /* istanbul ignore next */
+            if (this.isDebug) {
+                console.error("Anyhow.getMessage: failed to generate message")
+                console.error(ex)
+            }
+        }
+    }
+
+    /**
+     * Gets a nice, readable JSON representation of the passed arguments.
+     * @param args Objects or variables that should be stringified.
+     */
+    getInspection = (args: any): string => {
+        const result: string[] = []
+
+        const options = {
+            compact: false,
+            colors: true,
+            depth: this.options.maxDepth,
+            showHidden: false
         }
 
-        // Return single string log message.
-        return this.argumentsParser(args).join(this.separator)
+        // Add timestamp?
+        if (this.options.timestamp) {
+            result.push(getTimestamp())
+        }
+
+        // Iterate and process the passed arguments.
+        for (let obj of args) {
+            let objType: string
+
+            if (obj) {
+                if (obj.constructor && obj.constructor.name) {
+                    objType = obj.constructor.name
+                } else {
+                    objType = Object.prototype.toString.call(obj).match(/^\[object\s(.*)\]$/)[1]
+                }
+                result.push(`${objType}\n${"-".repeat(objType.length)}`)
+            }
+
+            result.push(util.inspect(obj, options))
+        }
+
+        return result.join("\n")
     }
 }
 

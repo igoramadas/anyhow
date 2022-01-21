@@ -1,100 +1,35 @@
 // Anyhow: Utils (largely based on lodash.js)
 
 /**
- * Get the passed object's tag.
- * @param value Object or value.
+ * Clone the passed object and return a new one.
+ * @param obj The object to be cloned.
  */
-export const getTag = (value) => {
-    const toString = Object.prototype.toString
+export const cloneDeep = (obj: any): any => {
+    if (!obj) return obj
+    let result
 
-    if (value == null) {
-        return value === undefined ? "[object Undefined]" : "[object Null]"
+    if (isArray(obj)) {
+        result = []
+        obj.forEach((element) => result.push(cloneDeep(element)))
+    } else if (obj instanceof Object && !(obj instanceof Function)) {
+        result = {}
+        for (let key in obj) {
+            if (key) result[key] = cloneDeep(obj[key])
+        }
+    } else {
+        result = obj
     }
 
-    return toString.call(value)
+    return result
 }
 
 /**
- * Check if the passed value is an object.
- * @param value Object or value.
+ * Returns a deduplicated array.
+ * @param arr Array to be deduplicated (immutable).
  */
-export const isObject = (value): boolean => {
-    return typeof value === "object" && value !== null
-}
-
-/**
- * Check if the passed value is a plain object.
- * @param value Object or value.
- */
-export const isPlainObject = (value): boolean => {
-    if (!isObject(value) || getTag(value) != "[object Object]") {
-        return false
-    }
-
-    if (Object.getPrototypeOf(value) === null) {
-        return true
-    }
-
-    let proto = value
-    while (Object.getPrototypeOf(proto) !== null) {
-        proto = Object.getPrototypeOf(proto)
-    }
-
-    return Object.getPrototypeOf(value) === proto
-}
-
-/**
- * Check if the passed value is an array.
- * @param value Object or value.
- */
-export const isArray = (value): boolean => {
-    return value && Array.isArray(value)
-}
-
-/**
- * Check if the passed value is same as args.
- * @param value Object or value.
- */
-export const isArguments = (value): boolean => {
-    return isObject(value) && getTag(value) == "[object Arguments]"
-}
-
-/**
- * Check if the passed value is an error.
- * @param value Object or value.
- */
-export const isError = (value): boolean => {
-    if (!isObject(value)) {
-        return false
-    }
-
-    const tag = getTag(value)
-    return tag == "[object Error]" || tag == "[object DOMException]" || (typeof value.message === "string" && typeof value.name === "string" && !isPlainObject(value))
-}
-
-/**
- * Check if the passed value is a string.
- * @param value Object or value.
- */
-export const isFunction = (value): boolean => {
-    return typeof value === "function"
-}
-
-/**
- * Check if the passed value is null or undefined.
- * @param value Object or value.
- */
-export const isNil = (value): boolean => {
-    return value === null || typeof value == "undefined"
-}
-
-/**
- * Check if the passed value is a string.
- * @param value Object or value.
- */
-export const isString = (value): boolean => {
-    const type = typeof value
-    return type === "string" || (type === "object" && value != null && !Array.isArray(value) && getTag(value) == "[object String]")
+export const dedupArray = (arr: any[]): any[] => {
+    if (!arr || arr.length == 0) return arr
+    return arr.filter((item, index, self) => self.indexOf(item) == index)
 }
 
 /**
@@ -127,4 +62,157 @@ export const flattenArray = (array, depth?, result?): any[] => {
     }
 
     return result
+}
+
+/**
+ * Get the passed object's tag.
+ * @param value Object or value.
+ */
+export const getTag = (value) => {
+    const toString = Object.prototype.toString
+
+    if (value == null) {
+        return value === undefined ? "[object Undefined]" : "[object Null]"
+    }
+
+    if (value && value.constructor && value.constructor.name) {
+        return `[object ${value.constructor.name}]`
+    }
+
+    return toString.call(value)
+}
+
+/**
+ * Get the current timestamp.
+ */
+export const getTimestamp = (): string => {
+    const padLeft = (v) => {
+        return v < 10 ? "0" + v.toString() : v.toString()
+    }
+
+    // Get date elements.
+    const now = new Date()
+    let year: any = now.getUTCFullYear().toString()
+    let month: any = now.getUTCMonth() + 1
+    let day: any = now.getUTCDate()
+    let hour: any = now.getUTCHours()
+    let minute: any = now.getUTCMinutes()
+    let second: any = now.getUTCSeconds()
+
+    return `${padLeft(year.substring(2))}-${padLeft(month)}-${padLeft(day)} ${padLeft(hour)}:${padLeft(minute)}:${padLeft(second)}`
+}
+
+/**
+ * Check if the passed value is same as args.
+ * @param value Object or value.
+ */
+export const isArguments = (value): boolean => {
+    return isObject(value) && getTag(value) == "[object Arguments]"
+}
+
+/**
+ * Check if the passed value is an array.
+ * @param value Object or value.
+ */
+export const isArray = (value): boolean => {
+    return value && Array.isArray(value)
+}
+
+/**
+ * Check if the passed value is an error.
+ * @param value Object or value.
+ */
+export const isError = (value): boolean => {
+    if (!isObject(value)) {
+        return false
+    }
+
+    const tag = getTag(value)
+    return tag == "[object Error]" || tag == "[object DOMException]" || (typeof value.message === "string" && typeof value.name === "string" && !isPlainObject(value))
+}
+
+/**
+ * Check if the passed value is a string.
+ * @param value Object or value.
+ */
+export const isFunction = (value): boolean => {
+    return typeof value === "function"
+}
+
+/**
+ * Check if the passed value is null or undefined.
+ * @param value Object or value.
+ */
+export const isNil = (value): boolean => {
+    return value === null || typeof value == "undefined"
+}
+
+/**
+ * Check if the passed value is an object.
+ * @param value Object or value.
+ */
+export const isObject = (value): boolean => {
+    return typeof value === "object" && value !== null
+}
+
+/**
+ * Check if the passed value is a plain object.
+ * @param value Object or value.
+ */
+export const isPlainObject = (value): boolean => {
+    if (!isObject(value) || getTag(value) != "[object Object]") {
+        return false
+    }
+
+    if (Object.getPrototypeOf(value) === null) {
+        return true
+    }
+
+    let proto = value
+    while (Object.getPrototypeOf(proto) !== null) {
+        proto = Object.getPrototypeOf(proto)
+    }
+
+    return Object.getPrototypeOf(value) === proto
+}
+
+/**
+ * Check if the passed value is a string.
+ * @param value Object or value.
+ */
+export const isString = (value): boolean => {
+    const type = typeof value
+    return type === "string" || (type === "object" && value != null && !Array.isArray(value) && getTag(value) == "[object String]")
+}
+
+/**
+ * Merge the passed / immutable objects into one, and return the result.
+ * @param obj The object to be cloned.
+ */
+export const mergeDeep = (...objects: any[]): any => {
+    if (!objects) return objects
+
+    let mergeArrays = false
+
+    if (objects[objects.length - 1] === true) {
+        mergeArrays = true
+        objects.pop()
+    }
+
+    return objects.reduce((prev: any, obj: any) => {
+        Object.keys(obj).forEach((key) => {
+            const previous = prev[key]
+            const current = obj[key]
+
+            if (isArray(previous) && isArray(current)) {
+                prev[key] = mergeArrays ? previous.concat(...current) : current
+            } else if (isObject(previous) && isObject(current)) {
+                prev[key] = mergeDeep(previous, current)
+            } else {
+                prev[key] = current
+            }
+        })
+
+        return prev
+    }, {})
 }
