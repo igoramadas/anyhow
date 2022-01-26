@@ -1,7 +1,7 @@
 // Anyhow: Parser
 
 import {AnyhowOptions, PreProcessor} from "./types"
-import {flattenArray, getTimestamp, isArray, isFunction, isObject, isString} from "./utils"
+import {cloneDeep, flattenArray, getTimestamp, isArray, isFunction, isObject, isString} from "./utils"
 import preprocessors from "./preprocessors"
 import util from "util"
 
@@ -145,8 +145,8 @@ class AnyhowParser {
             }
 
             // Stringify and clone objects when using preprocessors?
-            if (hasPreprocessors && this.options.preprocessorOptions && this.options.preprocessorOptions.stringify) {
-                args = JSON.parse(JSON.stringify(args))
+            if (hasPreprocessors && this.options.preprocessorOptions && this.options.preprocessorOptions.clone) {
+                args = cloneDeep(args, this.options.maxDepth)
             }
 
             // Execute built-in preprocessors (if any).

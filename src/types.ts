@@ -40,8 +40,8 @@ export interface PreProcessorOptions {
     errorStack?: boolean
     /** List of field names that should be masked. */
     maskedFields?: string[]
-    /** Stringify and clone passed objects before processing them? */
-    stringify?: boolean
+    /** Clone passed objects before processing them? */
+    clone?: boolean
 }
 
 /**

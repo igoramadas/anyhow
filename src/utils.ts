@@ -3,22 +3,41 @@
 /**
  * Clone the passed object and return a new one.
  * @param obj The object to be cloned.
+ * @param maxDepth Maximum depth to reach.
+ * @param depth Current depth.
  */
-export const cloneDeep = (obj: any): any => {
+export const cloneDeep = (obj: any, maxDepth?: number, depth?: number): any => {
     if (!obj) return obj
+    if (!maxDepth) maxDepth = 5
+    if (!depth) depth = 0
+
     let result
 
-    if (isArray(obj)) {
-        result = []
-        obj.forEach((element) => result.push(cloneDeep(element)))
-    } else if (obj instanceof Object && !(obj instanceof Function)) {
-        result = {}
-        for (let key in obj) {
-            if (key) result[key] = cloneDeep(obj[key])
+    try {
+        if (isArray(obj)) {
+            if (depth == maxDepth) {
+                result = `[${obj.length}]`
+            } else {
+                result = []
+                obj.forEach((element) => result.push(cloneDeep(element, maxDepth, depth + 1)))
+            }
+        } else if (obj instanceof Object && !(obj instanceof Function)) {
+            if (depth == maxDepth) {
+                result = obj.toString()
+            } else {
+                try {
+                    result = isError(obj) ? obj.constructor(obj.message) : obj.constructor()
+                } catch (innerEx) {
+                    result = {}
+                }
+                for (let key in obj) {
+                    if (key) result[key] = cloneDeep(obj[key], maxDepth, depth + 1)
+                }
+            }
+        } else {
+            result = obj
         }
-    } else {
-        result = obj
-    }
+    } catch (ex) {}
 
     return result
 }

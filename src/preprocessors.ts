@@ -2,6 +2,7 @@
 
 import {AnyhowOptions, PreProcessor} from "./types"
 import {getTag, isArray, isError, isFunction, isObject} from "./utils"
+import {isDate} from "util/types"
 
 /**
  * Parser methods to build a message out of passed logging arguments.
@@ -102,6 +103,8 @@ class AnyhowPreProcessors {
                 } else {
                     this.cleanupObject(options, value, depth + 1)
                 }
+            } else if (isDate(value)) {
+                obj[key] = value.toLocaleString()
             }
         }
     }
