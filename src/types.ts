@@ -36,12 +36,12 @@ export interface AnyhowOptions {
  * Additional options to be passed to the preprocessors.
  */
 export interface PreProcessorOptions {
+    /** Clone passed objects before processing them? */
+    clone?: boolean
     /** Log exception stack? */
     errorStack?: boolean
     /** List of field names that should be masked. */
     maskedFields?: string[]
-    /** Clone passed objects before processing them? */
-    clone?: boolean
 }
 
 /**

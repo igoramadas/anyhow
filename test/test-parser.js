@@ -20,11 +20,12 @@ describe("Anyhow Message Tests", function () {
         parser = require("../lib/parser")
 
         anyhow.setOptions({
+            compact: true,
             levels: ["debug", "info", "warn", "error"],
             preprocessorOptions: {
                 errorStack: true,
                 maskedFields: anyhow.options.preprocessorOptions.maskedFields,
-                stringify: false
+                clone: true
             }
         })
     })
@@ -139,7 +140,7 @@ describe("Anyhow Message Tests", function () {
 
         let customEx = new Error("Custom")
         delete customEx.message
-        customEx.description = "lalala"
+        customEx.description = "my error"
 
         let message = null
         let axiosEx
@@ -219,8 +220,8 @@ describe("Anyhow Message Tests", function () {
         done()
     })
 
-    it("Using the 'stringify' option should prevent object mutation", function (done) {
-        anyhow.options.preprocessorOptions.stringify = true
+    it("Using the 'clone' option should prevent object mutation", function (done) {
+        anyhow.options.preprocessorOptions.clone = true
         anyhow.setOptions({preprocessors: ["maskSecrets"]})
 
         let obj = {
@@ -229,7 +230,7 @@ describe("Anyhow Message Tests", function () {
 
         parser.getMessage([obj])
 
-        anyhow.options.preprocessorOptions.stringify = false
+        anyhow.options.preprocessorOptions.clone = false
         anyhow.setOptions({preprocessors: null})
 
         if (obj.token != 123) {
@@ -255,61 +256,77 @@ describe("Anyhow Message Tests", function () {
         done()
     })
 
-    it("Benchmark message parsing wth preprocessors disabled then enabled", async function () {
-        this.timeout(12000)
+    it("Benchmark parsing: preprocessors disabled, enabled without clone, enabled with clone", async function () {
+        this.timeout(20000)
 
         const randomString = () => crypto.randomBytes(Math.floor(Math.random() * 30) + 1).toString("hex")
-        const arr = []
+        const arr1 = []
+        const arr2 = []
+        const arr3 = []
 
-        for (let i = 0; i < 500; i++) {
-            const obj = {
-                level1: {
-                    level2: {
-                        level3: {
-                            level4: {
-                                level5: {
-                                    password: "123",
-                                    token: "abc",
-                                    func: (a) => a
+        for (let arr of [arr1, arr2, arr3]) {
+            for (let i = 0; i < 1000; i++) {
+                const obj = {
+                    level1: {
+                        level2: {
+                            level3: {
+                                level4: {
+                                    level5: {
+                                        password: "123",
+                                        token: "abc",
+                                        hello: {
+                                            a: "there"
+                                        },
+                                        func: (a) => a
+                                    }
                                 }
+                            },
+                            func: function (b) {
+                                return b
                             }
                         },
-                        func: function (b) {
-                            return b
-                        }
+                        empty: {}
                     },
-                    empty: {}
-                },
-                accessToken: "a12b3c"
+                    accessToken: "a12b3c"
+                }
+
+                obj.level1.circular = obj
+
+                arr.push(obj)
             }
 
-            arr.push(obj)
-        }
+            for (let i = 0; i < 50; i++) {
+                arr.push(new Error(randomString()))
+            }
 
-        for (let i = 0; i < 30; i++) {
-            arr.push(new Error(randomString()))
-        }
-
-        for (let i = 0; i < 2; i++) {
-            try {
-                await axios.get(`https://google.com/invalid-path/${randomString()}`)
-            } catch (ex) {
-                arr.push(ex)
+            for (let i = 0; i < 2; i++) {
+                try {
+                    await axios.get(`https://google.com/invalid-path/${randomString()}`)
+                } catch (ex) {
+                    arr.push(ex)
+                }
             }
         }
 
         const tStart = performance.now()
 
         anyhow.options.preprocessors = null
-        parser.getMessage(arr)
+        parser.getMessage(arr1)
 
         const tMid = performance.now()
 
-        anyhow.setOptions({preprocessors: ["cleanup", "friendlyErrors", "maskSecrets"]})
-        parser.getMessage(arr)
+        anyhow.setOptions({preprocessors: ["cleanup", "friendlyErrors", "maskSecrets"], preprocessorOptions: {clone: false}})
+        parser.getMessage(arr2)
+
+        const tLast = performance.now()
+
+        anyhow.setOptions({preprocessorOptions: {clone: true}})
+        parser.getMessage(arr3)
 
         const tEnd = performance.now()
+
         console.log(`Parsing without preprocessors: ${Math.floor(tMid - tStart)}ms`)
-        console.log(`Parsing with preprocessors: ${Math.floor(tEnd - tMid)}ms`)
+        console.log(`Parsing preprocessors without clone: ${Math.floor(tLast - tMid)}ms`)
+        console.log(`Parsing preprocessors with clone: ${Math.floor(tEnd - tLast)}ms`)
     })
 })
