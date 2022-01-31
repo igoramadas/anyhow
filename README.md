@@ -8,9 +8,9 @@ Drop-in (and slightly improved) logging wrapper for [Winston](https://www.npmjs.
 
 ## Why?
 
-The idea for Anyhow came after a conflict of interests regarding logging libraries on some of my personal and work projects. Some were using winston. A few other went for bunyan. Some were simply streaming to the console.
+The idea for Anyhow came after a conflict of interests regarding logging libraries in personal and work projects. Some of these projects were using winston. A few other bunyan. Some were simply streaming to the console.
 
-By using Anyhow we can achieve a consistent logging mechanism regardless of what library is actually doing the logging. Install Anyhow, replace the log calls and let it delegate the actual logging to the correct library. It also has some handy features like compacting the messages, pre-processing arguments and stylizing the console output.
+By using Anyhow we can achieve a consistent logging mechanism regardless of what library is actually doing the logging. Install Anyhow, replace the log calls and let it delegate the actual logging to the correct library. It also has some handy features like compacting the messages, pre-processing arguments, extracting error details and stylizing the console output.
 
 ## Basic usage
 
@@ -20,7 +20,10 @@ const logger = require("anyhow")
 // Setup passing no arguments will default to the console.
 logger.setup()
 
-// Setting the library options.
+// To use a specific logging library (winston in this case):
+logger.setup("winston")
+
+// Setting the options.
 logger.options = {
     compact: true,
     maxDepth: 5,
@@ -34,7 +37,7 @@ logger.options = {
     },
     preprocessorOptions: {
         maskedFields: ["password", "token", "access_token", "refresh_token", "client_secret"],
-        stringify: true
+        clone: true
     }
 }
 
@@ -42,7 +45,7 @@ logger.options = {
 logger.info("My app has started")
 
 // Mix and match arguments.
-logger.info({someJson: "text"}, "Some string", 123)
+logger.info({someJson: "hello world"}, "Some string", 123, new Date())
 
 // Log exceptions.
 try {
@@ -52,27 +55,26 @@ try {
 }
 
 // By default "debug" level is disabled, so this won't log anything.
-logger.debug("Debug something", myObject)
+logger.debug("This will not be logged", myObject)
 
-// Enable only warn and error logging.
-logger.levels = ["warn", "error"]
+// Now it will.
+logger.setOptions({levels: ["debug", "info", "warn", "error"]})
+logger.debug("Now it's logged", anotherObject)
 
-// Now info calls won't do anything.
+// Enable only warn and error logging, so info calls won't do anything.
+logger.setOptions({levels: ["warn", "error"]})
 logger.info("Won't log because we only enabled warn and error")
-logger.warn("This warn will be logged")
+logger.warn("This warning will be logged")
 
-// Enable debug, info, warn and error.
-logger.levels = ["debug", "info", "warn", "error"]
-
-// You can also call the .log method directly, passing level as the first argument.
+// You can also call the log() method directly, passing level as the first argument.
 // Useful when using custom loggers.
-logger.log("info", "This will be called as info", someExtraObject, 123)
+logger.log("warn", "This will be called as warn", someExtraObject, 123, true)
 ```
 
 ### Enforcing a specific library
 
 ```javascript
-// Use winston default logger.
+// Winston defaults.
 logger.setup("winston")
 
 // Or pass the winston logger directly.
@@ -105,11 +107,11 @@ const googleOptions = {
 }
 logger.setup("gcloud", googleOptions)
 
-// Disable logging.
+// Disable logging entirely.
 logger.setup("none")
 ```
 
-### Changing default settings
+### Changing settings
 
 ```javascript
 // Separate logged arguments with a ", " comma instead of default " | " pipe.
@@ -136,6 +138,12 @@ logger.warn("No console styles anymore, even if chalk is installed")
 // Prepend log level on the console.
 logger.setOptions({levelOnConsole: true})
 logger.info("This will now have 'INFO:' on the beginning of the message")
+
+// If you use the options setter, unpassed options will be reverted to the defaults.
+logger.options = {timestamp: true}
+
+// Now the separator that was set to ", " is reverted to " | ".
+logger.info("This", "should be separated with a bar now")
 ```
 
 ### Preprocessors
@@ -145,10 +153,27 @@ logger.info("This will now have 'INFO:' on the beginning of the message")
 const user = {
     name: "John Doe",
     password: "mypass",
-    token: "sometoken"
+    token: "sometoken",
+    registered: new Date(),
+    foo: function Foo() {},
+    team: {
+        a: {
+            b: {
+                c: {
+
+                }
+            }
+        }
+    }
 }
 
 // No preprocessor by default, will log all user data.
+logger.info(user)
+
+// Enable the "cleanup" preprocessor to have proper classes identified, dates formatted, etc.
+logger.setOptions({preprocessors: ["cleanup"]})
+
+// Looks slightly better.
 logger.info(user)
 
 // Enable the "maskSecrets" preprocessor to mask the password and token.
@@ -167,12 +192,15 @@ try{
     logger.error(ex)
 }
 
-// Add preprocessor to stringify and prepend all values with @.
+// Add preprocessor to use toString() and prepend all values with @.
 const numToString = (args) => args.map(a => `@ ${a.toString()}`)
 logger.setOptions({preprocessors: [numToString]})
 
 // Will output @ 1 | @ 2 | @ Sat Jan 01 2000 00:00:00 GMT+0100 (Central European Standard Time)
 logger.info(1, 2, new Date("2000-01-01T00:00:00"))
+
+// To enabled multiple preprocessors:
+logger.setOptions({preprocessors: ["friendlyErrors", "maskSecrets", numToString]})
 ```
 
 ### Uncaught and unhandled errors
@@ -201,65 +229,74 @@ failFunction()
 
 ## Options
 
-### appName: "Anyhow"
+### appName: string, _"Anyhow"_
 
-String, optional, the name of your app / tool / service.
+Optional, the name of your app / tool / service.
 
-### compact: true
+### compact: boolean, _true_
 
-Boolean, defines if messages should be compacted, so line breaks and extra spaces will be removed.
+Defines if messages should be compacted (remove line breaks and extra spaces, minify the JSON output, flatten arrays, etc).
 
-### errorStack: false
+### levels: string[], _["info", "warn", "error"]_
 
-Boolean, defines if stack traces should be logged with errors and exceptions.
+Defines which logging levels are enabled. The standard logging levels
+are ["debug", "info", "warn", "error"]. Debug should usually not be enabled in production.
 
-### levels: ["info", "warn", "error"]
+### maxDepth: number, _5_
 
-Array of string, defines which logging levels are enabled. Possible logging levels are
-["info", "warn", "error"].
+The maximum depth to reach when processing and logging arrays and objects.
 
-### maxDepth: 5
+### levelOnConsole: boolean, _false_
 
-Number, the maximum depth to reach when processing and logging arrays and objects.
+If true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.
 
-### levelOnConsole: false
+### preprocessors: string / function[], _null_
 
-Boolean, if true it will prepend the log level (INFO, WARN, ERROR etc...) to the message on the console.
+Array of preprocessors to be enabled, passed as functions or strings. Preprocessor functions should accept a single
+array containing the arguments to be parsed. The following built-in preprocessors strings are available:
 
-### preprocessors: null
+#### cleanup
 
-You can define a function(arrayOfObjects) that will be used to process arguments before generating
-the final log messages. This is useful if you want to change or remove information from objects, for
-instance you might want to obfuscate all `password` fields and mask `telephone` fields. The function
-can either mutate the arrayOfObjects or return the new arguments as a result.
+Cleanup the message output by removing non-relevant data from logged objects and replacing
+functions / custom objects with [Function] / [object Type] strings.
+
+#### friendlyErrors
+
+Extract the exception code, status and message instead of logging the full exception object.
+Supports axios and fetch exceptions out-of-the-box.
+
+#### maskSecrets
+
+Replace sensitive credentials with [***]. The actual field names to be masked are set
+under the `preprocessorOptions`, see below.
 
 ### preprocessorOptions: object
 
 Additional options to be passed to the preprocessors:
 
-#### errorStack: false
-
-Boolean, if set to true then exception stack traces will also be logged.
-
-#### maskedFields: array
-
-Array of strings, property names that should be masked with the maskSecrets preprocessor. Defaults to:
-password, passcode, secret, token, accessToken, access_token, refreshToken, refreshToken, clientSecret, client_secret
-
-#### stringify: true
+### clone: boolean, _true_
 
 Boolean, if set to false then objects will not be cloned before running the preprocessors.
 Only set to false if you are dealing exclusively with JSON data that can be mutated by the logger.
 
-#### uncaughtException: false
+#### errorStack: boolean, _false_
+
+Boolean, if set to true then exception stack traces will also be logged.
+
+#### maskedFields: string[], _default below_
+
+Array of strings, property names that should be masked with the maskSecrets preprocessor. Defaults to:
+`password, passcode, secret, token, accessToken, access_token, refreshToken, refreshToken, clientSecret, client_secret`
+
+#### uncaughtException: boolean, _false_
 
 Boolean, if true it will log uncaught exceptions to the console (and will NOT quit execution).
 
-#### unhandledRejections: false
+#### unhandledRejections: boolean, _false_
 
 Boolean, if true it will log uncaught exceptions to the console (and will NOT quit execution).
 
-#### separator: " | "
+#### separator: string, _" | "_
 
 String, defines the default separator between logged objects. For instance if you do a
 `info(123, "ABC")`, output will be "123 | ABC".
@@ -270,7 +307,7 @@ Object with keys defining the styles for each level on console output. This will
 if you also have the [chalk](https://www.npmjs.com/package/chalk) module installed. By default
 `debug` is gray, `info` white, `warn` yellow and `error` bold red. To disable, set it to null.
 
-### timestamp: false
+### timestamp: boolean, _false_
 
 Boolean, if true it will prepend log messages with a timestamp.
 
@@ -306,10 +343,8 @@ Shortcut to log("error", args).
 
 ## Version 3 breaking changes
 
-Version 3 will be released soon!
-
-If you are using the default options, there's nothing to worry about - the logging methods are all
-backwards-compatible. Otherwise, please use the new `options` object:
+If you are using the default options, there's nothing to worry about - the logging methods have the same
+signature and are backwards-compatible. Otherwise, please use the new `options` object:
 
 ### New options
 
@@ -346,6 +381,6 @@ Or check these following projects that are using Anyhow for logging:
 
 * [Expresser](https://github.com/igoramadas/expresser)
 * [Monitorado](https://github.com/igoramadas/monitorado)
-* [SetMeUp](https://github.com/igoramadas/setmeup)
 * [PandaGainz](https://github.com/igoramadas/pandagainz)
+* [SetMeUp](https://github.com/igoramadas/setmeup)
 * [Strautomator](https://github.com/strautomator/core)

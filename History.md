@@ -2,14 +2,15 @@
 
 3.0.0
 =====
+* Major code refactoring!
 * BREAKING! Library options now contained within the new logger.options property.
 * NEW! A few new logging helpers:
-    - deprecated: logs a deprecation warning (only once)
-    - inspect: outputs the JSON representation of the  passed objects / variables
+    - deprecated: logs a deprecation warning (only once).
+    - inspect: outputs the JSON representation of the  passed objects / variables.
 * NEW! Built-in preprocessors:
-    - cleanup: remove unnecessary gibberish from logged objects
-    - friendlyErrors: extract the most relevant data from error and exceptions
-    - maskSecrets: mask passwords, tokens and credentials on objects
+    - cleanup: remove unnecessary gibberish from logged objects.
+    - friendlyErrors: extract the most relevant data from error and exceptions.
+    - maskSecrets: mask passwords, tokens and credentials on objects.
 
 2.2.5
 =====
