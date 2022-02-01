@@ -13,6 +13,7 @@ const defaultOptions: AnyhowOptions = {
     compact: true,
     maxDepth: 5,
     appName: "Anyhow",
+    separator: " | ",
     levels: ["info", "warn", "error"],
     styles: {
         debug: ["gray"],

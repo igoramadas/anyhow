@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+3.0.1
+=====
+* Added missing default separator, switched back from "," to " | ".
+
 3.0.0
 =====
 * Major code refactoring!
