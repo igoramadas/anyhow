@@ -23,7 +23,7 @@ const defaultOptions: AnyhowOptions = {
     },
     preprocessors: [],
     preprocessorOptions: {
-        maskedFields: ["password", "passcode", "secret", "token", "accessToken", "access_token", "refreshToken", "refresh_token", "clientSecret", "client_secret"],
+        maskedFields: ["password", "passcode", "secret", "token", "accessToken", "access_token", "refreshToken", "refresh_token", "clientSecret", "client_secret", "Authorization"],
         clone: true
     }
 }
