@@ -47,7 +47,7 @@ describe("Anyhow Message Tests", function () {
             new Date()
         ]
 
-        let message = parser.getMessage(args, "secondArgument", {})
+        let message = parser.getMessage([args, "secondArgument", {}])
         anyhow.setOptions({timestamp: false})
 
         if (parser.getMessage().length > 0) {
@@ -62,7 +62,7 @@ describe("Anyhow Message Tests", function () {
     it("Uses a custom separator and do not compact", function (done) {
         anyhow.setOptions({separator: "/", compact: false})
 
-        let message = parser.getMessage("1   ", "2")
+        let message = parser.getMessage(["1   ", "2"])
 
         if (message == "1   /2") {
             done()
@@ -75,7 +75,7 @@ describe("Anyhow Message Tests", function () {
 
     it("Append a timestamp on messages", function (done) {
         anyhow.setOptions({timestamp: true})
-        let message = parser.getMessage("Should have a timestamp")
+        let message = parser.getMessage(["Should have a timestamp"])
         anyhow.setOptions({timestamp: false})
 
         let now = new Date()
@@ -98,6 +98,9 @@ describe("Anyhow Message Tests", function () {
             instance,
             new Date(),
             null,
+            {
+                someFunc: function lalala() {}
+            },
             {
                 obj: {
                     func: (a) => a,
@@ -186,7 +189,6 @@ describe("Anyhow Message Tests", function () {
         anyhow.setOptions({compact: true, preprocessors: null})
 
         if (message.includes("mypass") || message.includes("mytoken")) {
-            console.warn(message)
             done("The values 'mypass' and 'mytoken' should be masked, but weren't.")
         } else {
             done()
@@ -213,7 +215,7 @@ describe("Anyhow Message Tests", function () {
             ]
         })
 
-        if (parser.getMessage(obj).indexOf("123") >= 0) {
+        if (parser.getMessage([obj]).indexOf("123") >= 0) {
             return done("Resulting message should not contain the testing '123' (preprocessor returning a value).")
         }
         anyhow.setOptions({preprocessors: null})
@@ -250,7 +252,7 @@ describe("Anyhow Message Tests", function () {
             ]
         })
 
-        parser.getMessage({testing: true})
+        parser.getMessage([{testing: true}])
         anyhow.setOptions({preprocessors: null})
 
         done()

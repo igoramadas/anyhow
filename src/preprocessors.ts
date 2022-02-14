@@ -1,8 +1,7 @@
 // Anyhow: preprocessors
 
 import {AnyhowOptions, PreProcessor} from "./types"
-import {getTag, isArray, isError, isFunction, isObject} from "./utils"
-import {isDate} from "util/types"
+import {cloneDeep, getTag, isArray, isDate, isError, isFunction, isObject, isString} from "./utils"
 
 /**
  * Parser methods to build a message out of passed logging arguments.
@@ -23,27 +22,28 @@ class AnyhowPreProcessors {
      * @param args Arguments to be processed.
      * @param preprocessors List of preprocessors to be executed.
      */
-    run = (options: AnyhowOptions, args: any[], preprocessors: PreProcessor[]): void => {
-        const hasCleanup = preprocessors.includes("cleanup")
+    run = (options: AnyhowOptions, args: any[], preprocessors: PreProcessor[]): any[] => {
         const hasFriendlyErrors = preprocessors.includes("friendlyErrors")
+        const hasCleanup = preprocessors.includes("cleanup")
         const hasMaskSecrets = preprocessors.includes("maskSecrets")
 
         if (hasFriendlyErrors) {
             this.friendlyErrors(options, args)
         }
 
-        for (let i = 0; i < args.length; i++) {
-            const obj = args[i]
-            if (!obj) continue
-
-            if (isArray(obj)) {
-                if (hasCleanup) this.cleanupArray(options, obj, 0)
-                if (hasMaskSecrets && options.preprocessorOptions.maskedFields) this.maskSecretsArray(options, obj, 0)
-            } else if (isObject(obj)) {
-                if (hasCleanup) this.cleanupObject(options, obj, 0)
-                if (hasMaskSecrets && options.preprocessorOptions.maskedFields) this.maskSecretsObject(options, obj, 0)
-            }
+        // Stringify and clone objects?
+        if (options.preprocessorOptions && options.preprocessorOptions.clone) {
+            args = cloneDeep(args, options.levels.includes("debug"), options.maxDepth)
         }
+
+        if (hasCleanup) {
+            this.cleanupArray(options, args, 0)
+        }
+        if (hasMaskSecrets) {
+            this.maskSecretsArray(options, args, 0)
+        }
+
+        return args
     }
 
     // CLEANUP
@@ -121,34 +121,50 @@ class AnyhowPreProcessors {
         for (let i = 0; i < args.length; i++) {
             const obj = args[i]
             /* istanbul ignore next */
-            if (!obj) continue
+            if (!obj || isString(obj)) continue
 
+            let arrError: any[] = []
+            let code: string
+            let friendlyMessage: string
+            let message: string
+
+            // Typed error?
             if (isError(obj)) {
-                const arrError: any[] = []
-                const friendlyMessage = obj.friendlyMessage || obj.reason
-                const code = obj.code || obj.statusCode
-                const message = obj.message || obj.description
+                code = obj.code || obj.statusCode
+                friendlyMessage = obj.friendlyMessage || obj.reason
+                message = obj.message || obj.description
 
                 // Add error information separately.
+                if (code) arrError.push(`Code ${code}`)
                 if (friendlyMessage) arrError.push(friendlyMessage)
-                if (code) arrError.push(code)
                 if (message) arrError.push(message)
+            }
 
-                // Try extracting error details from axios exceptions.
-                if (obj.response && obj.response.data) {
-                    try {
-                        if (obj.response.data.message) {
-                            const dataMessage = obj.response.data.message.toString()
-                            if (dataMessage != "[object Object]") arrError.push(obj.response.data.message.toString())
-                        }
-                        if (obj.response.data.error) {
-                            const dataError = obj.response.data.error.toString()
-                            if (dataError != "[object Object]") arrError.push(obj.response.data.error.toString())
-                        }
-                    } catch (axiosEx) {}
-                }
+            // Try extracting error details from axios / request exceptions.
+            if (obj.response && obj.response.data) {
+                try {
+                    let dataMessage: string
+                    let dataError: string
 
-                // Append stack?
+                    if (!code && obj.response.statusCode) {
+                        arrError.push(`Code ${obj.response.statusCode}`)
+                    }
+                    if (obj.response.data.message) {
+                        dataMessage = obj.response.data.message.toString()
+                        if (dataMessage != "[object Object]" && dataMessage != message) {
+                            arrError.push(dataMessage)
+                        }
+                    }
+                    if (obj.response.data.error) {
+                        dataError = (obj.response.data.error.message || obj.response.data.error).toString()
+                        if (dataError != "[object Object]" && dataError != dataMessage && dataError != message) {
+                            arrError.push(dataError)
+                        }
+                    }
+                } catch (axiosEx) {}
+            }
+
+            if (arrError.length > 0) {
                 if (options.preprocessorOptions && options.preprocessorOptions.errorStack && obj.stack) {
                     arrError.push(obj.stack.toString())
                 }

@@ -67,7 +67,7 @@ describe("Anyhow Main Tests", function () {
         if (logged.indexOf("123") > 0) {
             done()
         } else {
-            done(`Expected '${expected}' but got '${logged}' on console.`)
+            done(`Expected 123 but got '${logged}' on console.`)
         }
     })
 

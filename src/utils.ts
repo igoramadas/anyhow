@@ -1,12 +1,15 @@
 // Anyhow: Utils (largely based on lodash.js)
 
+import utilTypes from "util/types"
+
 /**
  * Clone the passed object and return a new one.
  * @param obj The object to be cloned.
+ * @param logErrors Log cloning failures? Defaults to false.
  * @param maxDepth Maximum depth to reach.
  * @param depth Current depth.
  */
-export const cloneDeep = (obj: any, maxDepth?: number, depth?: number): any => {
+export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, depth?: number): any => {
     if (!obj) return obj
     if (!maxDepth) maxDepth = 5
     if (!depth) depth = 0
@@ -19,25 +22,41 @@ export const cloneDeep = (obj: any, maxDepth?: number, depth?: number): any => {
                 result = `[${obj.length}]`
             } else {
                 result = []
-                obj.forEach((element) => result.push(cloneDeep(element, maxDepth, depth + 1)))
+                obj.forEach((element) => result.push(cloneDeep(element, logErrors, maxDepth, depth + 1)))
             }
         } else if (obj instanceof Object && !(obj instanceof Function)) {
             if (depth == maxDepth) {
                 result = obj.toString()
             } else {
                 try {
-                    result = isError(obj) ? obj.constructor(obj.message) : obj.constructor()
+                    result = Object.assign(Object.create(Object.getPrototypeOf(obj)), obj)
+
+                    if (isError(obj)) {
+                        result.stack = obj.stack
+                    }
                 } catch (innerEx) {
-                    result = {}
+                    if (logErrors) {
+                        console.warn("Utils.cloneDeep: Failed to clone constructor")
+                        console.error(innerEx)
+                    }
                 }
-                for (let key in obj) {
-                    if (key) result[key] = cloneDeep(obj[key], maxDepth, depth + 1)
+                if (!result) {
+                    result = {}
+
+                    for (let key in obj) {
+                        if (key) result[key] = cloneDeep(obj[key], logErrors, maxDepth, depth + 1)
+                    }
                 }
             }
         } else {
             result = obj
         }
-    } catch (ex) {}
+    } catch (ex) {
+        if (logErrors) {
+            console.warn("Utils.cloneDeep: Failed to clone object")
+            console.error(ex)
+        }
+    }
 
     return result
 }
@@ -90,8 +109,11 @@ export const flattenArray = (array, depth?, result?): any[] => {
 export const getTag = (value) => {
     const toString = Object.prototype.toString
 
-    if (value == null) {
-        return value === undefined ? "[object Undefined]" : "[object Null]"
+    if (value === null) {
+        return "[object Null]"
+    }
+    if (value === undefined) {
+        return "[object Undefined]"
     }
 
     if (value && value.constructor && value.constructor.name) {
@@ -135,6 +157,14 @@ export const isArguments = (value): boolean => {
  */
 export const isArray = (value): boolean => {
     return value && Array.isArray(value)
+}
+
+/**
+ * Check if the passed value is a date.
+ * @param value Object or value.
+ */
+export const isDate = (value): boolean => {
+    return utilTypes.isDate(value)
 }
 
 /**

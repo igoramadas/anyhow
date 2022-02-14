@@ -1,7 +1,7 @@
 // Anyhow: Parser
 
 import {AnyhowOptions, PreProcessor} from "./types"
-import {cloneDeep, flattenArray, getTimestamp, isArray, isFunction, isObject, isString} from "./utils"
+import {flattenArray, getTimestamp, isArray, isFunction, isNil, isObject, isString} from "./utils"
 import preprocessors from "./preprocessors"
 import util from "util"
 
@@ -59,12 +59,12 @@ class AnyhowParser {
     /**
      * List of active built-in preprocessors.
      */
-    private builtinPreProcessors: string[]
+    private builtinPreProcessors: string[] = []
 
     /**
      * List of active custom preprocessors.
      */
-    private customPreProcessors: Function[]
+    private customPreProcessors: Function[] = []
 
     // METHODS
     // --------------------------------------------------------------------------
@@ -117,15 +117,21 @@ class AnyhowParser {
     /**
      * Gets a nice, readable message out of the passed arguments, which can be of any type.
      * @param args Objects or variables that should be stringified.
+     * @param ignoredPreProcessors List of ignored preprocessors.
      * @returns Human readable string taken out of the parsed arguments.
      */
-    getMessage = (...args: any): string => {
+    getMessage = (args: any[], ignoredPreProcessors?: PreProcessor[]): string => {
         let strMessage: string = null
 
-        if (args.length == 0) {
+        if (isNil(args)) {
             strMessage = ""
-        } else if (args.length == 1 && isString(args[0])) {
-            strMessage = args[0]
+        } else {
+            if (!isArray(args)) {
+                args = [args]
+            }
+            if (args.length == 1 && isString(args[0])) {
+                strMessage = args[0]
+            }
         }
 
         if (strMessage !== null) {
@@ -137,25 +143,21 @@ class AnyhowParser {
         }
 
         try {
-            const hasPreprocessors = this.builtinPreProcessors.length > 0 || this.customPreProcessors.length > 0
+            const builtinPreProcessors = this.builtinPreProcessors.filter((pp: any) => (ignoredPreProcessors ? ignoredPreProcessors.includes(pp) : true))
+            const customPreProcessors = this.customPreProcessors
 
             // Flatten the array if the compact option is set.
             if (this.options.compact) {
                 args = flattenArray(args)
             }
 
-            // Stringify and clone objects when using preprocessors?
-            if (hasPreprocessors && this.options.preprocessorOptions && this.options.preprocessorOptions.clone) {
-                args = cloneDeep(args, this.options.maxDepth)
-            }
-
             // Execute built-in preprocessors (if any).
             if (this.builtinPreProcessors.length > 0) {
-                preprocessors.run(this.options, args, this.builtinPreProcessors as PreProcessor[])
+                args = preprocessors.run(this.options, args, builtinPreProcessors as PreProcessor[])
             }
 
             // Execute custom preprocessors (if any).
-            for (let pp of this.customPreProcessors) {
+            for (let pp of customPreProcessors) {
                 try {
                     args = pp(args) || args
                 } catch (ex) {

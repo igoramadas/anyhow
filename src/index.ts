@@ -266,7 +266,7 @@ class Anyhow {
     debug = (...args: any[]): string => {
         if (this._options.levels.indexOf("debug") < 0) return null
         if (args.length < 1) return
-        let message = parser.getMessage(args)
+        let message = parser.getMessage(args, ["friendlyErrors"])
         return this.log("debug", message)
     }
 
@@ -276,7 +276,7 @@ class Anyhow {
     info = (...args: any[]): string => {
         if (this._options.levels.indexOf("info") < 0) return null
         if (args.length < 1) return
-        let message = parser.getMessage(args)
+        let message = parser.getMessage(args, ["friendlyErrors"])
         return this.log("info", message)
     }
 
