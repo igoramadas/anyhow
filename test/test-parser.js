@@ -1,6 +1,7 @@
 // TEST: MAIN
 
 let axios = require("axios")
+let bent = require("bent")
 let crypto = require("crypto")
 let chai = require("chai")
 let mocha = require("mocha")
@@ -23,7 +24,7 @@ describe("Anyhow Message Tests", function () {
             compact: true,
             levels: ["debug", "info", "warn", "error"],
             preprocessorOptions: {
-                errorStack: true,
+                errorStack: false,
                 maskedFields: anyhow.options.preprocessorOptions.maskedFields,
                 clone: true
             }
@@ -140,13 +141,19 @@ describe("Anyhow Message Tests", function () {
         anyhow.setOptions({preprocessors: ["friendlyErrors"]})
 
         let noEx = {error: false}
-
-        let customEx = new Error("Custom")
-        delete customEx.message
-        customEx.description = "my error"
-
         let message = null
+        let simpleEx
         let axiosEx
+        let bentEx
+
+        try {
+            throw new Error("This is an error")
+        } catch (ex) {
+            ex.friendlyMessage = "This is a friendly message"
+            ex.reason = "This is a reason"
+            ex.code = 500
+            simpleEx = ex
+        }
 
         try {
             await axios.get("https://google.com/page/that/does/not-exist")
@@ -155,14 +162,17 @@ describe("Anyhow Message Tests", function () {
         }
 
         try {
-            throw new Error("This is an error")
+            const getJson = bent("json")
+            await getJson("https://google.com/page/that/does/also-not-exist")
         } catch (ex) {
-            ex.friendlyMessage = "This is a friendly message"
-            ex.reason = "This is a reason"
-            ex.code = 500
-
-            message = parser.getMessage([ex, customEx, noEx, [axiosEx]])
+            bentEx = ex
         }
+
+        let customEx = new Error("Custom")
+        delete customEx.message
+        customEx.description = "my error"
+
+        message = parser.getMessage([noEx, simpleEx, , axiosEx, bentEx, customEx])
 
         anyhow.setOptions({preprocessors: null})
 
@@ -297,7 +307,7 @@ describe("Anyhow Message Tests", function () {
                 arr.push(obj)
             }
 
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 100; i++) {
                 arr.push(new Error(randomString()))
             }
 
