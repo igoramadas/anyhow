@@ -36,6 +36,7 @@
         "@google-cloud/logging": "^9.6.9",
         "@types/node": "^17.0.17",
         "axios": "^0.26.0",
+        "bent": "^7.3.12",
         "bunyan": "^1.8.15",
         "capture-console": "^1.0.1",
         "chai": "^4.3.6",
