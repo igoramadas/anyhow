@@ -1,5 +1,11 @@
 # Changelog for Anyhow
 
+3.0.2
+=====
+* Added "Authorization" to list of default masked fields.
+* Handling improvements to the "cleanup" and "friendlyErrors" preprocessors.
+* The "friendlyErrors" preprocessor is ignored on debug and info logs.
+
 3.0.1
 =====
 * Added missing default separator, switched back from "," to " | ".
