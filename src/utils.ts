@@ -1,7 +1,5 @@
 // Anyhow: Utils (largely based on lodash.js)
 
-import utilTypes from "util/types"
-
 /**
  * Clone the passed object and return a new one.
  * @param obj The object to be cloned.
@@ -164,7 +162,7 @@ export const isArray = (value): boolean => {
  * @param value Object or value.
  */
 export const isDate = (value): boolean => {
-    return utilTypes.isDate(value)
+    return value ? value instanceof Date : false
 }
 
 /**
