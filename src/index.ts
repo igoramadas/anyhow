@@ -176,12 +176,12 @@ class Anyhow {
     }
 
     /**
-     * Please use options.errorStack.
+     * Please use options.preprocessorOptions.errorStack.
      * @deprecated
      */
     /* istanbul ignore next */
     set errorStack(value: boolean) {
-        this.deprecated("errorStack", `Please use setOptions({errorStack: ${value}})`)
+        this.deprecated("errorStack", `Please use setOptions({preprocessorOptions: {errorStack: ${value}}})`)
     }
 
     /**

@@ -24,7 +24,7 @@ describe("Anyhow Message Tests", function () {
             compact: true,
             levels: ["debug", "info", "warn", "error"],
             preprocessorOptions: {
-                errorStack: false,
+                errorStack: true,
                 maskedFields: anyhow.options.preprocessorOptions.maskedFields,
                 clone: true
             }
