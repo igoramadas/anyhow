@@ -1,7 +1,8 @@
 # Changelog for Anyhow
 
-3.0.3
+3.0.4
 =====
+* Removed the "util/types" dependency on utils.
 * The "errorStack" was pointing to the wrong location, now fixed (preprocessorOptions.errorStack).
 * Updated dependencies.
 
