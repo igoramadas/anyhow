@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+3.0.3
+=====
+* The "errorStack" was pointing to the wrong location, now fixed (preprocessorOptions.errorStack).
+* Updated dependencies.
+
 3.0.2
 =====
 * Added "Authorization" to list of default masked fields.
