@@ -1,5 +1,11 @@
 # Changelog for Anyhow
 
+3.1.0
+=====
+* Fixed timestamp feature (was being added multiple times).
+* Fixed default Google Cloud logger.
+* Updated dependencies.
+
 3.0.4
 =====
 * Removed the "util/types" dependency on utils.
