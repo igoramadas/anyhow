@@ -1,7 +1,7 @@
 // Anyhow: Parser
 
 import {AnyhowOptions, PreProcessor} from "./types"
-import {flattenArray, getTimestamp, isArray, isFunction, isNil, isObject, isString} from "./utils"
+import {flattenArray, isArray, isFunction, isNil, isObject, isString} from "./utils"
 import preprocessors from "./preprocessors"
 import util from "util"
 
@@ -135,10 +135,6 @@ class AnyhowParser {
         }
 
         if (strMessage !== null) {
-            if (this.options.timestamp) {
-                strMessage = `${getTimestamp()}${this.options.separator}${strMessage}`
-            }
-
             return strMessage
         }
 
@@ -168,14 +164,8 @@ class AnyhowParser {
                 }
             }
 
-            const messages = this.argumentsParser(args)
-
-            // Add timestamp?
-            if (this.options.timestamp) {
-                messages.unshift(getTimestamp())
-            }
-
             // Return single string log message.
+            const messages = this.argumentsParser(args)
             return messages.join(this.options.separator)
         } catch (ex) {
             /* istanbul ignore next */
@@ -198,11 +188,6 @@ class AnyhowParser {
             colors: true,
             depth: this.options.maxDepth,
             showHidden: false
-        }
-
-        // Add timestamp?
-        if (this.options.timestamp) {
-            result.push(getTimestamp())
         }
 
         // Iterate and process the passed arguments.

@@ -15,8 +15,6 @@ describe("Anyhow Main Tests", function () {
 
     before(function () {
         anyhow = require("../lib/index")
-
-        anyhow.options = {aaaaaa: true}
     })
 
     it("Calling log() before setup() warns and defaults to console", function (done) {

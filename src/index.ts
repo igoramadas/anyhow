@@ -2,7 +2,7 @@
 
 import {AnyhowOptions, Logger} from "./types"
 import {libSetup} from "./setup"
-import {cloneDeep, dedupArray, mergeDeep} from "./utils"
+import {cloneDeep, dedupArray, getTimestamp, mergeDeep} from "./utils"
 import parser from "./parser"
 
 // Chalk (colorized console output). Will be instantiated on setup().
@@ -247,6 +247,11 @@ class Anyhow {
         if (this._options.levels.indexOf(level) < 0) return null
 
         let message = parser.getMessage(args)
+
+        // Add timestamp?
+        if (this.options.timestamp) {
+            message = `${getTimestamp()}${this.options.separator}${message}`
+        }
 
         // If setup was not called yet, defaults to console logging and emit warning.
         if (!this.isReady) {

@@ -130,7 +130,7 @@ class AnyhowPreProcessors {
 
             // Typed error?
             if (isError(obj)) {
-                code = obj.code || obj.statusCode
+                code = obj.statusCode || obj.code
                 friendlyMessage = obj.friendlyMessage || obj.reason
                 message = obj.message || obj.description
 

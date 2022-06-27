@@ -149,7 +149,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     }
 
                     const writeOptions = {
-                        resource: libOptions.resource || null,
+                        resource: libOptions.resource || {type: "global"},
                         partialSuccess: isNil(libOptions.partialSuccess) ? true : libOptions.partialSuccess
                     }
 
@@ -177,6 +177,9 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                 name: "console",
                 log: (level, message) => anyhow.console(level, message)
             }
+
+            anyhow.setOptions({timestamp: true})
+            anyhow.info("TEST")
         }
     } catch (ex) {
         /* istanbul ignore next */

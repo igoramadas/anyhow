@@ -76,7 +76,7 @@ describe("Anyhow Message Tests", function () {
 
     it("Append a timestamp on messages", function (done) {
         anyhow.setOptions({timestamp: true})
-        let message = parser.getMessage(["Should have a timestamp"])
+        let message = anyhow.info("Should have a timestamp")
         anyhow.setOptions({timestamp: false})
 
         let now = new Date()
