@@ -1,6 +1,6 @@
 {
     "name": "anyhow",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "description": "Drop-in wrapper for Winston, Bunyan, Pino and console logs.",
     "keywords": [
         "anyhow",
@@ -46,10 +46,10 @@
         "mocha-lcov-reporter": "^1.3.0",
         "nyc": "^15.1.0",
         "pino": "^7.11.0",
-        "supertest": "^6.2.3",
-        "typedoc": "^0.23.1",
+        "supertest": "^6.2.4",
+        "typedoc": "^0.23.10",
         "typescript": "^4.7.4",
-        "winston": "^3.8.0"
+        "winston": "^3.8.1"
     },
     "prettier": {
         "trailingComma": "none",

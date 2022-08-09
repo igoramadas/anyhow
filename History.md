@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+3.1.1
+=====
+* Removed "sneaky" TEST log.
+* Updated dependencies.
+
 3.1.0
 =====
 * Fixed timestamp feature (was being added multiple times).
