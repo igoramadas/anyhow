@@ -179,7 +179,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
             }
 
             anyhow.setOptions({timestamp: true})
-            anyhow.info("TEST")
+            anyhow.info("Anyhow: defaulting to console")
         }
     } catch (ex) {
         /* istanbul ignore next */
