@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+3.1.2
+=====
+* Updated dependencies.
+
 3.1.1
 =====
 * Removed "sneaky" TEST log.
