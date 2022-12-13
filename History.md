@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+3.2.0
+=====
+* Removed pre v3 deprecated methods.
+
 3.1.2
 =====
 * Updated dependencies.
