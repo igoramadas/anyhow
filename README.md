@@ -26,7 +26,7 @@ logger.setup("winston")
 // Setting the options.
 logger.options = {
     compact: true,
-    maxDepth: 5,
+    maxDepth: 6,
     appName: "Anyhow",
     levels: ["info", "warn", "error"],
     styles: {
@@ -242,9 +242,9 @@ Defines if messages should be compacted (remove line breaks and extra spaces, mi
 Defines which logging levels are enabled. The standard logging levels
 are ["debug", "info", "warn", "error"]. Debug should usually not be enabled in production.
 
-### maxDepth: number, _5_
+### maxDepth: number, _6_
 
-The maximum depth to reach when processing and logging arrays and objects.
+The maximum tree depth to follow when processing and logging arrays and objects.
 
 ### levelOnConsole: boolean, _false_
 

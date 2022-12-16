@@ -3,6 +3,7 @@
 3.2.0
 =====
 * Removed pre v3 deprecated methods.
+* Default maxDepth increased from 5 to 6.
 
 3.1.2
 =====
