@@ -11,7 +11,7 @@ let chalk = null
 // Default options.
 const defaultOptions: AnyhowOptions = {
     compact: true,
-    maxDepth: 5,
+    maxDepth: 6,
     appName: "Anyhow",
     separator: " | ",
     levels: ["info", "warn", "error"],
