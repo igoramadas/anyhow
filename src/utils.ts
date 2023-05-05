@@ -1,5 +1,7 @@
 // Anyhow: Utils (largely based on lodash.js)
 
+import {defaultOptions} from "./types"
+
 /**
  * Clone the passed object and return a new one.
  * @param obj The object to be cloned.
@@ -9,7 +11,7 @@
  */
 export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, depth?: number): any => {
     if (!obj) return obj
-    if (!maxDepth) maxDepth = 5
+    if (!maxDepth) maxDepth = defaultOptions.maxDepth
     if (!depth) depth = 0
 
     let result
@@ -33,11 +35,14 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
                         result.stack = obj.stack
                     }
                 } catch (innerEx) {
+                    /* istanbul ignore next */
                     if (logErrors) {
                         console.warn("Utils.cloneDeep: Failed to clone constructor")
                         console.error(innerEx)
                     }
                 }
+
+                /* istanbul ignore if */
                 if (!result) {
                     result = {}
 
@@ -50,6 +55,7 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
             result = obj
         }
     } catch (ex) {
+        /* istanbul ignore next */
         if (logErrors) {
             console.warn("Utils.cloneDeep: Failed to clone object")
             console.error(ex)

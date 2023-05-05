@@ -130,7 +130,7 @@ class AnyhowPreProcessors {
 
             // Typed error?
             if (isError(obj)) {
-                code = obj.statusCode || obj.code
+                code = obj.statusCode || obj.code || obj.response?.status || obj.response?.statusCode
                 friendlyMessage = obj.friendlyMessage || obj.reason
                 message = obj.message || obj.description
 
@@ -141,21 +141,18 @@ class AnyhowPreProcessors {
             }
 
             // Try extracting error details from axios / request exceptions.
-            if (obj.response && obj.response.data) {
+            if (obj.response) {
                 try {
                     let dataMessage: string
                     let dataError: string
 
-                    if (!code && obj.response.statusCode) {
-                        arrError.push(`Code ${obj.response.statusCode}`)
-                    }
-                    if (obj.response.data.message) {
+                    if (obj.response.data?.message) {
                         dataMessage = obj.response.data.message.toString()
                         if (dataMessage != "[object Object]" && dataMessage != message) {
                             arrError.push(dataMessage)
                         }
                     }
-                    if (obj.response.data.error) {
+                    if (obj.response.data?.error) {
                         dataError = (obj.response.data.error.message || obj.response.data.error).toString()
                         if (dataError != "[object Object]" && dataError != dataMessage && dataError != message) {
                             arrError.push(dataError)
