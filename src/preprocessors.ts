@@ -210,7 +210,7 @@ class AnyhowPreProcessors {
                 this.maskSecretsArray(options, value, depth + 1)
             } else if (isObject(value)) {
                 this.maskSecretsObject(options, value, depth + 1)
-            } else if (options.preprocessorOptions.maskedFields.includes(key)) {
+            } else if (options.preprocessorOptions.maskedFields.includes(key.toString().toLowerCase())) {
                 obj[key] = "[***]"
             }
         }
