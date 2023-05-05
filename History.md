@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+3.2.1
+=====
+* Expanded the list of masked fields.
+* Masked field keys are now case insensitive.
+
 3.2.0
 =====
 * Removed pre v3 deprecated methods.

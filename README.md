@@ -36,7 +36,7 @@ logger.options = {
         error: ["red", "bold"]
     },
     preprocessorOptions: {
-        maskedFields: ["password", "token", "access_token", "refresh_token", "client_secret"],
+        maskedFields: ["password", "token"],
         clone: true
     }
 }
@@ -285,8 +285,8 @@ Boolean, if set to true then exception stack traces will also be logged.
 
 #### maskedFields: string[], _default below_
 
-Array of strings, property names that should be masked with the maskSecrets preprocessor. Defaults to:
-`password, passcode, secret, token, accessToken, access_token, refreshToken, refreshToken, clientSecret, client_secret`
+Array of strings, property names (case insensitive) that should be masked with the maskSecrets preprocessor. Defaults to:
+`authorization, password, passcode, secret, token, accesstoken, access_token, refreshtoken, refresh_token, clientsecret, client_secret, apikey, api_key, apisecret, api_secret, privatekey, private_key`
 
 #### uncaughtException: boolean, _false_
 

@@ -35,7 +35,7 @@ publish:
 	npm publish
 
 update:
-	-ncu -u --target minor
+	-ncu -u -x axios,chalk
 	-npm install
 	$(TSC)
 
