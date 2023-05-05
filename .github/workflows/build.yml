@@ -15,12 +15,12 @@ jobs:
                   cache: "npm"
             - run: npm ci
             - run: npm run build
-            - run: npm test
+            - run: npm run test-coverage
               env:
                   GCP_TEST_PROJECT_ID: ${{ secrets.GCP_TEST_PROJECT_ID }}
                   GCP_TEST_EMAIL: ${{ secrets.GCP_TEST_EMAIL }}
                   GCP_TEST_KEY: ${{ secrets.GCP_TEST_KEY }}
             - name: Coveralls
-              uses: coverallsapp/github-action@master
+              uses: coverallsapp/github-action@v2
               with:
                   github-token: ${{ secrets.GITHUB_TOKEN }}
