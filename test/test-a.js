@@ -184,7 +184,7 @@ describe("Anyhow Main Tests", function () {
 
         anyhow.setOptions({levelOnConsole: false})
 
-        if (logged.indexOf("INFO")) {
+        if (logged.includes("INFO")) {
             done()
         } else {
             done("Expected 'INFO' on console.")
