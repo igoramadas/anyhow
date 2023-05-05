@@ -34,7 +34,7 @@
         "prebuild": "npm run clean",
         "prepublishOnly": "tsc --removeComments",
         "docs": "typedoc",
-        "test": "NODE_ENV=test nyc mocha --exit -R spec ./test/*.js"
+        "test": "NODE_ENV=test nyc mocha --exit --report lcovonly -R spec"
     },
     "devDependencies": {
         "@google-cloud/logging": "^10.4.1",
