@@ -9,18 +9,13 @@ build:
 	$(TSC)
 
 test:
-	$(TSC)
-	@NODE_ENV=test $(MOCHA) --trace-warnings --exit -u tdd -R spec
+	npm run build
+	npm test
 
 test-cover:
 	$(TSC)
-	echo TRAVIS_JOB_ID $(TRAVIS_JOB_ID)
 	@NODE_ENV=test $(ISTANBUL) $(MOCHAEXEC) --exit --report lcovonly -R spec && \
 	cat ./coverage/lcov.info | $(COVERALLS) || true
-
-cover:
-	$(TSC)
-	@NODE_ENV=test $(ISTANBUL) $(MOCHAEXEC) --exit -R spec ./test/*.js
 
 docs:
 	$(TYPEDOC)

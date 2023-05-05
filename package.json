@@ -29,8 +29,9 @@
         "node": ">= 12.0"
     },
     "scripts": {
+        "build": "tsc",
         "docs": "make docs",
-        "test": "make test-cover"
+        "test": "NODE_ENV=test nyc mocha --exit -R spec ./test/*.js"
     },
     "devDependencies": {
         "@google-cloud/logging": "^10.4.1",
