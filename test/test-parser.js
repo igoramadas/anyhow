@@ -111,7 +111,11 @@ describe("Anyhow Message Tests", function () {
                         level2: {
                             level3: {
                                 level4: {
-                                    level5: "level5"
+                                    level5: {
+                                        level6: {
+                                            level7: "level7"
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -126,8 +130,8 @@ describe("Anyhow Message Tests", function () {
         let message = parser.getMessage(arr)
         anyhow.setOptions({compact: true, preprocessors: null})
 
-        if (message.includes("level5")) {
-            done("Message should have stopped before level 5")
+        if (message.includes("level7")) {
+            done("Message should have stopped before level 7")
         } else if (!message.includes("[Function]")) {
             done("Functions should be replaced with the string [Function]")
         } else {
@@ -185,15 +189,15 @@ describe("Anyhow Message Tests", function () {
         anyhow.setOptions({compact: false, preprocessors: ["maskSecrets"]})
 
         let obj1 = {
-            accessToken: "mytoken",
+            access_Token: "mytoken",
             name: "User",
             inner: {
-                password: "mypass"
+                PassWord: "mypass"
             },
             empty: []
         }
 
-        let obj2 = [{password: "mypass", anotherArray: [[1, [2]]]}]
+        let obj2 = [{Token: "mytoken", password: "mypass", anotherArray: [[1, [2]]]}]
 
         let message = parser.getMessage([obj1, obj2])
         anyhow.setOptions({compact: true, preprocessors: null})
