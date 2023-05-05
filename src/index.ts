@@ -1,50 +1,12 @@
 // Anyhow: index.ts
 
-import {AnyhowOptions, Logger} from "./types"
+import {defaultOptions, AnyhowOptions, Logger} from "./types"
 import {libSetup} from "./setup"
 import {cloneDeep, dedupArray, getTimestamp, mergeDeep} from "./utils"
 import parser from "./parser"
 
 // Chalk (colorized console output). Will be instantiated on setup().
 let chalk = null
-
-// Default options.
-const defaultOptions: AnyhowOptions = {
-    compact: true,
-    maxDepth: 6,
-    appName: "Anyhow",
-    separator: " | ",
-    levels: ["info", "warn", "error"],
-    styles: {
-        debug: ["gray"],
-        info: ["white"],
-        warn: ["yellow"],
-        error: ["red", "bold"]
-    },
-    preprocessors: [],
-    preprocessorOptions: {
-        maskedFields: [
-            "authorization",
-            "password",
-            "passcode",
-            "secret",
-            "token",
-            "accesstoken",
-            "access_token",
-            "refreshtoken",
-            "refresh_token",
-            "clientsecret",
-            "client_secret",
-            "apikey",
-            "api_key",
-            "apisecret",
-            "api_secret",
-            "privatekey",
-            "private_key"
-        ],
-        clone: true
-    }
-}
 
 /**
  * This is the main class of the Anyhow library.
