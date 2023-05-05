@@ -183,13 +183,13 @@ describe("Anyhow Main Tests", function () {
             })
             .toString()
 
-        anyhow.setOptions({levelOnConsole: false})
-
         if (logged.indexOf("INFO") && logged.indexOf("ERROR")) {
             done()
         } else {
             done("Expected 'INFO' and 'ERROR' console.")
         }
+
+        anyhow.setOptions({levelOnConsole: false})
     })
 
     it("Log calls passing empty or null arguments", function () {
