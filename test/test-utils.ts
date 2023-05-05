@@ -4,7 +4,7 @@ import {describe, it} from "mocha"
 require("chai").should()
 
 describe("Anyhow Utils Tests", function () {
-    let {flattenArray, getTag, isError, isPlainObject} = require("../src/utils")
+    let {cloneDeep, flattenArray, getTag, isError, isPlainObject} = require("../src/utils")
 
     it("Check identifiable errors", function (done) {
         if (isError("")) return done("String should not be identified as error.")
@@ -20,9 +20,41 @@ describe("Anyhow Utils Tests", function () {
         done()
     })
 
-    it("Flatten a deep array", function (done) {
+    it("Deep clone javascript objects", function (done) {
+        let complexObj = {
+            func: (a) => a,
+            test: "test",
+            arrays: [2, [3, [4, [5]]]],
+            level1: {
+                level2: {
+                    level3: {
+                        obj3: {},
+                        arr3: [1, 2, {a: 1}],
+                        date3: new Date(),
+                        error3: new Error("this is an error"),
+                        level4: {
+                            level5: "level5"
+                        }
+                    }
+                }
+            }
+        }
+        let nullString: string = null
+        let nullArr = []
+        let nullObj = {[nullString]: null}
+
+        cloneDeep(complexObj)
+        cloneDeep(nullString)
+        cloneDeep(nullArr)
+        cloneDeep(nullObj)
+
+        done()
+    })
+
+    it("Clone and flatten a deep array", function (done) {
         let array = [1, 2, [3, 4, [5]], [[[6]]], flattenArray([]), flattenArray(null)]
-        let flat = flattenArray(array)
+        let cloned = cloneDeep(array)
+        let flat = flattenArray(cloned)
 
         if (flat.join(",") == "1,2,3,4,5,6") {
             done()

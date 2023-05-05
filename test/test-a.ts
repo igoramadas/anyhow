@@ -101,15 +101,6 @@ describe("Anyhow Main Tests", function () {
         }
     })
 
-    it("Log an axios error", function (done) {
-        try {
-            throw {response: {data: {error: "Something went wrong"}}}
-        } catch (ex) {
-            anyhow.log("error", ex)
-            done()
-        }
-    })
-
     it("Log deprecation notice only once", function (done) {
         let logged = capcon
             .captureStdout(function scope() {

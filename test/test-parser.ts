@@ -4,7 +4,7 @@ import crypto from "crypto"
 import {before, describe, it} from "mocha"
 require("chai").should()
 
-describe("Anyhow Message Tests", function () {
+describe("Anyhow Parser Tests", function () {
     let axios = require("axios")
     let bent = require("bent")
     let anyhow = null
@@ -84,10 +84,25 @@ describe("Anyhow Message Tests", function () {
     })
 
     it("Use the 'cleanup' preprocessor", function (done) {
-        anyhow.setOptions({compact: false, preprocessors: ["cleanup"]})
+        anyhow.setOptions({compact: false, preprocessors: ["cleanup"], maxDepth: 2})
 
         function aClass() {}
         const instance = new aClass()
+
+        let obj = {
+            func: (a) => a,
+            test: "test",
+            arrays: [2, [3, [4, [5]]]],
+            level1: {
+                level2: {
+                    level3: [1, 2, 3]
+                }
+            },
+            date1: new Date(),
+            function1: function () {
+                return null
+            }
+        }
 
         let arr = [
             instance,
@@ -97,21 +112,13 @@ describe("Anyhow Message Tests", function () {
                 someFunc: function lalala() {}
             },
             {
-                obj: {
+                aaa: {
                     func: (a) => a,
                     test: "test",
                     arrays: [2, [3, [4, [5]]]],
                     level1: {
                         level2: {
-                            level3: {
-                                level4: {
-                                    level5: {
-                                        level6: {
-                                            level7: "level7"
-                                        }
-                                    }
-                                }
-                            }
+                            level3: "level3"
                         }
                     }
                 }
@@ -121,16 +128,20 @@ describe("Anyhow Message Tests", function () {
             function anotherFunc() {}
         ]
 
-        let message = parser.getMessage(arr)
-        anyhow.setOptions({compact: true, preprocessors: null})
+        let cleanObj = parser.getMessage(obj)
+        let cleanArray = parser.getMessage(arr)
 
-        if (message.includes("level7")) {
-            done("Message should have stopped before level 7")
-        } else if (!message.includes("[Function]")) {
+        if (!cleanObj.includes("[...]")) {
+            done("Message should have the [...] replaced array string")
+        } else if (cleanArray.includes("level3")) {
+            done("Message should have stopped before level 3")
+        } else if (!cleanArray.includes("[Function]")) {
             done("Functions should be replaced with the string [Function]")
         } else {
             done()
         }
+
+        anyhow.setOptions({compact: true, preprocessors: null, maxDepth: 10})
     })
 
     it("Use the 'friendlyErrors' preprocessor", async function () {
@@ -172,11 +183,27 @@ describe("Anyhow Message Tests", function () {
 
         message = parser.getMessage([noEx, simpleEx, , axiosEx, bentEx, customEx])
 
-        anyhow.setOptions({preprocessors: null})
-
         if (!message.includes("500") || !message.includes("error") || !message.includes(".js")) {
             throw `Expected at least '500', 'error' and the stack trace inside the message, but got ${message}`
         }
+
+        try {
+            const err = new Error("That failed") as any
+            err.response = {data: {error: "Something went wrong"}}
+            throw err
+        } catch (ex) {
+            anyhow.error(ex)
+        }
+
+        try {
+            const err = new Error("That failed") as any
+            err.response = {data: {message: "Something went wrong"}}
+            throw err
+        } catch (ex) {
+            anyhow.error(ex)
+        }
+
+        anyhow.setOptions({preprocessors: null})
     })
 
     it("Use the 'maskSecrets' preprocessor", function (done) {
