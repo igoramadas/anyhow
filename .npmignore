@@ -1,7 +1,9 @@
 .DS_Store
 .nojekyll
 .git/
+.github/
 .history/
+.prettierignore
 coverage/
 docs/
 src/
@@ -10,4 +12,4 @@ lib-test/
 CNAME
 History.md
 Makefile
-tsconfig.json
+tsconfig*.json
