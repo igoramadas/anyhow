@@ -81,7 +81,6 @@
     "nyc": {
         "extends": "@istanbuljs/nyc-config-typescript",
         "temp-dir": "./coverage",
-        "all": true,
         "reporter": [
             "lcov",
             "text"

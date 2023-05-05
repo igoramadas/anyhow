@@ -38,6 +38,17 @@ describe("Anyhow Main Tests", function () {
         }
     })
 
+    it("Passing empty options should revert to the defaults", function (done) {
+        anyhow.options.appName = "another"
+        anyhow.options = null
+
+        if (anyhow.options.appName == "another") {
+            done("Calling setOptions passing null should have reverted to the defaults")
+        } else {
+            done()
+        }
+    })
+
     it("Log info to console based on simple arguments", function (done) {
         anyhow.setup("console")
         anyhow.uncaughtExceptions = true
@@ -284,6 +295,8 @@ describe("Anyhow Main Tests", function () {
 
         anyhow.setOptions({styles: null})
         anyhow.info("Styles fully disabled")
+        anyhow.setOptions({styles: {info: ["yellow"]}})
+        anyhow.info("Info should now be yellow")
     })
 
     it("Do not debug log if debug is not part of levels", function (done) {

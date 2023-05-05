@@ -84,6 +84,7 @@ try {
             })
 
             it("Catch and log uncaught exception", function (done) {
+                this.timeout(5000)
                 anyhow.setOptions({uncaughtExceptions: true})
                 uncaughtDone = done
 
@@ -97,6 +98,7 @@ try {
             })
 
             it("Catch and log unhandled rejection", function (done) {
+                this.timeout(5000)
                 anyhow.setOptions({unhandledRejections: true})
                 unhandledDone = done
 

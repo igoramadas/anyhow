@@ -279,6 +279,7 @@ describe("Anyhow Message Tests", function () {
                 const obj = {
                     level1: {
                         level2: {
+                            someDate: new Date(),
                             level3: {
                                 level4: {
                                     level5: {
@@ -297,7 +298,10 @@ describe("Anyhow Message Tests", function () {
                         },
                         empty: {}
                     },
-                    accessToken: "a12b3c"
+                    accessToken: "a12b3c",
+                    function(x) {
+                        return x
+                    }
                 }
 
                 obj.level1["circular"] = obj
@@ -327,6 +331,12 @@ describe("Anyhow Message Tests", function () {
 
         anyhow.setOptions({preprocessors: ["cleanup", "friendlyErrors", "maskSecrets"], preprocessorOptions: {clone: false}})
         parser.getMessage(arr2)
+        parser.getMessage(1)
+        parser.getMessage("a")
+        parser.getMessage(new Date())
+        parser.getMessage(function (a) {
+            return a
+        })
 
         const tLast = performance.now()
 

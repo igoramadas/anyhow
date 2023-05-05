@@ -355,20 +355,22 @@ class Anyhow {
      * @param newOptions New options object to be applied.
      */
     private applyOptions = (newOptions: AnyhowOptions): void => {
-        if (newOptions.levels && newOptions.levels.length > 0) {
+        if (newOptions.levels?.length > 0) {
             newOptions.levels = dedupArray(newOptions.levels)
         } else {
             newOptions.levels = []
         }
 
-        if (newOptions.preprocessors && newOptions.preprocessors.length > 0) {
+        if (newOptions.preprocessors?.length > 0) {
             newOptions.preprocessors = dedupArray(newOptions.preprocessors)
         } else {
             newOptions.preprocessors = []
         }
 
-        if (newOptions.preprocessorOptions && newOptions.preprocessorOptions.maskedFields && newOptions.preprocessorOptions.maskedFields.length > 0) {
+        if (newOptions.preprocessorOptions?.maskedFields?.length > 0) {
             newOptions.preprocessorOptions.maskedFields = dedupArray(newOptions.preprocessorOptions.maskedFields)
+        } else if (newOptions.preprocessorOptions) {
+            newOptions.preprocessorOptions.maskedFields = []
         }
 
         if (newOptions.styles) {
