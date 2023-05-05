@@ -1,9 +1,11 @@
 # Changelog for Anyhow
 
-3.2.1
+3.3.0
 =====
 * Expanded the list of masked fields.
 * Masked field keys are now case insensitive.
+* Default maxDepth increased from 6 to 10.
+* Code refactoring.
 
 3.2.0
 =====

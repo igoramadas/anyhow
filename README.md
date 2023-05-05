@@ -1,8 +1,8 @@
 # Anyhow
 
 [![Version](https://img.shields.io/npm/v/anyhow.svg)](https://npmjs.com/package/anyhow)
-[![Build Status](https://img.shields.io/travis/igoramadas/anyhow.svg)](https://travis-ci.org/igoramadas/anyhow)
-[![Coverage Status](https://img.shields.io/coveralls/github/igoramadas/anyhow.svg)](https://coveralls.io/github/igoramadas/anyhow?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/igoramadas/anyhow/badge.svg?branch=master)](https://coveralls.io/github/igoramadas/anyhow?branch=master)
+[![Build Status](https://github.com/igoramadas/anyhow/actions/workflows/build.yml/badge.svg)](https://github.com/igoramadas/anyhow/actions)
 
 Drop-in (and slightly improved) logging wrapper for [Winston](https://www.npmjs.com/package/winston), [Bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino), [Google Cloud Logging](https://github.com/googleapis/nodejs-logging) and [console](https://nodejs.org/api/console.html).
 

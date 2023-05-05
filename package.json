@@ -31,9 +31,9 @@
     "scripts": {
         "build": "tsc -p tsconfig-build.json",
         "build-test": "tsc -p tsconfig-test.json",
-        "clean": "rm -rf ./lib && rm -rf ./lib-test",
+        "clean": "rm -rf ./lib && rm -rf ./lib-test && rm -rf ./coverage && rm -rf ./docs",
         "prebuild": "npm run clean",
-        "docs": "typedoc",
+        "docs": "rm -rf ./docs && typedoc && cp CNAME docs/ && cp .nojekyll docs/",
         "test": "npm run build-test && mocha ./test/*.ts",
         "test-coverage": "nyc --reporter=lcov npm test"
     },
@@ -46,7 +46,7 @@
         "bent": "^7.3.12",
         "bunyan": "^1.8.15",
         "capture-console": "^1.0.1",
-        "chai": "<5.0.0",
+        "chai": "^4.3.7",
         "chalk": "<5.0.0",
         "coveralls": "^3.1.1",
         "mocha": "^10.2.0",
