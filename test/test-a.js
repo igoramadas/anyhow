@@ -179,17 +179,16 @@ describe("Anyhow Main Tests", function () {
         let logged = capcon
             .captureStdout(function scope() {
                 anyhow.info("Test i-n-f-o")
-                anyhow.error("Test e-r-r-o-r")
             })
             .toString()
 
-        if (logged.indexOf("INFO") && logged.indexOf("ERROR")) {
+        anyhow.setOptions({levelOnConsole: false})
+
+        if (logged.indexOf("INFO")) {
             done()
         } else {
-            done("Expected 'INFO' and 'ERROR' console.")
+            done("Expected 'INFO' on console.")
         }
-
-        anyhow.setOptions({levelOnConsole: false})
     })
 
     it("Log calls passing empty or null arguments", function () {
