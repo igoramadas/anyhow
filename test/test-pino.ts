@@ -1,26 +1,21 @@
 // TEST: PINO
 
-let chai = require("chai")
-let mocha = require("mocha")
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {before, describe, it} from "mocha"
+require("chai").should()
 
 describe("Anyhow Pino Tests", function () {
     let anyhow = null
     let stdout = ""
 
     before(function () {
-        anyhow = require("../lib/index")
+        anyhow = require("../src/index")
 
         process.stdout.write = (function (write) {
             return function (string) {
                 stdout += string
                 write.apply(process.stdout, arguments)
             }
-        })(process.stdout.write)
+        })(process.stdout.write) as any
     })
 
     it("Log using default auto-generated Pino logger", function (done) {

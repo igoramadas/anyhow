@@ -1,20 +1,14 @@
 // TEST: MAIN
 
-let capcon = require("capture-console")
-let chai = require("chai")
-let mocha = require("mocha")
-let after = mocha.after
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {before, describe, it} from "mocha"
+require("chai").should()
 
 describe("Anyhow Main Tests", function () {
+    let capcon = require("capture-console")
     let anyhow = null
 
     before(function () {
-        anyhow = require("../lib/index")
+        anyhow = require("../src/index")
     })
 
     it("Calling log() before setup() warns and defaults to console", function (done) {
@@ -86,7 +80,8 @@ describe("Anyhow Main Tests", function () {
 
     it("Log an exception via anyhow.log() and anyhow.console()", function (done) {
         try {
-            somethingUndefined.blablabla()
+            const obj = {} as any
+            obj.somethingUndefined.blablabla()
             done("Call somethingUndefined.blablabla() should throw an exception.")
         } catch (ex) {
             anyhow.log("error", ex)
@@ -198,7 +193,7 @@ describe("Anyhow Main Tests", function () {
         anyhow.info()
         anyhow.warn()
         anyhow.error()
-        anyhow.info([null], null, {}.invalid)
+        anyhow.info([null], null, {}["invalid"])
 
         anyhow.setOptions({levels: ["info", "warn", "error"]})
     })

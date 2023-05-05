@@ -1,6 +1,6 @@
 {
     "name": "anyhow",
-    "version": "3.2.1",
+    "version": "3.3.0",
     "description": "Drop-in wrapper for Winston, Bunyan, Pino and console logs.",
     "keywords": [
         "anyhow",
@@ -29,18 +29,20 @@
         "node": ">= 12.0"
     },
     "scripts": {
-        "build": "tsc",
-        "clean": "rm -rf ./lib",
+        "build": "tsc -p tsconfig-build.json",
+        "build-test": "tsc -p tsconfig-test.json",
+        "clean": "rm -rf ./lib && rm -rf ./lib-test",
         "prebuild": "npm run clean",
-        "prepublishOnly": "tsc --removeComments",
         "docs": "typedoc",
-        "test": "NODE_ENV=test mocha --exit ./test/*.js",
-        "test-coverage": "NODE_ENV=test nyc --reporter=lcov npm test"
+        "test": "npm run build-test && mocha ./test/*.ts",
+        "test-coverage": "nyc --reporter=lcov npm test"
     },
     "devDependencies": {
         "@google-cloud/logging": "^10.4.1",
+        "@istanbuljs/nyc-config-typescript": "^1.0.2",
+        "@types/mocha": "^10.0.1",
         "@types/node": "^20.0.0",
-        "axios": "<1.0.0",
+        "axios": "^1.4.0",
         "bent": "^7.3.12",
         "bunyan": "^1.8.15",
         "capture-console": "^1.0.1",
@@ -51,7 +53,9 @@
         "mocha-lcov-reporter": "^1.3.0",
         "nyc": "^15.1.0",
         "pino": "^8.12.1",
+        "source-map-support": "^0.5.21",
         "supertest": "^6.3.3",
+        "ts-node": "^10.9.1",
         "typedoc": "^0.24.6",
         "typescript": "^5.0.4",
         "winston": "^3.8.2"
@@ -65,8 +69,22 @@
         "bracketSpacing": false,
         "printWidth": 250
     },
+    "mocha": {
+        "exit": true,
+        "recursive": true,
+        "require": [
+            "test/mocha.env",
+            "ts-node/register",
+            "source-map-support/register"
+        ]
+    },
     "nyc": {
-        "reporter": "lcov",
-        "temp-dir": "./coverage"
+        "extends": "@istanbuljs/nyc-config-typescript",
+        "temp-dir": "./coverage",
+        "all": true,
+        "reporter": [
+            "lcov",
+            "text"
+        ]
     }
 }

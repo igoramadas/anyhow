@@ -1,24 +1,18 @@
 // TEST: MAIN
 
-let axios = require("axios")
-let bent = require("bent")
-let crypto = require("crypto")
-let chai = require("chai")
-let mocha = require("mocha")
-let after = mocha.after
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import crypto from "crypto"
+import {before, describe, it} from "mocha"
+require("chai").should()
 
 describe("Anyhow Message Tests", function () {
+    let axios = require("axios")
+    let bent = require("bent")
     let anyhow = null
     let parser = null
 
     before(function () {
-        anyhow = require("../lib/index")
-        parser = require("../lib/parser")
+        anyhow = require("../src/index")
+        parser = require("../src/parser")
 
         anyhow.setOptions({
             compact: true,
@@ -174,7 +168,7 @@ describe("Anyhow Message Tests", function () {
 
         let customEx = new Error("Custom")
         delete customEx.message
-        customEx.description = "my error"
+        customEx["description"] = "my error"
 
         message = parser.getMessage([noEx, simpleEx, , axiosEx, bentEx, customEx])
 
@@ -306,7 +300,7 @@ describe("Anyhow Message Tests", function () {
                     accessToken: "a12b3c"
                 }
 
-                obj.level1.circular = obj
+                obj.level1["circular"] = obj
 
                 arr.push(obj)
             }

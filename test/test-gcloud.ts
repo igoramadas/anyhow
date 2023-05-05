@@ -1,12 +1,7 @@
 // TEST: GOOGLE CLOUD LOGGING
 
-let chai = require("chai")
-let mocha = require("mocha")
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {before, describe, it} from "mocha"
+require("chai").should()
 
 describe("Anyhow Google Cloud Logging Tests", function () {
     let anyhow = null
@@ -22,14 +17,14 @@ describe("Anyhow Google Cloud Logging Tests", function () {
     }
 
     before(function () {
-        anyhow = require("../lib/index")
+        anyhow = require("../src/index")
 
         process.stdout.write = (function (write) {
             return function (string) {
                 stdout += string
                 write.apply(process.stdout, arguments)
             }
-        })(process.stdout.write)
+        })(process.stdout.write) as any
     })
 
     it("Log using default auto-generated GCloud logger", function (done) {
@@ -79,5 +74,6 @@ describe("Anyhow Google Cloud Logging Tests", function () {
 
         anyhow.setup({name: "gcloud", instance: logger}, options)
         anyhow.info("Log to custom GCloud")
+        anyhow.debug(stdout)
     })
 })

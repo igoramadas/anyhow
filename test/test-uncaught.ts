@@ -1,22 +1,17 @@
 // TEST: UNCAUGHT EXCEPTIONS
 
-let capcon = require("capture-console")
-let chai = require("chai")
-let childProcess = require("child_process")
-let mocha = require("mocha")
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
+import {before, describe, it} from "mocha"
+require("chai").should()
+
 let uncaughtProcess, uncaughtDone
 let unhandledProcess, unhandledDone
 
-chai.should()
-
 let messageHandler = (message) => {
+    let capcon = require("capture-console")
+    let innerAnyhow = require("../src/index")
     let logged = ""
 
     if (message.command == "throwex") {
-        let innerAnyhow = require("../lib/index")
         innerAnyhow.setup("console")
         innerAnyhow.uncaughtExceptions = true
 
@@ -36,7 +31,6 @@ let messageHandler = (message) => {
         setTimeout(callback, 500)
         throw new Error()
     } else if (message.command == "reject") {
-        let innerAnyhow = require("../lib/index")
         innerAnyhow.setup("console")
         innerAnyhow.unhandledRejections = true
         innerAnyhow.options.appName = "My App"
@@ -78,12 +72,14 @@ let messageHandler = (message) => {
 process.on("message", messageHandler)
 
 try {
+    let childProcess = require("child_process")
+
     if (describe) {
         describe("Anyhow Uncaught Exception Test", function () {
             let anyhow = null
 
             before(function () {
-                anyhow = require("../lib/index")
+                anyhow = require("../src/index")
                 anyhow.setup("console")
             })
 
@@ -91,7 +87,7 @@ try {
                 anyhow.setOptions({uncaughtExceptions: true})
                 uncaughtDone = done
 
-                uncaughtProcess = childProcess.fork(`${__dirname}/test-uncaught.js`, {})
+                uncaughtProcess = childProcess.fork("./lib-test/test/test-uncaught", {})
                 uncaughtProcess.on("message", messageHandler)
                 uncaughtProcess.send({
                     command: "throwex"
@@ -104,7 +100,7 @@ try {
                 anyhow.setOptions({unhandledRejections: true})
                 unhandledDone = done
 
-                unhandledProcess = childProcess.fork(`${__dirname}/test-uncaught.js`)
+                unhandledProcess = childProcess.fork("./lib-test/test/test-uncaught")
                 unhandledProcess.on("message", messageHandler)
                 unhandledProcess.send({
                     command: "reject"

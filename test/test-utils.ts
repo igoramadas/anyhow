@@ -1,27 +1,18 @@
 // TEST: UTILS
 
-let chai = require("chai")
-let mocha = require("mocha")
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {describe, it} from "mocha"
+require("chai").should()
 
 describe("Anyhow Utils Tests", function () {
-    let anyhow = null
-    let {flattenArray, getTag, isError, isPlainObject} = require("../lib/utils")
-
-    before(function () {
-        anyhow = require("../lib/index")
-    })
+    let {flattenArray, getTag, isError, isPlainObject} = require("../src/utils")
 
     it("Check identifiable errors", function (done) {
         if (isError("")) return done("String should not be identified as error.")
         if (!isError(new Error("Oops"))) return done("Instantiated Error was not identified as an error.")
 
         try {
-            const a = b.c.d
+            const b = {} as any
+            b.c.d()
         } catch (ex) {
             if (!isError(ex)) return done("Exception was not identified as an error.")
         }
@@ -43,7 +34,7 @@ describe("Anyhow Utils Tests", function () {
     it("Validate a plain object", function (done) {
         let obj = {a: 1, b: 2}
         let notObj = 123
-        
+
         if (!isPlainObject(obj)) {
             done("Validation for obj should have returned true.")
         } else if (isPlainObject(notObj)) {
@@ -54,7 +45,7 @@ describe("Anyhow Utils Tests", function () {
     })
 
     it("Get tags for null and undefined", function (done) {
-        let tagUndefined = getTag(done.something)
+        let tagUndefined = getTag(done["something"])
         let tagNull = getTag(null)
 
         if (tagUndefined != "[object Undefined]") {

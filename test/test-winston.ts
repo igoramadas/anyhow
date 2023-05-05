@@ -1,19 +1,14 @@
 // TEST: WINSTON
 
-let capcon = require("capture-console")
-let chai = require("chai")
-let mocha = require("mocha")
-let before = mocha.before
-let describe = mocha.describe
-let it = mocha.it
-
-chai.should()
+import {before, describe, it} from "mocha"
+require("chai").should()
 
 describe("Anyhow Winston Tests", function () {
+    let capcon = require("capture-console")
     let anyhow = null
 
     before(function () {
-        anyhow = require("../lib/index")
+        anyhow = require("../src/index")
     })
 
     it("Log using default auto-generated Winston logger", function (done) {

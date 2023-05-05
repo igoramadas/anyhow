@@ -6,6 +6,7 @@ coverage/
 docs/
 src/
 test/
+lib-test/
 CNAME
 History.md
 Makefile
