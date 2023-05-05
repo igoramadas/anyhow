@@ -2,10 +2,10 @@ sudo: false
 language: node_js
 dist: focal
 node_js:
+    - "20"
     - "19"
     - "18"
     - "16"
-    - "14"
 arch:
     - "amd64"
     - "arm64"
