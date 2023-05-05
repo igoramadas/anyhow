@@ -153,7 +153,7 @@ class Anyhow {
 
         // If setup was not called yet, defaults to console logging and emit warning.
         if (!this.isReady) {
-            console.warn("Anyhow: please call Anyhow's setup() on your application startup. Will default to console.log() for now.")
+            console.warn("Anyhow: please call Anyhow's setup() on your application startup, will default to console.log() for now")
             this.setup("console")
             this.console(level, message)
         } else {
