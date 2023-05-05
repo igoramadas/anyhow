@@ -1,24 +1,15 @@
-COVERALLS :=./node_modules/coveralls/bin/coveralls.js
-MOCHA:= ./node_modules/.bin/mocha
-MOCHAEXEC:= ./node_modules/.bin/_mocha
-ISTANBUL:= ./node_modules/.bin/nyc
-TYPEDOC:= ./node_modules/.bin/typedoc
-TSC:= ./node_modules/.bin/tsc
+# MAKE HELPERS
 
 build:
-	$(TSC)
+	npm run build
 
 test:
 	npm run build
 	npm test
 
-test-cover:
-	$(TSC)
-	@NODE_ENV=test $(ISTANBUL) $(MOCHAEXEC) --exit --report lcovonly -R spec && \
-	cat ./coverage/lcov.info | $(COVERALLS) || true
-
 docs:
-	$(TYPEDOC)
+	npm run build
+	npm run docs
 	cp CNAME docs/
 	cp .nojekyll docs/
 
@@ -31,7 +22,7 @@ publish:
 
 update:
 	-ncu -u -x axios,chalk
-	-npm install
-	$(TSC)
+	npm install
+	npm run build
 
 .PHONY: docs test
