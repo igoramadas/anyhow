@@ -72,7 +72,7 @@ export const dedupArray = (arr: any[]): any[] => {
  * Flatten the passed array.
  * @param value Object or value.
  */
-export const flattenArray = (array, depth?, result?): any[] => {
+export const flattenArray = (array: any[], depth?: number, result?: any[]): any[] => {
     const length = array == null ? 0 : array.length
     if (!length) return []
 
@@ -104,7 +104,7 @@ export const flattenArray = (array, depth?, result?): any[] => {
  * Get the passed object's tag.
  * @param value Object or value.
  */
-export const getTag = (value) => {
+export const getTag = (value: any) => {
     const toString = Object.prototype.toString
 
     if (value === null) {
@@ -145,7 +145,7 @@ export const getTimestamp = (): string => {
  * Check if the passed value is same as args.
  * @param value Object or value.
  */
-export const isArguments = (value): boolean => {
+export const isArguments = (value: any): boolean => {
     return isObject(value) && getTag(value) == "[object Arguments]"
 }
 
@@ -153,7 +153,7 @@ export const isArguments = (value): boolean => {
  * Check if the passed value is an array.
  * @param value Object or value.
  */
-export const isArray = (value): boolean => {
+export const isArray = (value: any): boolean => {
     return value && Array.isArray(value)
 }
 
@@ -161,7 +161,7 @@ export const isArray = (value): boolean => {
  * Check if the passed value is a date.
  * @param value Object or value.
  */
-export const isDate = (value): boolean => {
+export const isDate = (value: any): boolean => {
     return value ? value instanceof Date : false
 }
 
@@ -169,7 +169,7 @@ export const isDate = (value): boolean => {
  * Check if the passed value is an error.
  * @param value Object or value.
  */
-export const isError = (value): boolean => {
+export const isError = (value: any): boolean => {
     if (!isObject(value)) {
         return false
     }
@@ -182,7 +182,7 @@ export const isError = (value): boolean => {
  * Check if the passed value is a string.
  * @param value Object or value.
  */
-export const isFunction = (value): boolean => {
+export const isFunction = (value: any): boolean => {
     return typeof value === "function"
 }
 
@@ -190,7 +190,7 @@ export const isFunction = (value): boolean => {
  * Check if the passed value is null or undefined.
  * @param value Object or value.
  */
-export const isNil = (value): boolean => {
+export const isNil = (value: any): boolean => {
     return value === null || typeof value == "undefined"
 }
 
@@ -198,7 +198,7 @@ export const isNil = (value): boolean => {
  * Check if the passed value is an object.
  * @param value Object or value.
  */
-export const isObject = (value): boolean => {
+export const isObject = (value: any): boolean => {
     return typeof value === "object" && value !== null
 }
 
@@ -206,7 +206,7 @@ export const isObject = (value): boolean => {
  * Check if the passed value is a plain object.
  * @param value Object or value.
  */
-export const isPlainObject = (value): boolean => {
+export const isPlainObject = (value: any): boolean => {
     if (!isObject(value) || getTag(value) != "[object Object]") {
         return false
     }
