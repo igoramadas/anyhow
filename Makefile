@@ -1,29 +1,27 @@
-# MAKE HELPERS
+# MAKE ANYHOW
+
+all: clean update build docs
 
 build:
 	npm run build
 
-test:
-	npm run build
-	npm test
+clean:
+	npm run clean
 
 docs:
-	npm run build
 	npm run docs
-	cp CNAME docs/
-	cp .nojekyll docs/
-
-clean:
-	rm -rf ./coverage
-	rm -rf ./node_modules
-	rm -f package-lock.json
 
 publish:
 	npm publish
 
+test:
+	npm test
+
 update:
-	-ncu -u -x axios,chalk
+	-ncu -u -x chalk
+	-rm -rf ./node_modules
+	-rm -f package-lock.json
 	npm install
 	npm run build
 
-.PHONY: docs test
+.PHONY: docs
