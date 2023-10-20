@@ -1,5 +1,9 @@
 # Changelog for Anyhow
 
+3.3.1
+=====
+* Updated dependencies.
+
 3.3.0
 =====
 * Expanded the list of masked fields.
