@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+3.4.0
+=====
+* Check for an additional "errors" array when getting friendly error messages.
+* Updated dependencies.
+
 3.3.2
 =====
 * Updated dependencies.

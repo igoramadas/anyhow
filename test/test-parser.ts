@@ -203,6 +203,12 @@ describe("Anyhow Parser Tests", function () {
             anyhow.error(ex)
         }
 
+        try {
+            throw {message: "Some error here", errors: [{description: "Failed to do something"}]}
+        } catch (ex) {
+            anyhow.error(ex)
+        }
+
         anyhow.setOptions({preprocessors: null})
     })
 

@@ -161,6 +161,13 @@ class AnyhowPreProcessors {
                 } catch (axiosEx) {}
             }
 
+            // Check for additional  details in the errors array.
+            if (obj.errors && Array.isArray(obj.errors)) {
+                for (let err of obj.errors) {
+                    arrError.push(err.message || err.description || isObject(err) ? Object.values(err).join(" - ") : err.toString())
+                }
+            }
+
             if (arrError.length > 0) {
                 if (options.preprocessorOptions && options.preprocessorOptions.errorStack && obj.stack) {
                     arrError.push(obj.stack.toString())
