@@ -222,4 +222,9 @@ class AnyhowPreProcessors {
 }
 
 // Exports...
-export = AnyhowPreProcessors.Instance
+export default AnyhowPreProcessors.Instance
+
+// Keep require() returning the instance under CommonJS.
+if (typeof module !== "undefined") {
+    module.exports = AnyhowPreProcessors.Instance
+}

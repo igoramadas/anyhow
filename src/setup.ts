@@ -2,6 +2,7 @@
 
 import {Logger} from "./types"
 import {isFunction, isNil, isObject, isString} from "./utils"
+import {loadModule} from "./load"
 
 /**
  * Setup will try to load compatible loggers, and fall back to the console
@@ -58,7 +59,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
         // First try Winston.
         if (libName == "winston") {
             try {
-                const winston = libObj.instance ? libObj.instance : require("winston")
+                const winston = libObj.instance ? libObj.instance : loadModule("winston")
 
                 // Winston logger helper.
                 anyhow._logger.log = function (level, message) {
@@ -80,7 +81,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     libOptions.name = "Anyhow"
                 }
 
-                const bunyan = libObj.instance ? libObj.instance : require("bunyan").createLogger(libOptions)
+                const bunyan = libObj.instance ? libObj.instance : loadModule("bunyan").createLogger(libOptions)
 
                 // Bunyan logger helper.
                 anyhow._logger.log = function (level, message) {
@@ -102,7 +103,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     libOptions.name = "Anyhow"
                 }
 
-                const pino = libObj.instance ? libObj.instance : require("pino")()
+                const pino = libObj.instance ? libObj.instance : loadModule("pino")()
 
                 // Pino logger helper.
                 anyhow._logger.log = function (level, message) {
@@ -126,7 +127,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                 if (libObj.instance) {
                     gcloud = libObj.instance
                 } else {
-                    const gcloudModule = require("@google-cloud/logging")
+                    const gcloudModule = loadModule("@google-cloud/logging")
 
                     // Get log name from options.
                     const logName = libOptions.logName || anyhow.appName ? anyhow.appName.replace(/ /g, "-").toLowerCase() : "anyhow"

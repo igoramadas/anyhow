@@ -3,6 +3,7 @@
 import {defaultOptions, AnyhowOptions, Logger} from "./types"
 import {libSetup} from "./setup"
 import {cloneDeep, dedupArray, getTimestamp, mergeDeep} from "./utils"
+import {loadModule} from "./load"
 import parser from "./parser"
 
 // Chalk (colorized console output). Will be instantiated on setup().
@@ -11,6 +12,7 @@ let chalk = null
 /**
  * This is the main class of the Anyhow library.
  * @example const logger = require("anyhow")
+ * @example import logger from "anyhow"
  */
 class Anyhow {
     private static _instance: Anyhow
@@ -292,7 +294,7 @@ class Anyhow {
         if (lib == "console" && this._options.styles) {
             try {
                 if (chalk === null) {
-                    chalk = require("chalk")
+                    chalk = loadModule("chalk")
                 }
             } catch (ex) {
                 /* istanbul ignore next */
@@ -354,4 +356,9 @@ class Anyhow {
 }
 
 // Exports...
-export = Anyhow.Instance
+export default Anyhow.Instance
+
+// Keep require() returning the instance under CommonJS.
+if (typeof module !== "undefined") {
+    module.exports = Anyhow.Instance
+}

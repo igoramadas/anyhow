@@ -1,7 +1,9 @@
 {
     "extends": "./tsconfig.json",
     "compilerOptions": {
-        "outDir": "lib/cjs",
+        "module": "ES2022",
+        "moduleResolution": "node",
+        "outDir": "lib/esm",
         "rootDir": "src",
         "removeComments": true,
         "sourceMap": false
