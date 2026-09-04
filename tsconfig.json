@@ -10,6 +10,7 @@
         "declaration": true,
         "skipLibCheck": true
     },
+    "exclude": ["lib", "lib-test", "docs"],
     "typedocOptions": {
         "entryPoints": ["./src/"],
         "excludeExternals": true,

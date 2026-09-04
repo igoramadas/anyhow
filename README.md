@@ -16,6 +16,7 @@ By using Anyhow we can achieve a consistent logging mechanism regardless of what
 
 ```javascript
 const logger = require("anyhow")
+// or: import logger from "anyhow"
 
 // Setup passing no arguments will default to the console.
 logger.setup()

@@ -1,6 +1,6 @@
 {
     "name": "anyhow",
-    "version": "3.4.0",
+    "version": "3.5.0",
     "description": "Drop-in wrapper for Winston, Bunyan, Pino and console logs.",
     "keywords": [
         "anyhow",
@@ -19,8 +19,22 @@
     "homepage": "https://anyhow.devv.com",
     "subdomain": "anyhow",
     "license": "MIT",
-    "main": "lib/index.js",
-    "types": "lib/index.d.ts",
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/esm/index.js",
+    "types": "./lib/cjs/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./lib/esm/index.d.ts",
+                "default": "./lib/esm/index.js"
+            },
+            "require": {
+                "types": "./lib/cjs/index.d.ts",
+                "default": "./lib/cjs/index.js"
+            }
+        },
+        "./package.json": "./package.json"
+    },
     "repository": {
         "type": "git",
         "url": "https://github.com/igoramadas/anyhow.git"
@@ -29,12 +43,13 @@
         "node": ">= 16.0"
     },
     "scripts": {
-        "build": "tsc -p tsconfig-build.json",
+        "build": "tsc -p tsconfig-build.json && tsc -p tsconfig-esm.json && node scripts/postbuild.js",
         "build-test": "tsc -p tsconfig-test.json",
         "clean": "rm -rf ./lib && rm -rf ./lib-test && rm -rf ./coverage && rm -rf ./docs",
         "prebuild": "npm run clean",
         "docs": "rm -rf ./docs && typedoc && cp CNAME docs/ && cp .nojekyll docs/",
-        "test": "npm run build-test && mocha ./test/*.ts",
+        "test": "npm run build-test && mocha ./test/*.ts && npm run test-compat",
+        "test-compat": "tsc -p tsconfig-build.json && tsc -p tsconfig-esm.json && node scripts/postbuild.js && node ./test/compat/cjs.cjs && node ./test/compat/esm.mjs && node ./test/compat/consumers.cjs",
         "test-coverage": "nyc --reporter=lcov npm test"
     },
     "devDependencies": {

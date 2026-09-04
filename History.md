@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+3.5.0
+=====
+* Dual ESM + CommonJS package (import and require both work).
+* Optional loggers are loaded in a way that works in ESM-only projects.
+
 3.4.0
 =====
 * Check for an additional "errors" array when getting friendly error messages.

@@ -3,7 +3,7 @@
 import {AnyhowOptions, PreProcessor} from "./types"
 import {flattenArray, isArray, isFunction, isNil, isObject, isString} from "./utils"
 import preprocessors from "./preprocessors"
-import util from "util"
+import * as util from "util"
 
 /**
  * Parser methods to build a message out of passed logging arguments.
@@ -211,4 +211,9 @@ class AnyhowParser {
 }
 
 // Exports...
-export = AnyhowParser.Instance
+export default AnyhowParser.Instance
+
+// Keep require() returning the instance under CommonJS.
+if (typeof module !== "undefined") {
+    module.exports = AnyhowParser.Instance
+}
