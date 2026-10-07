@@ -12,11 +12,15 @@ describe("Anyhow Google Cloud Logging Tests", function () {
         projectId: env.GCP_TEST_PROJECT_ID,
         credentials: {
             client_email: env.GCP_TEST_EMAIL,
-            private_key: env.GCP_TEST_KEY.replace(/\\n/g, "\n")
+            private_key: (env.GCP_TEST_KEY || "").replace(/\\n/g, "\n")
         }
     }
 
     before(function () {
+        if (!env.GCP_TEST_PROJECT_ID || !env.GCP_TEST_EMAIL || !env.GCP_TEST_KEY) {
+            this.skip()
+        }
+
         anyhow = require("../src/index")
 
         process.stdout.write = (function (write) {
