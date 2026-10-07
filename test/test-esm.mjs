@@ -6,4 +6,4 @@ const require = createRequire(import.meta.url)
 
 assert.strictEqual(anyhow, require("anyhow"))
 anyhow.setup("none")
-assert.equal(anyhow.lib, "none")
+assert.equal(anyhow.isReady, true)
