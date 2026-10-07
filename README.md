@@ -278,7 +278,7 @@ Cleanup the message output by removing non-relevant data from logged objects and
 
 #### friendlyErrors
 
-Extract the exception code, status and message instead of logging the full exception object. Supports axios and fetch exceptions out-of-the-box.
+Extract the exception code, status and message instead of logging the full exception object. Supports `axios` errors, `fetch()` network failures (using the error `cause`) and failed `fetch()` responses (status, status text and URL). Note that `fetch()` does not throw on HTTP errors, and the response body is not logged, as it can only be read asynchronously.
 
 #### maskSecrets
 

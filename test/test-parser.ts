@@ -212,6 +212,22 @@ describe("Anyhow Parser Tests", function () {
         anyhow.setOptions({preprocessors: null})
     })
 
+    it("Use the 'friendlyErrors' preprocessor with fetch() failures", function () {
+        anyhow.setOptions({preprocessors: ["friendlyErrors"], preprocessorOptions: {errorStack: false}})
+
+        const cause = Object.assign(new Error("connect ECONNREFUSED 127.0.0.1:9"), {code: "ECONNREFUSED"})
+        const networkMessage = parser.getMessage([new TypeError("fetch failed", {cause})])
+        const responseMessage = parser.getMessage([new Response(null, {status: 401, statusText: "Unauthorized"})])
+
+        anyhow.setOptions({preprocessors: null, preprocessorOptions: {errorStack: true}})
+
+        if (networkMessage != "fetch failed | connect ECONNREFUSED 127.0.0.1:9") {
+            throw `Expected the network failure cause, got '${networkMessage}'.`
+        } else if (responseMessage != "Code 401 | Unauthorized") {
+            throw `Expected the response status, got '${responseMessage}'.`
+        }
+    })
+
     it("Use the 'maskSecrets' preprocessor", function (done) {
         anyhow.setOptions({compact: false, preprocessors: ["maskSecrets"]})
 

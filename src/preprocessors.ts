@@ -138,6 +138,16 @@ class AnyhowPreProcessors {
                 if (code) arrError.push(`Code ${code}`)
                 if (friendlyMessage) arrError.push(friendlyMessage)
                 if (message) arrError.push(message)
+
+                // Network failures only say "fetch failed", the actual reason is on the cause.
+                const cause = obj.cause?.message || obj.cause?.code || (isString(obj.cause) ? obj.cause : null)
+                if (cause && cause != message) arrError.push(cause)
+            }
+
+            // Failed fetch() response, the body can't be read synchronously.
+            else if (typeof obj.ok == "boolean" && typeof obj.status == "number" && isFunction(obj.headers?.get)) {
+                arrError.push(`Code ${obj.status}`)
+                if (obj.statusText) arrError.push(obj.statusText)
             }
 
             // Try extracting error details from axios / request exceptions.
