@@ -4,7 +4,7 @@
 
 - NEW: Native ESM support via package exports, alongside CommonJS.
 - NEW: Option `levelMap` to map Anyhow log levels to levels supported by the configured logger or console.
-- `debug()` now logs the full JSON of passed objects, with only the `maskSecrets` preprocessor applied.
+- The `debug()` now logs the full JSON of passed objects, with only the `maskSecrets` preprocessor applied.
 - BREAKING: Requires Node.js 22 or newer.
 
 ## 3.4.0
