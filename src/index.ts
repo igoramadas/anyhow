@@ -10,7 +10,6 @@ let chalk = null
 
 /**
  * This is the main class of the Anyhow library.
- * @example const logger = require("anyhow")
  */
 class Anyhow {
     private static _instance: Anyhow
@@ -89,6 +88,8 @@ class Anyhow {
      */
     private set uncaughtExceptions(value: boolean) {
         if (value) {
+            if (this._uncaughtExceptionHandler) return
+
             this._uncaughtExceptionHandler = (err) => {
                 this.error(this._options.appName, "Uncaught exception", err)
 
@@ -113,6 +114,8 @@ class Anyhow {
      */
     private set unhandledRejections(value: boolean) {
         if (value) {
+            if (this._unhandledRejectionHandler) return
+
             this._unhandledRejectionHandler = (err) => {
                 this.error(this._options.appName, "Unhandled rejection", err)
 
@@ -121,7 +124,7 @@ class Anyhow {
             process.on("unhandledRejection" as any, this._unhandledRejectionHandler as any)
         } else {
             if (this._unhandledRejectionHandler) {
-                process.off("Unhandled rejection", this._unhandledRejectionHandler as any)
+                process.off("unhandledRejection", this._unhandledRejectionHandler as any)
             }
             this._unhandledRejectionHandler = null
         }
@@ -134,6 +137,11 @@ class Anyhow {
 
     // LOGGING METHODS
     // --------------------------------------------------------------------------
+
+    /**
+     * Map an Anyhow level to the configured logger's level name.
+     */
+    private mapLevel = (level: string): string => this._options.levelMap?.[level] ?? level
 
     /**
      * Default logging method.
@@ -156,8 +164,10 @@ class Anyhow {
             console.warn("Anyhow: please call Anyhow's setup() on your application startup, will default to console.log() for now")
             this.setup("console")
             this.console(level, message)
+        } else if (this._logger.name == "console") {
+            this.console(level, message)
         } else {
-            this._logger.log(level, message)
+            this._logger.log(this.mapLevel(level), message)
         }
 
         return message
@@ -169,7 +179,7 @@ class Anyhow {
     debug = (...args: any[]): string => {
         if (this._options.levels.indexOf("debug") < 0) return null
         if (args.length < 1) return
-        let message = parser.getMessage(args, ["friendlyErrors"])
+        let message = parser.getDebugMessage(args)
         return this.log("debug", message)
     }
 
@@ -246,10 +256,11 @@ class Anyhow {
 
         let styledMessage = message
         let logMethod = console.log
+        const mappedLevel = this.mapLevel(level)
 
         // Check if console supports the passed level. Defaults to "log".
-        if (console[level] && level != "debug") {
-            logMethod = console[level]
+        if (typeof console[mappedLevel] == "function") {
+            logMethod = console[mappedLevel]
         }
 
         // Is chalk enabled? Use it to colorize the messages.
@@ -292,7 +303,8 @@ class Anyhow {
         if (lib == "console" && this._options.styles) {
             try {
                 if (chalk === null) {
-                    chalk = require("chalk")
+                    const chalkModule = require("chalk")
+                    chalk = chalkModule.default ?? chalkModule
                 }
             } catch (ex) {
                 /* istanbul ignore next */

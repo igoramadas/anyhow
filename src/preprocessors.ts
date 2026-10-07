@@ -33,7 +33,7 @@ class AnyhowPreProcessors {
 
         // Stringify and clone objects?
         if (options.preprocessorOptions && options.preprocessorOptions.clone) {
-            args = cloneDeep(args, options.levels.includes("debug"), options.maxDepth)
+            args = cloneDeep(args, options.levels.includes("debug"), options.maxDepth + 1)
         }
 
         if (hasCleanup) {
@@ -69,6 +69,8 @@ class AnyhowPreProcessors {
                 }
             } else if (isFunction(obj)) {
                 args[i] = "[Function]"
+            } else if (isDate(obj)) {
+                args[i] = obj.toLocaleString()
             } else if (isObject(obj)) {
                 if (Object.keys(obj).length == 0) {
                     args[i] = getTag(obj)
@@ -93,8 +95,10 @@ class AnyhowPreProcessors {
         for ([key, value] of entries) {
             if (isArray(value)) {
                 this.cleanupArray(options, value, depth + 1)
-            } else if (isFunction(obj)) {
+            } else if (isFunction(value)) {
                 obj[key] = "[Function]"
+            } else if (isDate(value)) {
+                obj[key] = value.toLocaleString()
             } else if (isObject(value)) {
                 if (depth == options.maxDepth) {
                     obj[key] = "[...]"
@@ -103,8 +107,6 @@ class AnyhowPreProcessors {
                 } else {
                     this.cleanupObject(options, value, depth + 1)
                 }
-            } else if (isDate(value)) {
-                obj[key] = value.toLocaleString()
             }
         }
     }
@@ -138,6 +140,16 @@ class AnyhowPreProcessors {
                 if (code) arrError.push(`Code ${code}`)
                 if (friendlyMessage) arrError.push(friendlyMessage)
                 if (message) arrError.push(message)
+
+                // Network failures only say "fetch failed", the actual reason is on the cause.
+                const cause = obj.cause?.message || obj.cause?.code || (isString(obj.cause) ? obj.cause : null)
+                if (cause && cause != message) arrError.push(cause)
+            }
+
+            // Failed fetch() response, the body can't be read synchronously.
+            else if (typeof obj.ok == "boolean" && typeof obj.status == "number" && isFunction(obj.headers?.get)) {
+                arrError.push(`Code ${obj.status}`)
+                if (obj.statusText) arrError.push(obj.statusText)
             }
 
             // Try extracting error details from axios / request exceptions.
@@ -164,7 +176,7 @@ class AnyhowPreProcessors {
             // Check for additional  details in the errors array.
             if (obj.errors && Array.isArray(obj.errors)) {
                 for (let err of obj.errors) {
-                    arrError.push(err.message || err.description || isObject(err) ? Object.values(err).join(" - ") : err.toString())
+                    arrError.push(err.message || err.description || (isObject(err) ? Object.values(err).join(" - ") : err.toString()))
                 }
             }
 
