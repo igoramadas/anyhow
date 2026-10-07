@@ -106,6 +106,29 @@ describe("Anyhow Utils Tests", function () {
         }
     })
 
+    it("Keep built-ins and class instances when cloning", function () {
+        class Secret {
+            #value = "hidden"
+            toJSON() {
+                return {value: this.#value}
+            }
+        }
+        const source = {buffer: Buffer.from("abc"), url: new URL("https://example.com/x"), map: new Map([["a", 1]]), re: /x/g, secret: new Secret()}
+        const cloned = cloneDeep(source)
+
+        if (cloned === source) {
+            throw "The outer plain object should be copied."
+        }
+
+        for (const key of Object.keys(source)) {
+            if (cloned[key] !== source[key]) throw `The ${key} value should be kept as is.`
+        }
+
+        if (JSON.stringify(cloned) != JSON.stringify(source)) {
+            throw `The clone should serialize like the source, got ${JSON.stringify(cloned)}`
+        }
+    })
+
     it("Truncate clones at the max depth", function () {
         const cloned = cloneDeep({a: {b: {c: 1}}, list: [[1]]}, false, 2)
 

@@ -29,7 +29,7 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
                 result = "[...]"
             } else if (isDate(obj)) {
                 result = new Date(obj.getTime())
-            } else {
+            } else if (isPlainObject(obj) || isError(obj)) {
                 result = Object.create(Object.getPrototypeOf(obj))
 
                 for (const key of Object.keys(obj)) {
@@ -40,6 +40,9 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
                 if (isError(obj)) {
                     result.stack = obj.stack
                 }
+            } else {
+                // Built-ins and class instances can hold internal state (Buffer, URL, private fields) that a copy would lose.
+                result = obj
             }
         } else {
             result = obj
