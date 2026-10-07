@@ -2,11 +2,18 @@
 
 ## 4.0.0
 
+- BREAKING: Requires Node.js 22 or newer.
 - NEW: Native ESM support via package exports, alongside CommonJS.
 - NEW: Option `levelMap` to map Anyhow log levels to levels supported by the configured logger or console.
 - The `debug()` now logs the full JSON of passed objects, with only the `maskSecrets` preprocessor applied.
 - The `friendlyErrors` preprocessor now supports `fetch()` network failures and responses.
-- BREAKING: Requires Node.js 22 or newer.
+- Fixed `friendlyErrors` not extracting the messages of nested errors.
+- Fixed `info()` logs not masking secrets with the `maskSecrets` preprocessor.
+- Fixed `setup("pino", options)` ignoring the passed options.
+- Fixed `cleanup` not replacing nested functions and not formatting dates.
+- Fixed masking secrets changing nested values of the logged objects, objects are now cloned deeply.
+- Fixed Google Cloud setup failing when passing a `logName`, and the log name now defaults to the `appName`.
+- Fixed uncaught exceptions and unhandled rejections being logged multiple times after changing options.
 
 ## 3.4.0
 
