@@ -224,7 +224,7 @@ describe("Anyhow Main Tests", function () {
         const originalLevels = anyhow.options.levels
         const logger = {
             name: "capture",
-            log: (level, message) => {
+            log: (_level, message) => {
                 loggedMessage = message
             }
         }
