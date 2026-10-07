@@ -101,8 +101,10 @@ describe("Anyhow Utils Tests", function () {
             throw "Nested objects should not be shared with the clone."
         } else if (cloned.date === date || cloned.date.getTime() != date.getTime()) {
             throw "Dates should be copied."
-        } else if (!isError(cloned.error) || cloned.error.stack != error.stack) {
-            throw "Errors should keep their type and stack."
+        } else if (!isError(cloned.error) || cloned.error.stack != error.stack || cloned.error.message != error.message) {
+            throw "Errors should keep their type, message and stack."
+        } else if (JSON.stringify(cloned.error) != JSON.stringify(error)) {
+            throw `Cloned errors should serialize like the source, got ${JSON.stringify(cloned.error)}`
         }
     })
 

@@ -36,9 +36,11 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
                     result[key] = cloneDeep(obj[key], logErrors, maxDepth, depth + 1)
                 }
 
-                // Errors keep their stack as a non-enumerable property.
+                // Errors keep their message and stack as non-enumerable properties.
                 if (isError(obj)) {
-                    result.stack = obj.stack
+                    for (const key of ["message", "stack"]) {
+                        Object.defineProperty(result, key, {value: obj[key], writable: true, configurable: true, enumerable: false})
+                    }
                 }
             } else {
                 // Built-ins and class instances can hold internal state (Buffer, URL, private fields) that a copy would lose.
