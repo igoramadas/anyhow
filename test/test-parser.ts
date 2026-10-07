@@ -240,7 +240,7 @@ describe("Anyhow Parser Tests", function () {
             empty: []
         }
 
-        let obj2 = [{Token: "mytoken", password: "mypass", anotherArray: [[1, [2]]]}]
+        let obj2 = [{Token: "mytoken", password: "mypass", anotherArray: [[1, [2]]]}, null]
 
         let message = parser.getMessage([obj1, obj2])
         anyhow.setOptions({compact: true, preprocessors: null})
@@ -313,6 +313,127 @@ describe("Anyhow Parser Tests", function () {
         anyhow.setOptions({preprocessors: null})
 
         done()
+    })
+
+    it("Mask secrets when other preprocessors are ignored, as on info logs", function () {
+        anyhow.setOptions({preprocessors: ["friendlyErrors", "maskSecrets"]})
+        const message = parser.getMessage([{password: "secret", errors: [{description: "Kept as JSON"}]}], ["friendlyErrors"])
+        anyhow.setOptions({preprocessors: null})
+
+        if (message.includes("secret") || !message.includes("[***]")) {
+            throw `Expected the password to be masked, got '${message}'.`
+        } else if (!message.includes('"errors"')) {
+            throw `Expected friendlyErrors to be skipped, got '${message}'.`
+        }
+    })
+
+    it("Masking with the 'clone' option does not change nested objects", function () {
+        anyhow.setOptions({preprocessors: ["maskSecrets"], preprocessorOptions: {clone: true}})
+        const user = {name: "joe", auth: {token: "abc123"}, keys: [{apiKey: "k1"}]}
+        const message = parser.getMessage([user])
+        anyhow.setOptions({preprocessors: null})
+
+        if (message.includes("abc123") || message.includes("k1")) {
+            throw `Expected nested secrets to be masked, got '${message}'.`
+        } else if (user.auth.token != "abc123" || user.keys[0].apiKey != "k1") {
+            throw "The logged object should not have been changed."
+        }
+    })
+
+    it("Use the 'cleanup' preprocessor on nested functions and dates", function () {
+        anyhow.setOptions({preprocessors: ["cleanup"]})
+        const date = new Date(2020, 0, 2)
+        const message = parser.getMessage([{handler: () => true, created: date}, date])
+        anyhow.setOptions({preprocessors: null})
+
+        if (!message.includes('"handler": "[Function]"')) {
+            throw `Expected nested functions to be replaced, got '${message}'.`
+        } else if (!message.includes(`"created": "${date.toLocaleString()}"`) || !message.endsWith(date.toLocaleString())) {
+            throw `Expected dates to be formatted, got '${message}'.`
+        }
+    })
+
+    it("Use the 'friendlyErrors' preprocessor with nested errors and string causes", function () {
+        anyhow.setOptions({preprocessors: ["friendlyErrors"], preprocessorOptions: {errorStack: false}})
+        const aggregateMessage = parser.getMessage([new AggregateError([new Error("First failed"), "Second failed"], "All failed")])
+        const causeMessage = parser.getMessage([new Error("Outer", {cause: "Inner reason"})])
+        anyhow.setOptions({preprocessors: null, preprocessorOptions: {errorStack: true}})
+
+        if (aggregateMessage != "All failed | First failed | Second failed") {
+            throw `Expected the nested error messages, got '${aggregateMessage}'.`
+        } else if (causeMessage != "Outer | Inner reason") {
+            throw `Expected the string cause, got '${causeMessage}'.`
+        }
+    })
+
+    it("Keep the arguments when a custom preprocessor returns nothing", function () {
+        anyhow.setOptions({
+            preprocessors: [
+                (args) => {
+                    args[0].touched = true
+                }
+            ]
+        })
+        const message = parser.getMessage([{a: 1}])
+        anyhow.setOptions({preprocessors: null})
+
+        if (message != '{ "a": 1, "touched": true}') {
+            throw `Unexpected message '${message}'.`
+        }
+    })
+
+    it("Report parsing failures to stderr when debug is enabled", function () {
+        const capcon = require("capture-console")
+        const circular = Object.create(null)
+        circular.self = circular
+        const failing = {
+            get response() {
+                throw new Error("Getter failed")
+            }
+        }
+        let message
+
+        const logged = capcon.captureStderr(() => {
+            message = parser.getMessage([circular, "ok"])
+            anyhow.setOptions({preprocessors: ["friendlyErrors"]})
+            parser.getMessage([failing])
+            anyhow.setOptions({preprocessors: null})
+        })
+
+        if (message != "ok") {
+            throw `Unparseable arguments should be skipped, got '${message}'.`
+        } else if (!logged.includes("failed to parse arguments") || !logged.includes("failed to generate message")) {
+            throw `Expected both failures on stderr, got '${logged}'.`
+        }
+    })
+
+    it("Format debug JSON with indentation when not compacting", function () {
+        anyhow.setOptions({compact: false})
+        const message = parser.getDebugMessage([{a: 1}])
+        anyhow.setOptions({compact: true})
+
+        if (message != JSON.stringify({a: 1}, null, 2)) {
+            throw `Unexpected debug message '${message}'.`
+        }
+    })
+
+    it("Inspect objects without a constructor", function () {
+        const message = parser.getInspection([Object.create(null)])
+
+        if (!message.startsWith("Object\n------")) {
+            throw `Unexpected inspection '${message}'.`
+        }
+    })
+
+    it("Reset preprocessors when the parser options have none", function () {
+        anyhow.setOptions({preprocessors: ["maskSecrets"]})
+        parser.options = {...anyhow.options, preprocessors: undefined}
+        const message = parser.getMessage([{password: "visible"}])
+        anyhow.setOptions({preprocessors: null})
+
+        if (!message.includes("visible")) {
+            throw `Expected no preprocessors to run, got '${message}'.`
+        }
     })
 
     it("Benchmark parsing: preprocessors disabled, enabled without clone, enabled with clone", async function () {

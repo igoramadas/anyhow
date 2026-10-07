@@ -52,4 +52,17 @@ describe("Anyhow Bunyan Tests", function () {
             done("Expected 'Log to custom Bunyan' on console output.")
         }
     })
+
+    it("Fall back to the console when Bunyan fails to set up", function () {
+        const errors = capcon.captureStderr(() => {
+            capcon.captureStdout(() => anyhow.setup("bunyan", {level: "bogus"}))
+        })
+        anyhow.setOptions({timestamp: false})
+
+        if (anyhow.lib != "console") {
+            throw `Expected the console fallback, got '${anyhow.lib}'.`
+        } else if (!errors.includes("can't setup bunyan")) {
+            throw `Expected the setup failure on stderr, got '${errors}'.`
+        }
+    })
 })

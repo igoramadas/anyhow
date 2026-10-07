@@ -160,7 +160,7 @@ class AnyhowParser {
         }
 
         try {
-            const builtinPreProcessors = this.builtinPreProcessors.filter((pp: any) => (jsonMode ? pp == "maskSecrets" : ignoredPreProcessors ? ignoredPreProcessors.includes(pp) : true))
+            const builtinPreProcessors = this.builtinPreProcessors.filter((pp: any) => (jsonMode ? pp == "maskSecrets" : ignoredPreProcessors ? !ignoredPreProcessors.includes(pp) : true))
             const customPreProcessors = this.customPreProcessors
 
             // Flatten the array if the compact option is set.

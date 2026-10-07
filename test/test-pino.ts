@@ -29,10 +29,17 @@ describe("Anyhow Pino Tests", function () {
         }
     })
 
-    it("Pass custom options to Pino", function () {
+    it("Pass custom options to Pino", function (done) {
         anyhow.setup("pino", {
             name: "MyApp"
         })
+        anyhow.info("Log to Pino with options")
+
+        if (stdout.includes('"name":"MyApp"')) {
+            done()
+        } else {
+            done("Expected the custom 'MyApp' name on the Pino output.")
+        }
     })
 
     it("Log passing Pino logger directly", function (done) {

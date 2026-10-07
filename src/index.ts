@@ -88,6 +88,8 @@ class Anyhow {
      */
     private set uncaughtExceptions(value: boolean) {
         if (value) {
+            if (this._uncaughtExceptionHandler) return
+
             this._uncaughtExceptionHandler = (err) => {
                 this.error(this._options.appName, "Uncaught exception", err)
 
@@ -112,6 +114,8 @@ class Anyhow {
      */
     private set unhandledRejections(value: boolean) {
         if (value) {
+            if (this._unhandledRejectionHandler) return
+
             this._unhandledRejectionHandler = (err) => {
                 this.error(this._options.appName, "Unhandled rejection", err)
 

@@ -432,6 +432,81 @@ describe("Anyhow Main Tests", function () {
         }
     })
 
+    it("Ignore null options on setOptions()", function () {
+        const options = anyhow.options
+        anyhow.setOptions(null)
+
+        if (anyhow.options !== options) {
+            throw "Calling setOptions(null) should not change the options."
+        }
+    })
+
+    it("Disable masking with an empty maskedFields list", function () {
+        let logged = null
+        const fields = anyhow.options.preprocessorOptions.maskedFields
+
+        anyhow.setup({name: "capture", log: (_level, message) => (logged = message)})
+        anyhow.setOptions({preprocessors: ["maskSecrets"], preprocessorOptions: {maskedFields: []}})
+        anyhow.warn({password: "visible"})
+        anyhow.setOptions({preprocessors: null, preprocessorOptions: {maskedFields: fields}})
+        anyhow.setup("none")
+
+        if (!logged?.includes("visible")) {
+            throw `Expected nothing to be masked, got '${logged}'.`
+        }
+    })
+
+    it("Log uncaught exceptions and unhandled rejections with the registered handlers", function () {
+        const logged = []
+
+        anyhow.setup({name: "capture", log: (_level, message) => logged.push(message)})
+        anyhow.setOptions({uncaughtExceptions: true, unhandledRejections: true})
+        anyhow._uncaughtExceptionHandler(new Error("Thrown"))
+        anyhow._unhandledRejectionHandler(new Error("Rejected"))
+        anyhow.setOptions({uncaughtExceptions: false, unhandledRejections: false})
+        anyhow.setup("none")
+
+        if (!logged[0]?.includes("Uncaught exception") || !logged[1]?.includes("Unhandled rejection")) {
+            throw `Expected both handlers to log, got ${JSON.stringify(logged)}`
+        } else if (anyhow._uncaughtExceptionHandler || anyhow._unhandledRejectionHandler) {
+            throw "Handlers should be removed when disabled."
+        }
+    })
+
+    it("Register the process handlers only once", function () {
+        const exceptionListeners = process.listenerCount("uncaughtException")
+        const rejectionListeners = process.listenerCount("unhandledRejection")
+
+        anyhow.setOptions({uncaughtExceptions: true, unhandledRejections: true})
+        anyhow.setOptions({timestamp: false})
+        anyhow.setOptions({uncaughtExceptions: true, unhandledRejections: true})
+
+        const addedExceptions = process.listenerCount("uncaughtException") - exceptionListeners
+        const addedRejections = process.listenerCount("unhandledRejection") - rejectionListeners
+
+        anyhow.setOptions({uncaughtExceptions: false, unhandledRejections: false})
+
+        if (addedExceptions != 1 || addedRejections != 1) {
+            throw `Expected one handler each, got ${addedExceptions} and ${addedRejections}.`
+        } else if (process.listenerCount("uncaughtException") != exceptionListeners || process.listenerCount("unhandledRejection") != rejectionListeners) {
+            throw "Handlers should be removed when disabled."
+        }
+    })
+
+    it("Fall back to the console for unknown libraries", function () {
+        const logged = capcon.captureStdout(() => {
+            anyhow.setup("unknown")
+            anyhow.logger.log("info", "Logged via the logger")
+        })
+        anyhow.setOptions({timestamp: false})
+
+        if (anyhow.lib != "console") {
+            throw `Expected the console fallback, got '${anyhow.lib}'.`
+        } else if (!logged.includes("Logged via the logger")) {
+            throw `Expected the fallback logger to log, got '${logged}'.`
+        }
+    })
+
     it("Fails to setup with missing or invalid arguments", function (done) {
         try {
             anyhow.setup({wrong: true})

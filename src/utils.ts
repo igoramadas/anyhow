@@ -19,43 +19,32 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
     try {
         if (isArray(obj)) {
             if (depth == maxDepth) {
-                result = `[${obj.length}]`
+                result = "[...]"
             } else {
                 result = []
                 obj.forEach((element) => result.push(cloneDeep(element, logErrors, maxDepth, depth + 1)))
             }
         } else if (obj instanceof Object && !(obj instanceof Function)) {
             if (depth == maxDepth) {
-                result = obj.toString()
+                result = "[...]"
+            } else if (isDate(obj)) {
+                result = new Date(obj.getTime())
             } else {
-                try {
-                    result = Object.assign(Object.create(Object.getPrototypeOf(obj)), obj)
+                result = Object.create(Object.getPrototypeOf(obj))
 
-                    if (isError(obj)) {
-                        result.stack = obj.stack
-                    }
-                } catch (innerEx) {
-                    /* istanbul ignore next */
-                    if (logErrors) {
-                        console.warn("Utils.cloneDeep: Failed to clone constructor")
-                        console.error(innerEx)
-                    }
+                for (const key of Object.keys(obj)) {
+                    result[key] = cloneDeep(obj[key], logErrors, maxDepth, depth + 1)
                 }
 
-                /* istanbul ignore if */
-                if (!result) {
-                    result = {}
-
-                    for (let key in obj) {
-                        if (key) result[key] = cloneDeep(obj[key], logErrors, maxDepth, depth + 1)
-                    }
+                // Errors keep their stack as a non-enumerable property.
+                if (isError(obj)) {
+                    result.stack = obj.stack
                 }
             }
         } else {
             result = obj
         }
     } catch (ex) {
-        /* istanbul ignore next */
         if (logErrors) {
             console.warn("Utils.cloneDeep: Failed to clone object")
             console.error(ex)
@@ -86,10 +75,6 @@ export const flattenArray = (array: any[], depth?: number, result?: any[]): any[
     if (isNil(result)) result = []
 
     const predicate = (value) => Array.isArray(value) || isArguments(value) || !!(value && value[Symbol.isConcatSpreadable])
-
-    if (array == null) {
-        return result
-    }
 
     for (const value of array) {
         if (depth > 0 && predicate(value)) {
@@ -243,8 +228,6 @@ export const isString = (value): boolean => {
  * @param obj The object to be cloned.
  */
 export const mergeDeep = (...objects: any[]): any => {
-    if (!objects) return objects
-
     let mergeArrays = false
 
     if (objects[objects.length - 1] === true) {

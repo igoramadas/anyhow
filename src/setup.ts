@@ -102,7 +102,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     libOptions.name = "Anyhow"
                 }
 
-                const pino = libObj.instance ? libObj.instance : require("pino")()
+                const pino = libObj.instance ? libObj.instance : require("pino")(libOptions)
 
                 // Pino logger helper.
                 anyhow._logger.log = function (level, message) {
@@ -129,7 +129,7 @@ export const libSetup = (anyhow, lib?: "winston" | "bunyan" | "pino" | "gcloud" 
                     const gcloudModule = require("@google-cloud/logging")
 
                     // Get log name from options.
-                    const logName = libOptions.logName || anyhow.appName ? anyhow.appName.replace(/ /g, "-").toLowerCase() : "anyhow"
+                    const logName = libOptions.logName || anyhow.options.appName?.replace(/ /g, "-").toLowerCase() || "anyhow"
                     const logging = new gcloudModule.Logging(libOptions)
                     gcloud = logging.log(logName)
                 }
