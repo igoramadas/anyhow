@@ -10,7 +10,6 @@ let chalk = null
 
 /**
  * This is the main class of the Anyhow library.
- * @example const logger = require("anyhow")
  */
 class Anyhow {
     private static _instance: Anyhow
@@ -121,7 +120,7 @@ class Anyhow {
             process.on("unhandledRejection" as any, this._unhandledRejectionHandler as any)
         } else {
             if (this._unhandledRejectionHandler) {
-                process.off("Unhandled rejection", this._unhandledRejectionHandler as any)
+                process.off("unhandledRejection", this._unhandledRejectionHandler as any)
             }
             this._unhandledRejectionHandler = null
         }
@@ -134,6 +133,11 @@ class Anyhow {
 
     // LOGGING METHODS
     // --------------------------------------------------------------------------
+
+    /**
+     * Map an Anyhow level to the configured logger's level name.
+     */
+    private mapLevel = (level: string): string => this._options.levelMap?.[level] ?? level
 
     /**
      * Default logging method.
@@ -156,8 +160,10 @@ class Anyhow {
             console.warn("Anyhow: please call Anyhow's setup() on your application startup, will default to console.log() for now")
             this.setup("console")
             this.console(level, message)
+        } else if (this._logger.name == "console") {
+            this.console(level, message)
         } else {
-            this._logger.log(level, message)
+            this._logger.log(this.mapLevel(level), message)
         }
 
         return message
@@ -246,10 +252,11 @@ class Anyhow {
 
         let styledMessage = message
         let logMethod = console.log
+        const mappedLevel = this.mapLevel(level)
 
         // Check if console supports the passed level. Defaults to "log".
-        if (console[level] && level != "debug") {
-            logMethod = console[level]
+        if (typeof console[mappedLevel] == "function") {
+            logMethod = console[mappedLevel]
         }
 
         // Is chalk enabled? Use it to colorize the messages.
@@ -292,7 +299,8 @@ class Anyhow {
         if (lib == "console" && this._options.styles) {
             try {
                 if (chalk === null) {
-                    chalk = require("chalk")
+                    const chalkModule = require("chalk")
+                    chalk = chalkModule.default ?? chalkModule
                 }
             } catch (ex) {
                 /* istanbul ignore next */

@@ -48,6 +48,8 @@ export interface AnyhowOptions {
     compact?: boolean
     /** Logging levels. */
     levels?: LoggingLevel[]
+    /** Map Anyhow levels to levels supported by the configured logger or console. */
+    levelMap?: {[level: string]: string}
     /** Output the log level to the console? */
     levelOnConsole?: boolean
     /** Max depth to follow when processing object properties and arrays. */

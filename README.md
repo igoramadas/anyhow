@@ -6,6 +6,20 @@
 
 Drop-in (and slightly improved) logging wrapper for [Winston](https://www.npmjs.com/package/winston), [Bunyan](https://www.npmjs.com/package/bunyan), [pino](https://www.npmjs.com/package/pino), [Google Cloud Logging](https://github.com/googleapis/nodejs-logging) and [console](https://nodejs.org/api/console.html).
 
+Requires Node.js 22 or newer.
+
+CommonJS and ESM imports are supported:
+
+```js
+const logger = require("anyhow")
+```
+
+or
+
+```js
+import logger from "anyhow"
+```
+
 ## Why?
 
 The idea for Anyhow came after a conflict of interests regarding logging libraries in personal and work projects. Some of these projects were using winston. A few other bunyan. Some were simply streaming to the console.
@@ -159,9 +173,7 @@ const user = {
     team: {
         a: {
             b: {
-                c: {
-
-                }
+                c: {}
             }
         }
     }
@@ -186,14 +198,14 @@ logger.info(user)
 logger.setOptions({preprocessors: ["friendlyErrors"]})
 
 // This should log the status code and message.
-try{
+try {
     axios.get("https://my.api.com/something-to-fail")
 } catch (ex) {
     logger.error(ex)
 }
 
 // Add preprocessor to use toString() and prepend all values with @.
-const numToString = (args) => args.map(a => `@ ${a.toString()}`)
+const numToString = (args) => args.map((a) => `@ ${a.toString()}`)
 logger.setOptions({preprocessors: [numToString]})
 
 // Will output @ 1 | @ 2 | @ Sat Jan 01 2000 00:00:00 GMT+0100 (Central European Standard Time)
@@ -219,12 +231,11 @@ notFunction()
 logger.setOptions({unhandledRejections: true})
 
 // Here a sample of unhandled rejection.
-let failFunction = async function() {
+let failFunction = async function () {
     throw new Error("Oh no!")
 }
 // Will log the unhandled rejection.
 failFunction()
-
 ```
 
 ## Options
@@ -239,8 +250,15 @@ Defines if messages should be compacted (remove line breaks and extra spaces, mi
 
 ### levels: string[], _["info", "warn", "error"]_
 
-Defines which logging levels are enabled. The standard logging levels
-are ["debug", "info", "warn", "error"]. Debug should usually not be enabled in production.
+Defines which logging levels are enabled. The standard logging levels are ["debug", "info", "warn", "error"]. Debug should usually not be enabled in production.
+
+### levelMap: object
+
+Maps Anyhow level names to level names supported by the configured logger. The source level is still used for filtering and console styling. For example, map `debug` to `trace` for a logger that uses `trace` instead:
+
+```javascript
+logger.setOptions({levelMap: {debug: "trace"}})
+```
 
 ### maxDepth: number, _6_
 
@@ -252,23 +270,19 @@ If true it will prepend the log level (INFO, WARN, ERROR etc...) to the message 
 
 ### preprocessors: string / function[], _null_
 
-Array of preprocessors to be enabled, passed as functions or strings. Preprocessor functions should accept a single
-array containing the arguments to be parsed. The following built-in preprocessors strings are available:
+Array of preprocessors to be enabled, passed as functions or strings. Preprocessor functions should accept a single array containing the arguments to be parsed. The following built-in preprocessors strings are available:
 
 #### cleanup
 
-Cleanup the message output by removing non-relevant data from logged objects and replacing
-functions / custom objects with [Function] / [object Type] strings.
+Cleanup the message output by removing non-relevant data from logged objects and replacing functions / custom objects with [Function] / [object Type] strings.
 
 #### friendlyErrors
 
-Extract the exception code, status and message instead of logging the full exception object.
-Supports axios and fetch exceptions out-of-the-box.
+Extract the exception code, status and message instead of logging the full exception object. Supports axios and fetch exceptions out-of-the-box.
 
 #### maskSecrets
 
-Replace sensitive credentials with [***]. The actual field names to be masked are set
-under the `preprocessorOptions`, see below.
+Replace sensitive credentials with [***]. The actual field names to be masked are set under the `preprocessorOptions`, see below.
 
 ### preprocessorOptions: object
 
@@ -276,8 +290,7 @@ Additional options to be passed to the preprocessors:
 
 ### clone: boolean, _true_
 
-Boolean, if set to false then objects will not be cloned before running the preprocessors.
-Only set to false if you are dealing exclusively with JSON data that can be mutated by the logger.
+Boolean, if set to false then objects will not be cloned before running the preprocessors. Only set to false if you are dealing exclusively with JSON data that can be mutated by the logger.
 
 #### errorStack: boolean, _false_
 
@@ -285,8 +298,7 @@ Boolean, if set to true then exception stack traces will also be logged.
 
 #### maskedFields: string[], _default below_
 
-Array of strings, property names (case insensitive) that should be masked with the maskSecrets preprocessor. Defaults to:
-`authorization, password, passcode, secret, token, accesstoken, access_token, refreshtoken, refresh_token, clientsecret, client_secret, apikey, api_key, apisecret, api_secret, privatekey, private_key`
+Array of strings, property names (case insensitive) that should be masked with the maskSecrets preprocessor. Defaults to: `authorization, password, passcode, secret, token, accesstoken, access_token, refreshtoken, refresh_token, clientsecret, client_secret, apikey, api_key, apisecret, api_secret, privatekey, private_key`
 
 #### uncaughtException: boolean, _false_
 
@@ -298,14 +310,11 @@ Boolean, if true it will log uncaught exceptions to the console (and will NOT qu
 
 #### separator: string, _" | "_
 
-String, defines the default separator between logged objects. For instance if you do a
-`info(123, "ABC")`, output will be "123 | ABC".
+String, defines the default separator between logged objects. For instance if you do a `info(123, "ABC")`, output will be "123 | ABC".
 
 #### styles: object
 
-Object with keys defining the styles for each level on console output. This will only be effective
-if you also have the [chalk](https://www.npmjs.com/package/chalk) module installed. By default
-`debug` is gray, `info` white, `warn` yellow and `error` bold red. To disable, set it to null.
+Object with keys defining the styles for each level on console output. This will only be effective if you also have the [chalk](https://www.npmjs.com/package/chalk) module installed. By default `debug` is gray, `info` white, `warn` yellow and `error` bold red. To disable, set it to null.
 
 ### timestamp: boolean, _false_
 
@@ -315,15 +324,11 @@ Boolean, if true it will prepend log messages with a timestamp.
 
 #### console(level, args) -> string
 
-Log to console directly, regardless of which library is currently active. First argument is
-the `level` string, and second is array of things to be logged.
-Returns the final, parsed message that was logged.
+Log to console directly, regardless of which library is currently active. First argument is the `level` string, and second is array of things to be logged. Returns the final, parsed message that was logged.
 
 #### log(level, args) -> string
 
-Main logging method. First argument is the `level` string, and second is array of things to be logged.
-Please note that only "info", "warn" and "error" levels are enabled by default.
-Returns the final, parsed message that was logged.
+Main logging method. First argument is the `level` string, and second is array of things to be logged. Please note that only "info", "warn" and "error" levels are enabled by default. Returns the final, parsed message that was logged.
 
 #### debug(...args) -> string
 
@@ -343,8 +348,7 @@ Shortcut to log("error", args).
 
 ## Version 3 breaking changes
 
-If you are using the default options, there's nothing to worry about - the logging methods have the same
-signature and are backwards-compatible. Otherwise, please use the new `options` object:
+If you are using the default options, there's nothing to worry about - the logging methods have the same signature and are backwards-compatible. Otherwise, please use the new `options` object:
 
 ### New options
 
@@ -372,15 +376,3 @@ anyhow.options = {
 // Or option 2: set only specific options. Here the levels and preprocessors are left untouched.
 anyhow.setOptions({appName: "MyApp", compact: true})
 ```
-
-## API documentation
-
-You can browse the full API documentation at https://anyhow.devv.com.
-
-Or check these following projects that are using Anyhow for logging:
-
-* [Expresser](https://github.com/igoramadas/expresser)
-* [Monitorado](https://github.com/igoramadas/monitorado)
-* [PandaGainz](https://github.com/igoramadas/pandagainz)
-* [SetMeUp](https://github.com/igoramadas/setmeup)
-* [Strautomator](https://github.com/strautomator/core)

@@ -1,7 +1,7 @@
 // TEST: MAIN
 
 import crypto from "crypto"
-import {before, describe, it} from "mocha"
+import {after, before, describe, it} from "mocha"
 require("chai").should()
 
 describe("Anyhow Parser Tests", function () {

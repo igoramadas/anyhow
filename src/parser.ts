@@ -73,8 +73,9 @@ class AnyhowParser {
      * Used by [[getMessage]] to parse and return the individual log strings
      * out of the passed arguments. Might run recursively.
      * @param args Array of arguments to be parsed.
+     * @param jsonMode Whether to preserve JSON structure in the output.
      */
-    private argumentsParser = (args: any[]): string[] => {
+    private argumentsParser = (args: any[], jsonMode = false): string[] => {
         let result = []
 
         // Parse all arguments and stringify objects. Please note that fields defined
@@ -86,7 +87,7 @@ class AnyhowParser {
 
                     try {
                         if (isObject(arg)) {
-                            stringified = JSON.stringify(arg, null, 2)
+                            stringified = JSON.stringify(arg, null, jsonMode ? (this.options.compact ? 0 : 2) : 2)
                         } else {
                             stringified = arg.toString()
                         }
@@ -96,7 +97,7 @@ class AnyhowParser {
                     }
 
                     // Compact the output message?
-                    if (stringified && this.options.compact) {
+                    if (stringified && this.options.compact && !jsonMode) {
                         stringified = stringified.replace(/(\r\n|\n|\r)/gm, "").replace(/  +/g, " ")
                     }
 
@@ -121,6 +122,26 @@ class AnyhowParser {
      * @returns Human readable string taken out of the parsed arguments.
      */
     getMessage = (args: any[], ignoredPreProcessors?: PreProcessor[]): string => {
+        return this.parseMessage(args, ignoredPreProcessors)
+    }
+
+    /**
+     * Formats debug arguments as JSON output.
+     * @param args Objects or variables that should be stringified.
+     * @returns Human readable JSON string taken out of the parsed arguments.
+     */
+    getDebugMessage = (args: any[]): string => {
+        return this.parseMessage(args, undefined, true)
+    }
+
+    /**
+     * Parses arguments into a message, optionally preserving JSON structure.
+     * @param args Objects or variables that should be stringified.
+     * @param ignoredPreProcessors List of ignored preprocessors.
+     * @param jsonMode Whether to preserve JSON structure in the output.
+     * @returns Human readable string taken out of the parsed arguments.
+     */
+    private parseMessage = (args: any[], ignoredPreProcessors?: PreProcessor[], jsonMode = false): string => {
         let strMessage: string = null
 
         if (isNil(args)) {
@@ -139,33 +160,35 @@ class AnyhowParser {
         }
 
         try {
-            const builtinPreProcessors = this.builtinPreProcessors.filter((pp: any) => (ignoredPreProcessors ? ignoredPreProcessors.includes(pp) : true))
+            const builtinPreProcessors = this.builtinPreProcessors.filter((pp: any) => (jsonMode ? pp == "maskSecrets" : ignoredPreProcessors ? ignoredPreProcessors.includes(pp) : true))
             const customPreProcessors = this.customPreProcessors
 
             // Flatten the array if the compact option is set.
-            if (this.options.compact) {
+            if (this.options.compact && !jsonMode) {
                 args = flattenArray(args)
             }
 
             // Execute built-in preprocessors (if any).
-            if (this.builtinPreProcessors.length > 0) {
+            if (builtinPreProcessors.length > 0) {
                 args = preprocessors.run(this.options, args, builtinPreProcessors as PreProcessor[])
             }
 
             // Execute custom preprocessors (if any).
-            for (let pp of customPreProcessors) {
-                try {
-                    args = pp(args) || args
-                } catch (ex) {
-                    if (this.isDebug) {
-                        console.error("Anyhow: failed to execute custom preprocessor")
-                        console.error(ex)
+            if (!jsonMode) {
+                for (let pp of customPreProcessors) {
+                    try {
+                        args = pp(args) || args
+                    } catch (ex) {
+                        if (this.isDebug) {
+                            console.error("Anyhow: failed to execute custom preprocessor")
+                            console.error(ex)
+                        }
                     }
                 }
             }
 
             // Return single string log message.
-            const messages = this.argumentsParser(args)
+            const messages = this.argumentsParser(args, jsonMode)
             return messages.join(this.options.separator)
         } catch (ex) {
             /* istanbul ignore next */
