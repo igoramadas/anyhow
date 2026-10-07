@@ -11,7 +11,7 @@
 - Fixed `info()` logs not masking secrets with the `maskSecrets` preprocessor.
 - Fixed `setup("pino", options)` ignoring the passed options.
 - Fixed `cleanup` not replacing nested functions and not formatting dates.
-- Fixed masking secrets changing nested values of the logged objects, plain objects, arrays and errors are now cloned deeply.
+- Fixed masking secrets changing nested values of the logged objects.
 - Fixed Google Cloud setup failing when passing a `logName`, and the log name now defaults to the `appName`.
 - Fixed uncaught exceptions and unhandled rejections being logged multiple times after changing options.
 

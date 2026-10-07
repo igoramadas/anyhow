@@ -43,7 +43,6 @@ export const cloneDeep = (obj: any, logErrors?: boolean, maxDepth?: number, dept
                     }
                 }
             } else {
-                // Built-ins and class instances can hold internal state (Buffer, URL, private fields) that a copy would lose.
                 result = obj
             }
         } else {
