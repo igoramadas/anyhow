@@ -140,7 +140,7 @@ describe("Anyhow Utils Tests", function () {
     })
 
     it("Log clone failures only when requested", function () {
-        const capcon = require("capture-console")
+        const capcon = require("./capture")
         const failing = {
             get bad() {
                 throw new Error("Getter failed")
