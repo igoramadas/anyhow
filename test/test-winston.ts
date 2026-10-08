@@ -4,7 +4,7 @@ import {before, describe, it} from "mocha"
 require("chai").should()
 
 describe("Anyhow Winston Tests", function () {
-    let capcon = require("capture-console")
+    let capcon = require("./capture")
     let anyhow = null
 
     before(function () {

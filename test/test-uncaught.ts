@@ -7,7 +7,7 @@ let uncaughtProcess, uncaughtDone
 let unhandledProcess, unhandledDone
 
 let messageHandler = (message) => {
-    let capcon = require("capture-console")
+    let capcon = require("./capture")
     let innerAnyhow = require("../src/index")
     let logged = ""
 

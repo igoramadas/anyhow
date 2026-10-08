@@ -383,7 +383,7 @@ describe("Anyhow Parser Tests", function () {
     })
 
     it("Report parsing failures to stderr when debug is enabled", function () {
-        const capcon = require("capture-console")
+        const capcon = require("./capture")
         const circular = Object.create(null)
         circular.self = circular
         const failing = {
