@@ -1,6 +1,6 @@
 {
     "name": "anyhow",
-    "version": "4.0.0",
+    "version": "4.0.1",
     "description": "Drop-in wrapper for Winston, Bunyan, Pino and console logs.",
     "keywords": [
         "anyhow",
@@ -55,10 +55,10 @@
         "test-coverage": "nyc --reporter=lcov npm test"
     },
     "devDependencies": {
-        "@google-cloud/logging": "^12.2.0",
+        "@google-cloud/logging": "^12.3.1",
         "@istanbuljs/nyc-config-typescript": "^1.0.2",
-        "@types/node": "^26.6.5",
-        "axios": "^1.20.0",
+        "@types/node": "^26.6.6",
+        "axios": "^1.21.1",
         "bent": "^7.3.12",
         "bunyan": "^1.8.15",
         "chai": "^6.3.0",
@@ -69,7 +69,7 @@
         "nyc": "^18.0.0",
         "pino": "^10.4.0",
         "source-map-support": "^0.5.21",
-        "supertest": "^7.3.1",
+        "supertest": "^7.3.2",
         "tsx": "^4.23.15",
         "typescript": "^7.0.2",
         "winston": "^3.19.0"

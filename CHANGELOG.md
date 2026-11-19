@@ -1,5 +1,10 @@
 # Changelog for Anyhow
 
+## 4.0.1
+
+- Fixed `friendlyErrors` with objects set as the error `reason`, extracting the message or serializing it.
+- Updated dependencies.
+
 ## 4.0.0
 
 - BREAKING: Requires Node.js 22 or newer.

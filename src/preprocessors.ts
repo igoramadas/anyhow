@@ -136,9 +136,19 @@ class AnyhowPreProcessors {
                 friendlyMessage = obj.friendlyMessage || obj.reason
                 message = obj.message || obj.description
 
+                // A "reason" can hold an object, so extract a message out of it or serialize it
+                if (friendlyMessage && !isString(friendlyMessage)) {
+                    const reason: any = friendlyMessage
+                    try {
+                        friendlyMessage = reason.message || reason.error?.message || JSON.stringify(reason)
+                    } catch {
+                        friendlyMessage = ""
+                    }
+                }
+
                 // Add error information separately.
                 if (code) arrError.push(`Code ${code}`)
-                if (friendlyMessage) arrError.push(friendlyMessage)
+                if (friendlyMessage && friendlyMessage != message) arrError.push(friendlyMessage)
                 if (message) arrError.push(message)
 
                 // Network failures only say "fetch failed", the actual reason is on the cause.
