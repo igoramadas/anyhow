@@ -366,6 +366,27 @@ describe("Anyhow Parser Tests", function () {
         }
     })
 
+    it("Use the 'friendlyErrors' preprocessor with object reasons", function () {
+        anyhow.setOptions({preprocessors: ["friendlyErrors"], preprocessorOptions: {errorStack: false}})
+
+        // MongoDB selection errors hold the whole TopologyDescription on `reason`
+        const mongoEx = new Error("connect ECONNREFUSED 127.0.0.1:27017") as any
+        mongoEx.reason = {type: "Single", servers: new Map(), error: new Error("connect ECONNREFUSED 127.0.0.1:27017")}
+        const mongoMessage = parser.getMessage([mongoEx])
+
+        const plainEx = new Error("Connection failed") as any
+        plainEx.reason = {type: "Single", servers: 2}
+        const plainMessage = parser.getMessage([plainEx])
+
+        anyhow.setOptions({preprocessors: null, preprocessorOptions: {errorStack: true}})
+
+        if (mongoMessage != "connect ECONNREFUSED 127.0.0.1:27017") {
+            throw `Expected just the error message, got '${mongoMessage}'.`
+        } else if (!plainMessage.includes('"type":"Single"') || !plainMessage.includes("Connection failed")) {
+            throw `Expected the serialized reason and the message, got '${plainMessage}'.`
+        }
+    })
+
     it("Keep the arguments when a custom preprocessor returns nothing", function () {
         anyhow.setOptions({
             preprocessors: [
